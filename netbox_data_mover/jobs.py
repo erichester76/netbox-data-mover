@@ -1,5 +1,5 @@
 
-from extras.jobs import Job
+from netbox.jobs import Job
 from .models import DataMoverConfig
 from django.utils import timezone
 
