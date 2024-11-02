@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="netbox_data_mover",
+    name="netbox-data-mover",
     version="0.0.1",
     description="A NetBox plugin to manage data movement configurations between various sources and destinations.",
     author="Eric Hester",
