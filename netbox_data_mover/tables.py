@@ -9,6 +9,8 @@ class DataMoverConfigTable(NetBoxTable):
  
     
     class Meta:
+        verbose_name='Job Configuration'
+        verbose_name_plural='Jobs'
         model = DataMoverConfig
         fields = ('name', 'description', 'schedule', 'source', 'destination', 'last_run_status', 'last_run_records_changed', 'last_run_time')
 
@@ -17,5 +19,8 @@ class DataMoverDataSourceTable(NetBoxTable):
 
     
     class Meta:
+        verbose_name='Data Source Configuration'
+        verbose_name_plural='Data Sources'
+
         model = DataMoverDataSource
         fields = ('name', 'type', 'api_url', 'auth_details')
