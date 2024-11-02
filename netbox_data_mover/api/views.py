@@ -1,15 +1,11 @@
-from rest_framework.generics import ListAPIView, RetrieveAPIView
-from .models import DataSource, DataMoverConfig
+from rest_framework import viewsets
+from ..models import DataSource, DataMoverConfig
 from .serializers import DataSourceSerializer, DataMoverConfigSerializer
 
-class DataSourceListAPIView(ListAPIView):
+class DataSourceViewSet(viewsets.ModelViewSet):
     queryset = DataSource.objects.all()
     serializer_class = DataSourceSerializer
 
-class DataMoverConfigListAPIView(ListAPIView):
-    queryset = DataMoverConfig.objects.all()
-    serializer_class = DataMoverConfigSerializer
-
-class DataMoverConfigDetailAPIView(RetrieveAPIView):
+class DataMoverConfigViewSet(viewsets.ModelViewSet):
     queryset = DataMoverConfig.objects.all()
     serializer_class = DataMoverConfigSerializer
