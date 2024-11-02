@@ -1,0 +1,33 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h1>Data Mover Configurations</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Schedule</th>
+            <th>Source</th>
+            <th>Destination</th>
+            <th>Last Run Status</th>
+            <th>Records Changed</th>
+            <th>Last Run Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for config in configs %}
+        <tr>
+            <td>{{ config.name }}</td>
+            <td>{{ config.description }}</td>
+            <td>{{ config.schedule }}</td>
+            <td>{{ config.source }}</td>
+            <td>{{ config.destination }}</td>
+            <td>{{ config.last_run_status }}</td>
+            <td>{{ config.last_run_records_changed }}</td>
+            <td>{{ config.last_run_time }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

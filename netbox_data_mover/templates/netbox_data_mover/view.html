@@ -1,0 +1,16 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ config.name }}</h1>
+<p><strong>Description:</strong> {{ config.description }}</p>
+<p><strong>Schedule:</strong> {{ config.schedule }}</p>
+<p><strong>Source:</strong> {{ config.source }}</p>
+<p><strong>Destination:</strong> {{ config.destination }}</p>
+<p><strong>Last Run Status:</strong> {{ config.last_run_status }}</p>
+<p><strong>Records Changed:</strong> {{ config.last_run_records_changed }}</p>
+<p><strong>Last Run Time:</strong> {{ config.last_run_time }}</p>
+<form method="post" action="{% url 'netbox_data_mover:trigger_job' config.pk %}">
+    {% csrf_token %}
+    <button type="submit">Run Data Mover Job</button>
+</form>
+{% endblock %}
