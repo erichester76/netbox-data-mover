@@ -1,11 +1,15 @@
-from .serializers import DataMoverConfigSerializer, DataSourceSerializer
-from ..models import DataMoverConfig, DataSource
-from netbox.api.viewsets import NetBoxModelViewSet
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+from .models import DataSource, DataMoverConfig
+from .serializers import DataSourceSerializer, DataMoverConfigSerializer
 
-class DataMoverConfigViewSet(NetBoxModelViewSet):
+class DataSourceListAPIView(ListAPIView):
+    queryset = DataSource.objects.all()
+    serializer_class = DataSourceSerializer
+
+class DataMoverConfigListAPIView(ListAPIView):
     queryset = DataMoverConfig.objects.all()
     serializer_class = DataMoverConfigSerializer
 
-class DataSourceViewSet(NetBoxModelViewSet):
-    queryset = DataSource.objects.all()
-    serializer_class = DataSourceSerializer
+class DataMoverConfigDetailAPIView(RetrieveAPIView):
+    queryset = DataMoverConfig.objects.all()
+    serializer_class = DataMoverConfigSerializer

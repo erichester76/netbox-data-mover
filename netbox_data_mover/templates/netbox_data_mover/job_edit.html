@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-5">Create or Edit Data Mover Job</h2>
+
+    <form id="job-form" method="post">
+        {% csrf_token %}
+        
+        <!-- Section to Define Data Sources and Other Details -->
+        <div id="source-container" class="source-section">
+            <h4>Define Data Sources and Destination</h4>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="source" class="form-label">Source</label>
+                    <select id="source" name="source" class="form-select">
+                        <option value="">Select Source</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="destination" class="form-label">Destination</label>
+                    <select id="destination" name="destination" class="form-select">
+                        <option value="">Select Destination</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="fetch-data" class="form-label">Fetch Data Definition</label>
+                    <input type="text" id="fetch-data" name="fetch_data" class="form-control" placeholder="Fetch Data Definition">
+                </div>
+            </div>
+        </div>
+
+        <!-- Mapping Lines Section -->
+        <div id="config-container" class="mt-4">
+            <!-- Dynamic Configuration Lines will be inserted here -->
+        </div>
+        <button id="add-config-line" type="button" class="btn btn-primary mt-3">Add Mapping Line</button>
+        <button id="submit-config" type="submit" class="btn btn-success mt-3">Submit Configuration</button>
+    </form>
+
+    <!-- Cytoscape Diagram -->
+    <div id="cy" style="width: 100%; height: 400px; margin-top: 30px;"></div>
+</div>
+
+<script>
+    let configLineCounter = 0;
+    let cy;
+
+    $(document).ready(function() {
+        populateSources();
+        populateDestinations();
+
+        // Initialize Cytoscape Diagram
+        cy = cytoscape({
+            container: document.getElementById('cy'),
+            elements: [],
+            style: [
+                {
+                    selector: 'node',
+                    style: {
+                        'label': 'data(label)',
+                        'width': 50,
+                        'height': 50,
+                        'background-color': '#007bff',
+                        'color': '#fff',
+                        'text-valign': 'center'
+                    }
+                },
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 2,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'triangle'
+                    }
+                }
+            ],
+            layout: {
+                name: 'grid',
+                rows: 1
+            }
+        });
+    });
+
+    // AJAX call to fetch source options
+    function populateSources() {
+        $.ajax({
+            url: '{% url "plugins:netbox_data_mover:datasource_list" %}',
+            method: 'GET',
+            success: function(data) {
+                let select = $('#source');
+                select.empty().append('<option value="">Select Source</option>');
+                $.each(data, function(index, source) {
+                    select.append(`<option value="${source.id}">${source.name} (${source.type})</option>`);
+                });
+            },
+            error: function(error) {
+                console.error("Failed to load sources", error);
+            }
+        });
+    }
+
+    // AJAX call to fetch destination options
+    function populateDestinations() {
+        $.ajax({
+            url: '{% url "plugins:netbox_data_mover:datasource_list" %}',
+            method: 'GET',
+            success: function(data) {
+                let select = $('#destination');
+                select.empty().append('<option value="">Select Destination</option>');
+                $.each(data, function(index, destination) {
+                    select.append(`<option value="${destination.id}">${destination.name} (${destination.type})</option>`);
+                });
+            },
+            error: function(error) {
+                console.error("Failed to load destinations", error);
+            }
+        });
+    }
+
+
+    // Add a new configuration line dynamically
+    $(document).on('click', '#add-config-line', function() {
+        addConfigLine();
+        updateDiagramFromForm();
+    });
+
+    // Remove a specific configuration line
+    $(document).on('click', '.remove-config-line', function() {
+        let lineId = $(this).data('line');
+        $(`#config-line-${lineId}`).remove();
+        updateDiagramFromForm();
+    });
+
+    // Handle submit of the entire configuration
+    $(document).on('click', '#submit-config', function() {
+        updateDiagramFromForm();
+    });
+
+    // Function to add a new configuration line
+    function addConfigLine() {
+        configLineCounter++;
+        let newConfigLine = `
+            <div class="row config-line" id="config-line-${configLineCounter}">
+                <div class="col-md-2">
+                    <select class="form-select source-object" data-line="${configLineCounter}">
+                        <option value="">Select Source Object</option>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select destination-object" data-line="${configLineCounter}">
+                        <option value="">Select Destination Object</option>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select transformation" data-line="${configLineCounter}">
+                        <option value="">Select Transformation</option>
+                        <option value="uppercase">Uppercase</option>
+                        <option value="lowercase">Lowercase</option>
+                        <option value="regex_replace">Regex Replace</option>
+                        <option value="replace">Replace</option>
+                    </select>
+                </div>
+                <div class="col-md-4 transformation-params" id="params-${configLineCounter}">
+                    <!-- Transformation Parameters will be dynamically generated here -->
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-danger remove-config-line" data-line="${configLineCounter}">Remove</button>
+                </div>
+            </div>`;
+        
+        $('#config-container').append(newConfigLine);
+        populateSourceFields(configLineCounter);
+        populateDestinationFields(configLineCounter);
+    }
+
+    // Update Cytoscape diagram based on configuration
+    function updateDiagramFromForm() {
+        cy.elements().remove();
+        let nodes = [];
+        let edges = [];
+
+        // Collect data from each configuration line
+        $('.config-line').each(function(index) {
+            let lineId = $(this).attr('id');
+            let source = $(this).find('.source-object').val();
+            let destination = $(this).find('.destination-object').val();
+            let transformation = $(this).find('.transformation').val();
+
+            if (source && destination) {
+                let sourceNodeId = `source_${lineId}`;
+                let destinationNodeId = `destination_${lineId}`;
+                
+                // Add source and destination nodes for each line uniquely
+                nodes.push({ data: { id: sourceNodeId, label: source } });
+                nodes.push({ data: { id: destinationNodeId, label: destination } });
+                
+                // Add edge with transformation label between source and destination for the current line
+                edges.push({ data: { source: sourceNodeId, target: destinationNodeId, label: transformation } });
+            }
+        });
+
+        // Add nodes and edges to Cytoscape
+        cy.add(nodes);
+        cy.add(edges);
+        cy.edges().forEach(function(edge) {
+            edge.style({
+                'label': edge.data('label'),
+                'text-background-opacity': 1,
+                'text-background-color': '#ffffff',
+                'text-valign': 'top',
+                'font-size': 12,
+                'color': '#000'
+            });
+        });
+
+        cy.layout({ name: 'breadthfirst' }).run();
+        cy.resize();
+    }
+</script>
+{% endblock %}
