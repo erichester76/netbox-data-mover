@@ -3,11 +3,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import DataMoverConfig
 from .forms import ConfigForm
+from .tables import DataMoverConfigTable
+
 from netbox.views import generic
-import netbox.jobs 
 
 
-class DataMoverConfigView(generic.ObjectView):
+class DataMoverView(generic.ObjectView):
     
     def get_extra_context(self, request, instance):
             # Extract fields and their values for the object, including relationships
@@ -32,7 +33,7 @@ class DataMoverConfigView(generic.ObjectView):
             field_data = []
             for field in instance._meta.get_fields():      
                 # Skip excluded fields listed above
-                if field.name in excluded_extras or ('equirement' in field.name):
+                if field.name in excluded_extras:
                     continue      
                 
                 value = None
@@ -44,15 +45,15 @@ class DataMoverConfigView(generic.ObjectView):
                     'url': url, 
                 })
             
-def DataMoverCreateView(request):
-    if request.method == 'POST':
-        form = ConfigForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('netbox_data_mover:index')
-    else:
-        form = ConfigForm()
-    return render(request, 'netbox_data_mover/create.html', {'form': form})
+class DataMoverEditView(generic.ObjectEditView):
+    queryset = DataMoverConfig.objects.all()
+
+class DataMoverDeleteView(generic.ObjectEditView):
+    queryset = DataMoverConfig.objects.all()
+    
+class DataMoverListView(generic.ObjectEditView):
+    queryset = DataMoverConfig.objects.all()
+    table = DataMoverConfigTable
 
 def trigger_job_view(request, pk):
     config = get_object_or_404(DataMoverConfig, pk=pk)
