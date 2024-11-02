@@ -1,16 +1,18 @@
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
-from .models import DataMoverConfig
-from .forms import ConfigForm
-from .tables import DataMoverConfigTable
+from .models import DataMoverConfig, DataSource
+from .forms import ConfigForm, DataSourceForm
+from .tables import DataMoverConfigTable, DataSourceTable
 from .jobs import DataMoverJob
+from django.views.generic import View
+from django.http import JsonResponse
+import requests
 from netbox.views import generic
-
 
 class DataMoverDetailView(generic.ObjectView):
     queryset = DataMoverConfig.objects.all()
-   
+
     def get_extra_context(self, request, instance):
             # Extract fields and their values for the object, including relationships
             field_data = []
@@ -51,10 +53,21 @@ class DataMoverEditView(generic.ObjectEditView):
 
 class DataMoverDeleteView(generic.ObjectEditView):
     queryset = DataMoverConfig.objects.all()
-    
+
 class DataMoverListView(generic.ObjectListView):
     queryset = DataMoverConfig.objects.all()
     table = DataMoverConfigTable
+
+class DataSourceListView(generic.ObjectListView):
+    queryset = DataSource.objects.all()
+    table = DataSourceTable
+
+class DataSourceEditView(generic.ObjectEditView):
+    queryset = DataSource.objects.all()
+    form = DataSourceForm
+
+class DataSourceDeleteView(generic.ObjectDeleteView):
+    queryset = DataSource.objects.all()
 
 class DataMoverConfigTriggerJobView(generic.ObjectEditView):
     model = DataMoverConfig
@@ -68,3 +81,11 @@ class DataMoverConfigTriggerJobView(generic.ObjectEditView):
         config.last_run_time = timezone.now()
         config.save()
         return redirect('plugins:netbox_data_mover:datamoverconfig_detail', pk=config.pk)
+
+class FetchFieldNamesView(View):
+    def get(self, request, *args, **kwargs):
+        datasource_id = request.GET.get('datasource_id')
+        datasource = get_object_or_404(DataSource, pk=datasource_id)
+        response = requests.get(datasource.api_url, headers={'Authorization': f"Bearer {datasource.auth_details.get('token', '')}"})
+        field_names = response.json().get('fields', [])
+        return JsonResponse({'fields': field_names})

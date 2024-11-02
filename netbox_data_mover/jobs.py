@@ -1,13 +1,10 @@
-# Background job to execute data movement tasks
 from netbox.jobs import Job
 from .models import DataMoverConfig
 from django.utils import timezone
 from django.db import models
 
 class DataMoverJob(Job):
-
     config_id = models.IntegerField()
-
 
     def run(self, data, commit):
         # Retrieve the Data Mover Configuration
@@ -22,8 +19,8 @@ class DataMoverJob(Job):
         # Perform the Data Movement Logic
         try:
             # Placeholder for connection logic and transformation
-            source_details = config.source.connection_details
-            destination_details = config.destination.connection_details
+            source_details = config.source
+            destination_details = config.destination
             # Sample logic here
             self.log_info(f"Connecting to source: {config.source.name}")
             # Do something with the source and destination
