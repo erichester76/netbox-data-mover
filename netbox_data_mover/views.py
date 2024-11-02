@@ -4,7 +4,7 @@ from django.utils import timezone
 from .models import DataMoverConfig
 from .forms import ConfigForm
 from netbox.views import generic
-from extras.jobs import get_job
+from netbox.jobs import get_job
 
 
 class DataMoverConfigView(generic.ObjectView):
