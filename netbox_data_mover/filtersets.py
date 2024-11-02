@@ -1,5 +1,5 @@
 from django_filters import FilterSet
-from .models import DataMoverConfig, DataSource
+from .models import DataMoverConfig, DataMoverDataSource
 from netbox.filtersets import NetBoxModelFilterSet
 
 class DataMoverConfigFilterSet(NetBoxModelFilterSet):
@@ -7,7 +7,7 @@ class DataMoverConfigFilterSet(NetBoxModelFilterSet):
         model = DataMoverConfig
         fields = ['name', 'source', 'destination']
 
-class DataSourceFilterSet(NetBoxModelFilterSet):
+class DataMoverDataSourceFilterSet(NetBoxModelFilterSet):
     class Meta:
-        model = DataSource
+        model = DataMoverDataSource
         fields = ['name', 'type']

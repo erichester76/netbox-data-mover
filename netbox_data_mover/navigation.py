@@ -8,7 +8,7 @@ menu_items = (
         buttons=()
     ),
     PluginMenuItem(
-        link='plugins:netbox_data_mover:datasource_list',
+        link='plugins:netbox_data_mover:datamoverdatasource_list',
         link_text='Data Sources',
         buttons=()
     ),

@@ -2,7 +2,7 @@
 from django.db import models
 from netbox.models import NetBoxModel
 
-class DataSource(NetBoxModel):
+class DataMoverDataSource(NetBoxModel):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
     api_url = models.URLField(max_length=200)

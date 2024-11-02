@@ -1,5 +1,5 @@
 import django_tables2 as tables
-from .models import DataMoverConfig, DataSource
+from .models import DataMoverConfig, DataMoverDataSource
 from netbox.tables import NetBoxTable
 
 class DataMoverConfigTable(NetBoxTable):
@@ -7,7 +7,7 @@ class DataMoverConfigTable(NetBoxTable):
         model = DataMoverConfig
         fields = ('name', 'description', 'schedule', 'source', 'destination', 'last_run_status', 'last_run_records_changed', 'last_run_time')
 
-class DataSourceTable(NetBoxTable):
+class DataMoverDataSourceTable(NetBoxTable):
     class Meta:
-        model = DataSource
+        model = DataMoverDataSource
         fields = ('name', 'type', 'api_url')

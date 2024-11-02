@@ -1,12 +1,12 @@
 from netbox.api.serializers import NetBoxModelSerializer
-from ..models import DataMoverConfig, DataSource
+from ..models import DataMoverConfig, DataMoverDataSource
 
 class DataMoverConfigSerializer(NetBoxModelSerializer):
     class Meta:
         model = DataMoverConfig
         fields = '__all__'
 
-class DataSourceSerializer(NetBoxModelSerializer):
+class DataMoverDataSourceSerializer(NetBoxModelSerializer):
     class Meta:
-        model = DataSource
+        model = DataMoverDataSource
         fields = '__all__'

@@ -1,10 +1,10 @@
 from rest_framework import viewsets
-from ..models import DataSource, DataMoverConfig
-from .serializers import DataSourceSerializer, DataMoverConfigSerializer
+from ..models import DataMoverDataSource, DataMoverConfig
+from .serializers import DataMoverDataSourceSerializer, DataMoverConfigSerializer
 
-class DataSourceViewSet(viewsets.ModelViewSet):
-    queryset = DataSource.objects.all()
-    serializer_class = DataSourceSerializer
+class DataMoverDataSourceViewSet(viewsets.ModelViewSet):
+    queryset = DataMoverDataSource.objects.all()
+    serializer_class = DataMoverDataSourceSerializer
 
 class DataMoverConfigViewSet(viewsets.ModelViewSet):
     queryset = DataMoverConfig.objects.all()

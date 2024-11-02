@@ -9,8 +9,8 @@ urlpatterns = [
     path('<int:pk>/delete/', views.DataMoverDeleteView.as_view(), name='datamover_delete'),
     path('<int:pk>/', views.DataMoverDetailView.as_view(), name='datamover_detail'),
     path('<int:pk>/trigger/', views.DataMoverConfigTriggerJobView.as_view(), name='datamover_trigger_job'),
-    path('datasources/', views.DataSourceListView.as_view(), name='datasource_list'),
-    path('datasources/add/', views.DataSourceEditView.as_view(), name='datasource_add'),
-    path('datasources/<int:pk>/edit/', views.DataSourceEditView.as_view(), name='datasource_edit'),
-    path('datasources/<int:pk>/delete/', views.DataSourceDeleteView.as_view(), name='datasource_delete'),
+    path('datamoverdatasources/', views.DataMoverDataSourceListView.as_view(), name='datamoverdatasource_list'),
+    path('datamoverdatasources/add/', views.DataMoverDataSourceEditView.as_view(), name='datamoverdatasource_add'),
+    path('datamoverdatasources/<int:pk>/edit/', views.DataMoverDataSourceEditView.as_view(), name='datamoverdatasource_edit'),
+    path('datamoverdatasources/<int:pk>/delete/', views.DataMoverDataSourceDeleteView.as_view(), name='datamoverdatasource_delete'),
 ]
