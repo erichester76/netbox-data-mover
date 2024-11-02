@@ -5,12 +5,12 @@ from .models import DataMoverConfig
 from .forms import ConfigForm
 from .tables import DataMoverConfigTable
 from .jobs import DataMoverJob
-
 from netbox.views import generic
 
 
-class DataMoverView(generic.ObjectView):
-    
+class DataMoverDetailView(generic.ObjectView):
+    queryset = DataMoverConfig.objects.all()
+   
     def get_extra_context(self, request, instance):
             # Extract fields and their values for the object, including relationships
             field_data = []
@@ -52,7 +52,7 @@ class DataMoverEditView(generic.ObjectEditView):
 class DataMoverDeleteView(generic.ObjectEditView):
     queryset = DataMoverConfig.objects.all()
     
-class DataMoverListView(generic.ObjectEditView):
+class DataMoverListView(generic.ObjectListView):
     queryset = DataMoverConfig.objects.all()
     table = DataMoverConfigTable
 
