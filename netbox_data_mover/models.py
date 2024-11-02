@@ -15,8 +15,8 @@ class DataMoverConfig(NetBoxModel):
     name = models.CharField(max_length=100)
     description = models.TextField()
     schedule = models.CharField(max_length=100)
-    source = models.ForeignKey(DataSource, on_delete=models.CASCADE, related_name="source")
-    destination = models.ForeignKey(DataSource, on_delete=models.CASCADE, related_name="destination")
+    source = models.ForeignKey(DataMoverDataSource, on_delete=models.CASCADE, related_name="source")
+    destination = models.ForeignKey(DataMoverDataSource, on_delete=models.CASCADE, related_name="destination")
     fetch_data_definition = models.JSONField()  # JSON to define data fetching
     transformations = models.JSONField()  # Transformation details
     last_run_status = models.CharField(max_length=50, null=True, blank=True)
