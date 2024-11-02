@@ -9,10 +9,8 @@ class DataMoverJob(Job):
         name = "Data Mover Execution Job"
         description = "Executes data movement based on specified Data Mover Configurations."
 
-    config_id = models.IntegerField(
-        label="Data Mover Config ID",
-        description="The ID of the Data Mover Configuration to execute."
-    )
+    config_id = models.IntegerField()
+
 
     def run(self, data, commit):
         # Retrieve the Data Mover Configuration
