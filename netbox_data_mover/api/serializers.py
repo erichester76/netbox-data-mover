@@ -1,8 +1,8 @@
 
-from rest_framework import serializers
+from netbox.api.serializers import NetBoxModelSerializer, WritableNestedSerializer
 from ..models import DataMoverConfig
 
-class DataMoverConfigSerializer(serializers.ModelSerializer):
+class DataMoverConfigSerializer(NetBoxModelSerializer):
     class Meta:
         model = DataMoverConfig
         fields = '__all__'

@@ -1,7 +1,8 @@
 
 from django.db import models
+from netbox.models import NetBoxModel
 
-class DataSourceModel(models.Model):
+class DataSourceModel(NetBoxModel):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
     connection_details = models.JSONField()
@@ -9,7 +10,7 @@ class DataSourceModel(models.Model):
     def __str__(self):
         return self.name
 
-class DataDestinationModel(models.Model):
+class DataDestinationModel(NetBoxModel):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
     connection_details = models.JSONField()
@@ -17,7 +18,7 @@ class DataDestinationModel(models.Model):
     def __str__(self):
         return self.name
 
-class DataMoverConfig(models.Model):
+class DataMoverConfig(NetBoxModel):
     name = models.CharField(max_length=100)
     description = models.TextField()
     schedule = models.CharField(max_length=100)
