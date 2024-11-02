@@ -4,6 +4,7 @@ from django.utils import timezone
 from .models import DataMoverConfig
 from .forms import ConfigForm
 from .tables import DataMoverConfigTable
+from .jobs import DataMoverJob
 
 from netbox.views import generic
 
@@ -55,15 +56,15 @@ class DataMoverListView(generic.ObjectEditView):
     queryset = DataMoverConfig.objects.all()
     table = DataMoverConfigTable
 
-def trigger_job_view(request, pk):
-    config = get_object_or_404(DataMoverConfig, pk=pk)
-    # Triggering the DataMoverJob using NetBox's job execution API
-    from .jobs import DataMoverJob
-    job_instance = DataMoverJob()
-    job_data = {'config_id': config.pk}
-    job_instance.run({'config_id': config.pk}, commit=True)
-    # Update status to show pending execution
-    config.last_run_status = "Pending"
-    config.last_run_time = timezone.now()
-    config.save()
-    return redirect('netbox_data_mover:detail', pk=pk)
+class DataMoverConfigTriggerJobView(generic.ObjectEditView):
+    model = DataMoverConfig
+
+    def post(self, request, *args, **kwargs):
+        config = get_object_or_404(DataMoverConfig, pk=kwargs['pk'])
+        job_instance = DataMoverJob()
+        job_instance.enqueue_run({'config_id': config.pk})
+        # Update status to show pending execution
+        config.last_run_status = "Pending"
+        config.last_run_time = timezone.now()
+        config.save()
+        return redirect('plugins:netbox_data_mover:datamoverconfig_detail', pk=config.pk)
