@@ -5,9 +5,6 @@ from django.utils import timezone
 from django.db import models
 
 class DataMoverJob(Job):
-    class Meta:
-        name = "Data Mover Execution Job"
-        description = "Executes data movement based on specified Data Mover Configurations."
 
     config_id = models.IntegerField()
 
