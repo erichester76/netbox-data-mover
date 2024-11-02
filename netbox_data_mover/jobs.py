@@ -2,6 +2,7 @@
 from netbox.jobs import Job
 from .models import DataMoverConfig
 from django.utils import timezone
+from django.db import models
 
 class DataMoverJob(Job):
     class Meta:
