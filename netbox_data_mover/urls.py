@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.DataMoverListView.as_view(), name='datamover_list'),
-    path('/add', views.DataMoverEditView.as_view(), name='datamover_add'),
+    path('add', views.DataMoverEditView.as_view(), name='datamover_add'),
     path('<int:pk>/edit', views.DataMoverEditView.as_view(), name='datamover_edit'),
     path('<int:pk>/delete', views.DataMoverDeleteView.as_view(), name='datamover_delete'),
     path('<int:pk>/', views.DataMoverView, name='datamover_detail'),
