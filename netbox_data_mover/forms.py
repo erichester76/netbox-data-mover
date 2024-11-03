@@ -4,7 +4,7 @@ from .models import DataMoverConfig, DataMoverDataSource
 class DataMoverConfigForm(forms.ModelForm):
     class Meta:
         model = DataMoverConfig
-        fields = ['name', 'description', 'schedule', 'source', 'source_endpoint', 'destination', 'destination_endpoint', 'mappings']
+        fields = ['name', 'description', 'schedule', 'source', 'destination', 'source_endpoint', 'destination_endpoint', 'mappings','last_run_records', 'last_run_status', 'last_run_time']
 
 class DataMoverDataSourceForm(forms.ModelForm):
     class Meta:
