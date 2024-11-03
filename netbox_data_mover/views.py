@@ -24,9 +24,9 @@ class DataMoverConfigDetailView(BaseObjectView):
 
 class DataMoverConfigEditView(generic.ObjectEditView):
     queryset = DataMoverConfig.objects.all()  
+    form = DataMoverConfigForm
     # dynamic javascript template to have more of a wizard feel  
     template_name = 'netbox_data_mover/job_edit.html'
-    form = DataMoverConfigForm
     permission_required = 'netbox_data_mover.add_datamoverconfig'
 
 class DataMoverConfigDeleteView(generic.ObjectDeleteView):
