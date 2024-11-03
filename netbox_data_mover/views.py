@@ -2,7 +2,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import DataMoverConfig, DataMoverDataSource
-from .forms import ConfigForm, DataMoverDataSourceForm
+from .forms import DataMoverForm, DataMoverDataSourceForm
 from .tables import DataMoverConfigTable, DataMoverDataSourceTable
 from .jobs import DataMoverJob
 from django.views.generic import View
