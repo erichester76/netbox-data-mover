@@ -50,7 +50,7 @@ class DataMoverDetailView(generic.ObjectView):
             
 class DataMoverEditView(generic.ObjectEditView):
     queryset = DataMoverConfig.objects.all()
-    template_name = 'netbox_data_mover/job_edit.html'
+    #template_name = 'netbox_data_mover/job_edit.html'
 
 class DataMoverDeleteView(generic.ObjectEditView):
     queryset = DataMoverConfig.objects.all()
