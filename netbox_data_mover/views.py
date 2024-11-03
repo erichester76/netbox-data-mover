@@ -24,8 +24,6 @@ def inspect_module(request):
         return JsonResponse({'error': f'Module {module_name} not found.'}, status=400)
 
 
-
-
 class DataMoverConfigListView(generic.ObjectListView):
     queryset = DataMoverConfig.objects.all()
     table = DataMoverConfigTable
@@ -115,7 +113,7 @@ class DataMoverDataSourceChangeLogView(BaseChangeLogView):
     queryset = DataMoverDataSource.objects.all()
     permission_required = 'netbox_data_mover.view_datamoverdatasource'
     
-class DataMoverDataSourceCloneView(View):
+class DataMoverDataSourceCloneView(BaseObjectView):
     def get(self, request, pk):
         # Get the existing object to clone
         instance = get_object_or_404(DataMoverDataSource, pk=pk)
