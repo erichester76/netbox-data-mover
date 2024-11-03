@@ -4,7 +4,7 @@ from netbox.forms import NetBoxModelForm
 class DataMoverForm(NetBoxModelForm):
     class Meta:
         model = DataMoverConfig
-        fields = [ 'name', 'description', 'schedule', 'source', 'destination'  ]
+        fields = [ 'name', 'description', 'schedule', 'source', 'destination' ]
         
 class DataMoverDataSourceForm(NetBoxModelForm):
     class Meta:

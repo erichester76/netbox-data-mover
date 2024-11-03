@@ -17,3 +17,4 @@ class DataMoverDataSourceTable(NetBoxTable):
         model = DataMoverDataSource
         fields = ( 'pk', 'id', 'name', 'type', 'api_url', 'auth_details')
         default_columns = ('name', 'type', 'api_url', 'auth_details')
+        

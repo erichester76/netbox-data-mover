@@ -24,6 +24,10 @@ class DataMoverDeleteView(generic.ObjectEditView):
 class DataMoverListView(generic.ObjectListView):
     queryset = DataMoverConfig.objects.all()
     table = DataMoverConfigTable
+    permission_required = 'netbox_data_mover.view_datamoverconfig'
+    extra_context = {
+        'add_button': True
+    }
 
 class DataMoverDataSourceDetailView(generic.ObjectEditView):
     queryset = DataMoverConfig.objects.all()

@@ -7,7 +7,7 @@ class DataMoverDataSource(NetBoxModel):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
     api_url = models.URLField(max_length=200)
-    auth_details = models.JSONField()  # Authentication details
+    auth_details = models.JSONField() 
     
     class Meta:
         ordering = ['name']
@@ -40,6 +40,5 @@ class DataMoverConfig(NetBoxModel):
     def __str__(self):
         return self.name
     
-     
     def get_absolute_url(self):
         return reverse('plugins:netbox_data_mover:config', kwargs={'pk': self.pk})
