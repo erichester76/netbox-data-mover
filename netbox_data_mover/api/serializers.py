@@ -2,18 +2,25 @@ from rest_framework import serializers
 from ..models import DataMoverConfig, DataMoverDataSource
 from netbox.api.serializers import NetBoxModelSerializer
 
-class DataMoverDataSourceSerializer(NetBoxModelSerializer):
+
+class DataMoverDataSourceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = DataMoverDataSource
         fields = '__all__'
+        extra_kwargs = {
+            'url': {
+                'view_name': 'plugins-api:netbox_data_mover:datamoverdatasource-detail',
+                'lookup_field': 'pk'
+            }
+        }
 
 class DataMoverConfigSerializer(NetBoxModelSerializer):
-    source_api = serializers.HyperlinkedRelatedField(
+    source = serializers.HyperlinkedRelatedField(
         view_name='plugins-api:netbox_data_mover:datamoverdatasource-detail',
         queryset=DataMoverDataSource.objects.all(),
         lookup_field='pk'
     )
-    destination_api = serializers.HyperlinkedRelatedField(
+    destination = serializers.HyperlinkedRelatedField(
         view_name='plugins-api:netbox_data_mover:datamoverdatasource-detail',
         queryset=DataMoverDataSource.objects.all(),
         lookup_field='pk'
