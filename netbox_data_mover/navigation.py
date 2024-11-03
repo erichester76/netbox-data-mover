@@ -4,7 +4,7 @@ from netbox.plugins import PluginMenuItem, PluginMenuButton
 menu_items = (
      PluginMenuItem(
         link="plugins:netbox_data_mover:datamover_list",
-        link_text="Jobs",
+        link_text="Movers",
         buttons=[
             PluginMenuButton(
                 link="plugins:netbox_data_mover:datamover_add",
