@@ -4,6 +4,8 @@ from .forms import DataMoverConfigForm, DataMoverDataSourceForm
 from .tables import DataMoverConfigTable, DataMoverDataSourceTable
 from .filtersets import DataMoverConfigFilterSet, DataMoverDataSourceFilterSet
 from .base_views import BaseChangeLogView,  BaseObjectView, BaseChangeLogView
+from django.db import reverse
+from django.shortcuts import redirect, get_object_or_404
 
 class DataMoverConfigListView(generic.ObjectListView):
     queryset = DataMoverConfig.objects.all()
@@ -93,3 +95,16 @@ class DataMoverDataSourceBulkDeleteView(generic.BulkDeleteView):
 class DataMoverDataSourceChangeLogView(BaseChangeLogView):
     queryset = DataMoverDataSource.objects.all()
     permission_required = 'netbox_data_mover.view_datamoverdatasource'
+    
+class DataMoverDataSourceCloneView(View):
+    def get(self, request, pk):
+        # Get the existing object to clone
+        instance = get_object_or_404(DataMoverDataSource, pk=pk)
+
+        # Clone the instance by copying fields
+        instance.pk = None  # Set pk to None to create a new instance
+        instance.name = f"Copy of {instance.name}"  # Modify the name to indicate a copy
+        instance.save()
+
+        # Redirect to edit view of the cloned object
+        return redirect(reverse('plugins:netbox_data_mover:datamoverconfig_edit', kwargs={'pk': instance.pk}))
