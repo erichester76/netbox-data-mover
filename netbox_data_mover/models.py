@@ -41,7 +41,7 @@ class DataMoverDataSource(NetBoxModel):
 class DataMoverConfig(NetBoxModel):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    schedule = models.CharField(max_length=100)
+    schedule = models.CharField(max_length=100,null=True)
 
     source = models.ForeignKey(DataMoverDataSource, on_delete=models.CASCADE, related_name="source")
     source_endpoint = models.CharField(max_length=100,null=True)
