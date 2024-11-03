@@ -2,6 +2,7 @@ from netbox.views import generic
 from .models import DataMoverConfig, DataMoverDataSource
 from .forms import DataMoverConfigForm, DataMoverDataSourceForm
 from .tables import DataMoverConfigTable, DataMoverDataSourceTable
+from .filtersets import DataMoverConfigFilterSet, DataMoverDataSourceFilterSet
 from django.contrib import messages
 
 class DataMoverConfigListView(generic.ObjectListView):
@@ -28,6 +29,24 @@ class DataMoverConfigDeleteView(generic.ObjectDeleteView):
     queryset = DataMoverConfig.objects.all()
     permission_required = 'netbox_data_mover.delete_datamoverconfig'
 
+class DataMoverConfigBulkImportView(generic.BulkImportView):
+    queryset = DataMoverConfig.objects.all()
+    model_form = DataMoverConfigForm
+    permission_required = 'netbox_data_mover.add_datamoverconfig'
+
+class DataMoverConfigBulkEditView(generic.BulkEditView):
+    queryset = DataMoverConfig.objects.all()
+    filterset = DataMoverConfigFilterSet
+    table = DataMoverConfigTable
+    form = DataMoverConfigForm
+    permission_required = 'netbox_data_mover.change_datamoverconfig'
+
+class DataMoverConfigBulkDeleteView(generic.BulkDeleteView):
+    queryset = DataMoverConfig.objects.all()
+    filterset = DataMoverConfigFilterSet
+    table = DataMoverConfigTable
+    permission_required = 'netbox_data_mover.delete_datamoverconfig'
+
 class DataMoverDataSourceListView(generic.ObjectListView):
     queryset = DataMoverDataSource.objects.all()
     table = DataMoverDataSourceTable
@@ -44,4 +63,22 @@ class DataMoverDataSourceEditView(generic.ObjectEditView):
 
 class DataMoverDataSourceDeleteView(generic.ObjectDeleteView):
     queryset = DataMoverDataSource.objects.all()
+    permission_required = 'netbox_data_mover.delete_datamoverdatasource'
+    
+class DataMoverDataSourceBulkImportView(generic.BulkImportView):
+    queryset = DataMoverDataSource.objects.all()
+    model_form = DataMoverDataSourceForm
+    permission_required = 'netbox_data_mover.add_datamoverdatasource'
+
+class DataMoverDataSourceBulkEditView(generic.BulkEditView):
+    queryset = DataMoverDataSource.objects.all()
+    filterset = DataMoverDataSourceFilterSet
+    table = DataMoverDataSourceTable
+    form = DataMoverDataSourceForm
+    permission_required = 'netbox_data_mover.change_datamoverdatasource'
+
+class DataMoverDataSourceBulkDeleteView(generic.BulkDeleteView):
+    queryset = DataMoverDataSource.objects.all()
+    filterset = DataMoverDataSourceFilterSet
+    table = DataMoverDataSourceTable
     permission_required = 'netbox_data_mover.delete_datamoverdatasource'

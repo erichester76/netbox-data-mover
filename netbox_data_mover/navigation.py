@@ -11,11 +11,11 @@ menu_items = (
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
             ),
-            # PluginMenuButton(
-            #     link="plugins:netbox_data_mover:datamover_bulk_import",
-            #     title="Import",
-            #     icon_class="mdi mdi-upload",
-            # ),
+            PluginMenuButton(
+                link="plugins:netbox_data_mover:datamover_bulk_import",
+                title="Import",
+                icon_class="mdi mdi-upload",
+            ),
         ]
     ),
     PluginMenuItem(
@@ -27,11 +27,11 @@ menu_items = (
                 title="Add",
                 icon_class="mdi mdi-plus-thick",
             ),
-            # PluginMenuButton(
-            #     link="plugins:netbox_data_mover:datamoverdatasource_bulk_import",
-            #     title="Import",
-            #     icon_class="mdi mdi-upload",
-            # ),
+            PluginMenuButton(
+                link="plugins:netbox_data_mover:datamoverdatasource_bulk_import",
+                title="Import",
+                icon_class="mdi mdi-upload",
+            ),
         ]
     ),
 )
