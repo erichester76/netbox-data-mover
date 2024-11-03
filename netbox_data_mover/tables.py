@@ -1,5 +1,5 @@
 import django_tables2 as tables
-from utilities.tables import NetBoxTable
+from netbox.tables import NetBoxTable
 from .models import DataMoverConfig, DataMoverDataSource
 
 class DataMoverConfigTable(NetBoxTable):
