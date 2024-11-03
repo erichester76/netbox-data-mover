@@ -13,6 +13,7 @@ urlpatterns = [
     path('datamoverconfigs/<int:pk>/', views.DataMoverConfigDetailView.as_view(), name='datamoverconfig_detail'),
     path('datamoverconfigs/<int:pk>/edit/', views.DataMoverConfigEditView.as_view(), name='datamoverconfig_edit'),
     path('datamoverconfigs/<int:pk>/delete/', views.DataMoverConfigDeleteView.as_view(), name='datamoverconfig_delete'),
+    path('datamoverconfigs/<int:pk>/changelog/', views.DataMoverDataSourceChangeLogView.as_view(), name='datamoverconfig_changelog'),
 
     # DataMoverDataSource URLs
     path('datamoverdatasources/', views.DataMoverDataSourceListView.as_view(), name='datamoverdatasource_list'),
@@ -23,4 +24,6 @@ urlpatterns = [
     path('datamoverdatasources/<int:pk>/', views.DataMoverDataSourceDetailView.as_view(), name='datamoverdatasource_detail'),
     path('datamoverdatasources/<int:pk>/edit/', views.DataMoverDataSourceEditView.as_view(), name='datamoverdatasource_edit'),
     path('datamoverdatasources/<int:pk>/delete/', views.DataMoverDataSourceDeleteView.as_view(), name='datamoverdatasource_delete'),
+    path('datamoverdatasources/<int:pk>/changelog/', views.DataMoverDataSourceChangeLogView.as_view(), name='datamoverdatasource_changelog'),
+
 ]

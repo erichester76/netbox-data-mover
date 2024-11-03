@@ -4,7 +4,7 @@ from .forms import DataMoverConfigForm, DataMoverDataSourceForm
 from .tables import DataMoverConfigTable, DataMoverDataSourceTable
 from .filtersets import DataMoverConfigFilterSet, DataMoverDataSourceFilterSet
 from django.contrib import messages
-from .base_views import BaseChangeLogView,  BaseObjectView
+from .base_views import BaseChangeLogView,  BaseObjectView, BaseChangeLogView
 
 class DataMoverConfigListView(generic.ObjectListView):
     queryset = DataMoverConfig.objects.all()
@@ -51,6 +51,10 @@ class DataMoverConfigBulkDeleteView(generic.BulkDeleteView):
     table = DataMoverConfigTable
     permission_required = 'netbox_data_mover.delete_datamoverconfig'
 
+class DataMoverConfighangeLogView(BaseChangeLogView):
+    queryset = DataMoverConfig.objects.all()
+    permission_required = 'netbox_data_mover.view_datamoverconfig'
+
 class DataMoverDataSourceListView(generic.ObjectListView):
     queryset = DataMoverDataSource.objects.all()
     table = DataMoverDataSourceTable
@@ -86,3 +90,7 @@ class DataMoverDataSourceBulkDeleteView(generic.BulkDeleteView):
     filterset = DataMoverDataSourceFilterSet
     table = DataMoverDataSourceTable
     permission_required = 'netbox_data_mover.delete_datamoverdatasource'
+
+class DataMoverDataSourceChangeLogView(BaseChangeLogView):
+    queryset = DataMoverDataSource.objects.all()
+    permission_required = 'netbox_data_mover.view_datamoverdatasource'
