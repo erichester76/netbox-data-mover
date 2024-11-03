@@ -86,7 +86,7 @@
     // AJAX call to fetch source options
     function populateSources() {
         $.ajax({
-            url: '{% url "plugins-api:netbox_data_mover:datasource-list" %}',
+            url: '{% url "plugins-api:netbox_data_mover:datasource" %}',
             method: 'GET',
             success: function(data) {
                 let select = $('#source');
@@ -104,7 +104,7 @@
     // AJAX call to fetch destination options
     function populateDestinations() {
         $.ajax({
-            url: '{% url "plugins-api:netbox_data_mover:datasource-list" %}',
+            url: '{% url "plugins-api:netbox_data_mover:datasource" %}',
             method: 'GET',
             success: function(data) {
                 let select = $('#destination');

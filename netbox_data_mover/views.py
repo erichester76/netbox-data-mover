@@ -8,7 +8,7 @@ class DataMoverConfigListView(generic.ObjectListView):
     table = DataMoverConfigTable
     permission_required = 'netbox_data_mover.view_datamoverconfig'
 
-class DataMoverConfigView(generic.ObjectView):
+class DataMoverConfigDetailView(generic.ObjectView):
     queryset = DataMoverConfig.objects.all()
     permission_required = 'netbox_data_mover.view_datamoverconfig'
 
@@ -26,7 +26,7 @@ class DataMoverDataSourceListView(generic.ObjectListView):
     table = DataMoverDataSourceTable
     permission_required = 'netbox_data_mover.view_datamoverdatasource'
 
-class DataMoverDataSourceView(generic.ObjectView):
+class DataMoverDataSourceDetailView(generic.ObjectView):
     queryset = DataMoverDataSource.objects.all()
     permission_required = 'netbox_data_mover.view_datamoverdatasource'
 
