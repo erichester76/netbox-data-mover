@@ -24,7 +24,7 @@ class DataMoverDataSource(NetBoxModel):
     update_function = models.TextField(blank=True, null=True) 
     fetch_function = models.TextField(blank=True, null=True)  
     auth_args = models.JSONField(blank=True, null=True)  
-    base_urls = models.JSONField()  
+    base_urls = models.JSONField(null=True)  
 
     class Meta:
         ordering = ['name']
@@ -44,10 +44,10 @@ class DataMoverConfig(NetBoxModel):
     schedule = models.CharField(max_length=100)
 
     source = models.ForeignKey(DataMoverDataSource, on_delete=models.CASCADE, related_name="source")
-    source_endpoint = models.CharField(max_length=100)
+    source_endpoint = models.CharField(max_length=100,null=True)
     
     destination = models.ForeignKey(DataMoverDataSource, on_delete=models.CASCADE, related_name="destination")
-    destination_endpoint = models.CharField(max_length=100)
+    destination_endpoint = models.CharField(max_length=100,null=True)
 
     mappings = models.JSONField()  
 
