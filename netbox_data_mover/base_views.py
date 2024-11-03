@@ -8,10 +8,10 @@ from . import tables
 import re
 
 class BaseChangeLogView(generic.ObjectChangeLogView):
-    base_template = 'netbox_servicemgmt/default-detail.html'
+    base_template = 'netbox_data_mover/default-detail.html'
     
 class BaseObjectView(generic.ObjectView):
-    template_name = 'netbox_servicemgmt/default-detail.html'
+    template_name = 'netbox_data_mover/default-detail.html'
     
     def get_extra_context(self, request, instance):
     # Extract fields and their values for the object, including relationships
