@@ -1,9 +1,8 @@
-from rest_framework import serializers
 from ..models import DataMoverConfig, DataMoverDataSource
 from netbox.api.serializers import NetBoxModelSerializer
 
 
-class DataMoverDataSourceSerializer(serializers.HyperlinkedModelSerializer):
+class DataMoverDataSourceSerializer(NetBoxModelSerializer):
     class Meta:
         model = DataMoverDataSource
         fields = '__all__'

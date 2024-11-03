@@ -1,8 +1,8 @@
-from rest_framework.routers import DefaultRouter
+from netbox.api.routers import NetBoxRouter
 from . import views
 
-router = DefaultRouter()
-router.register(r'datasources', views.DataMoverDataSourceViewSet, basename='datamoverdatasource')
-router.register(r'datamoverconfigs', views.DataMoverConfigViewSet, basename='datamoverconfig')
+router = NetBoxRouter()
+router.register(r'datasources', views.DataMoverDataSourceViewSet)
+router.register(r'datamoverconfigs', views.DataMoverConfigViewSet)
 
 urlpatterns = router.urls
