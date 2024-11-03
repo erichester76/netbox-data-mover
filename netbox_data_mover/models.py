@@ -43,10 +43,10 @@ class DataMoverConfig(NetBoxModel):
     description = models.TextField()
     schedule = models.CharField(max_length=100)
 
-    source_api = models.ForeignKey(DataMoverDataSource, on_delete=models.CASCADE, related_name="source_api")
+    source = models.ForeignKey(DataMoverDataSource, on_delete=models.CASCADE, related_name="source")
     source_endpoint = models.CharField(max_length=100)
     
-    destination_api = models.ForeignKey(DataMoverDataSource, on_delete=models.CASCADE, related_name="destination_api")
+    destination = models.ForeignKey(DataMoverDataSource, on_delete=models.CASCADE, related_name="destination")
     destination_endpoint = models.CharField(max_length=100)
 
     mappings = models.JSONField()  
