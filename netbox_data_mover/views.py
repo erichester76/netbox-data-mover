@@ -17,17 +17,17 @@ class DataMoverEditView(generic.ObjectEditView):
     queryset = DataMoverConfig.objects.all()
     #template_name = 'netbox_data_mover/job_edit.html'
     form = DataMoverForm
-
-class DataMoverDetailView(generic.ObjectEditView):
-    queryset = DataMoverConfig.objects.all()
-    
+      
 class DataMoverDeleteView(generic.ObjectEditView):
     queryset = DataMoverConfig.objects.all()
 
 class DataMoverListView(generic.ObjectListView):
     queryset = DataMoverConfig.objects.all()
     table = DataMoverConfigTable
-     
+
+class DataMoverDataSourceDetailView(generic.ObjectEditView):
+    queryset = DataMoverConfig.objects.all()
+    
 class DataMoverDataSourceListView(generic.ObjectListView):
     queryset = DataMoverDataSource.objects.all()
     table = DataMoverDataSourceTable
