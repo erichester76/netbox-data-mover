@@ -4,8 +4,27 @@ from .forms import DataMoverConfigForm, DataMoverDataSourceForm
 from .tables import DataMoverConfigTable, DataMoverDataSourceTable
 from .filtersets import DataMoverConfigFilterSet, DataMoverDataSourceFilterSet
 from .base_views import BaseChangeLogView,  BaseObjectView, BaseChangeLogView
-from django.db import reverse
+from django.urls import reverse 
 from django.shortcuts import redirect, get_object_or_404
+import inspect
+import importlib
+from django.http import JsonResponse
+
+def inspect_module(request):
+    module_name = request.GET.get('module_name')
+    try:
+        lib_module = importlib.import_module(module_name)
+        classes = inspect.getmembers(lib_module, inspect.isclass)
+        response_data = {}
+        for class_name, class_obj in classes:
+            attributes = [attr for attr, _ in inspect.getmembers(class_obj)]
+            response_data[class_name] = attributes
+        return JsonResponse(response_data)
+    except ModuleNotFoundError:
+        return JsonResponse({'error': f'Module {module_name} not found.'}, status=400)
+
+
+
 
 class DataMoverConfigListView(generic.ObjectListView):
     queryset = DataMoverConfig.objects.all()

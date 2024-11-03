@@ -116,16 +116,35 @@
     function populateSourcesAndDestinations() {
         console.log("Calling API to populate sources and destinations...");
         $.ajax({
-            url: '/api/plugins/datamover/datasources',
+            url: '/plugins/api/datamover/datasources',
             method: 'GET',
             success: function(data) {
                 let selectSource = $('#source');
                 let selectDestination = $('#destination');
                 selectSource.empty().append('<option value="">Select Source</option>');
                 selectDestination.empty().append('<option value="">Select Destination</option>');
+
                 $.each(data, function(index, datasource) {
-                    selectSource.append(`<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`);
-                    selectDestination.append(`<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`);
+                    // Use the datasource.module to dynamically get module data
+                    $.ajax({
+                        url: `/plugins-api/datamover/inspect_module/?module_name=${datasource.module}`,
+                        method: 'GET',
+                        success: function(moduleData) {
+                            let optgroupSource = $('<optgroup>', { label: datasource.name + " (" + datasource.type + ")" });
+                            let optgroupDestination = $('<optgroup>', { label: datasource.name + " (" + datasource.type + ")" });
+                            $.each(moduleData, function(className, attributes) {
+                                attributes.forEach(function(attr) {
+                                    optgroupSource.append(`<option value="${className}.${attr}">${className} - ${attr}</option>`);
+                                    optgroupDestination.append(`<option value="${className}.${attr}">${className} - ${attr}</option>`);
+                                });
+                            });
+                            selectSource.append(optgroupSource);
+                            selectDestination.append(optgroupDestination);
+                        },
+                        error: function(error) {
+                            console.error("Failed to load module data for", datasource.module, error);
+                        }
+                    });
                 });
             },
             error: function(error) {
