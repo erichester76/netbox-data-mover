@@ -5,13 +5,13 @@ from django.urls import reverse  # Import reverse
 
 class DataMoverDataSource(NetBoxModel):
     TYPE_CHOICES = [
-        ('api', 'API'),
-        ('rest', 'REST API'),
-        ('csv', 'CSV'),
-        ('snmp', 'SNMP'),
-        ('xls', 'XLS'),
-        ('sql', 'SQL'),
-        ('')
+        ('api', 'Python SDK/API Call'),
+        ('rest', 'Direct REST API Call'),
+        ('csv', 'CSV File Import'),
+        ('snmp', 'SNMP Query'),
+        ('xls', 'XLS(x) File'),
+        ('sql', 'SQL Query'),
+        ('promql','Prometheus Query'),
     ]
 
     name = models.CharField(max_length=100)
