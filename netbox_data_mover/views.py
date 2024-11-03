@@ -15,8 +15,7 @@ class DataMoverDetailView(generic.ObjectView):
             
 class DataMoverEditView(generic.ObjectEditView):
     queryset = DataMoverConfig.objects.all()
-    #template_name = 'netbox_data_mover/job_edit.html'
-    form = DataMoverForm
+    template_name = 'netbox_data_mover/job_edit.html'
       
 class DataMoverDeleteView(generic.ObjectEditView):
     queryset = DataMoverConfig.objects.all()
@@ -25,8 +24,12 @@ class DataMoverListView(generic.ObjectListView):
     queryset = DataMoverConfig.objects.all()
     table = DataMoverConfigTable
     permission_required = 'netbox_data_mover.view_datamoverconfig'
-    extra_context = {
-        'add_button': True
+    actions = {
+        'add': {'add'},
+        'import': {'add'},
+        'export': set(),
+        'bulk_edit': {'change'},
+        'bulk_delete': {'delete'},
     }
 
 class DataMoverDataSourceDetailView(generic.ObjectEditView):
@@ -35,7 +38,14 @@ class DataMoverDataSourceDetailView(generic.ObjectEditView):
 class DataMoverDataSourceListView(generic.ObjectListView):
     queryset = DataMoverDataSource.objects.all()
     table = DataMoverDataSourceTable
-
+    actions = {
+        'add': {'add'},
+        'import': {'add'},
+        'export': set(),
+        'bulk_edit': {'change'},
+        'bulk_delete': {'delete'},
+    }
+    
 class DataMoverDataSourceEditView(generic.ObjectEditView):
     queryset = DataMoverDataSource.objects.all()
     form = DataMoverDataSourceForm

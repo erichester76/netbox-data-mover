@@ -9,4 +9,4 @@ class DataMoverForm(NetBoxModelForm):
 class DataMoverDataSourceForm(NetBoxModelForm):
     class Meta:
         model = DataMoverDataSource
-        fields = ['name', 'type', 'api_url', 'auth_details']
+        fields = [ 'name', 'type', 'api_url', 'auth_details' ]
