@@ -1,8 +1,5 @@
-{% extends 'generic/object_edit.html' %}
+{% extends 'base.html' %}
 {% load static %}
-{% load buttons %}
-{% load helpers %}
-{% load plugins %}
 
 {% block content %}
 <div class="container-fluid">
@@ -38,14 +35,13 @@
                                 <input type="text" id="destination-endpoint" class="form-control" placeholder="Enter Destination Endpoint" required>
                             </div>
                         </div>
-                        <div class="card-header">
-                            <h2 class="card-title">Mappings Editor</h2>
-                        </div>                     
+
+                        <h4>Field Mappings</h4>
                         <div id="mappings-container" class="mb-3"></div>
                         <div class="d-flex justify-content-between mt-3">
-                            <button type="button" id="add-mapping" class="btn btn-secondary">Add Mapping Line</button>
-                            <button type="submit" class="btn btn-primary">Save Job</button>
-                        </div>
+    <button type="button" id="add-mapping" class="btn btn-secondary">Add Mapping Line</button>
+    <button type="submit" class="btn btn-primary">Save Job</button>
+</div>
                     </form>
                 </div>
             </div>
@@ -64,21 +60,23 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.20.0/cytoscape.min.js"></script>
 <script>
-    $(function() {
+    $(document).ready(function() {
         // Populate sources and destinations from API
         populateSourcesAndDestinations();
 
         // Add mapping line functionality
-        $(document).on('click', '#add-mapping', function() {
+        $('#add-mapping').click(function() {
             addMappingLine();
         });
 
         // Form submit handler
-        $(document).on('submit', '#job-editor-form', function(event) {
+        $('#job-editor-form').submit(function(event) {
             event.preventDefault();
             saveJobConfiguration();
         });
@@ -116,7 +114,7 @@
 
     function populateSourcesAndDestinations() {
         $.ajax({
-            url: '/api/plugins/datamover/datasources/',
+            url: '{% url "plugins-api:datamover:datasources" %}',
             method: 'GET',
             success: function(data) {
                 let selectSource = $('#source');
@@ -141,6 +139,23 @@
                     <input type="text" class="form-control source-field" placeholder="Source Field">
                 </div>
                 <div class="col-md-3">
+                    <input type="text" class="form-control destination-field" placeholder="Destination Field">
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-secondary add-transform">Add Transform</button>
+                </div>
+            </div>
+            <div class="transform-container"></div>
+        `;
+        $('#mappings-container').append(mappingLineHtml);
+        updateDiagramFromForm();
+    }
+
+    // Add transform line functionality
+    $(document).on('click', '.add-transform', function() {
+        let transformHtml = `
+            <div class="row mb-3 transform-line">
+                <div class="col-md-4 offset-md-1">
                     <select class="form-select transform-type">
                         <option value="">Select Transform</option>
                         <option value="replace">Replace</option>
@@ -148,17 +163,13 @@
                         <option value="lookup_object">Lookup Object</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <input type="text" class="form-control transform-param" placeholder="Transform Parameters">
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control destination-field" placeholder="Destination Field">
                 </div>
             </div>
         `;
-        $('#mappings-container').append(mappingLineHtml);
-        updateDiagramFromForm();
-    }
+        $(this).closest('.mapping-line').next('.transform-container').append(transformHtml);
+    });
 
     function updateDiagramFromForm() {
         let nodes = [];
@@ -205,10 +216,16 @@
         $('.mapping-line').each(function(index, line) {
             let mapping = {
                 source: $(line).find('.source-field').val(),
-                transform: $(line).find('.transform-type').val(),
-                params: $(line).find('.transform-param').val(),
-                destination: $(line).find('.destination-field').val()
+                destination: $(line).find('.destination-field').val(),
+                transforms: []
             };
+            $(line).next('.transform-container').find('.transform-line').each(function(i, transformLine) {
+                let transform = {
+                    type: $(transformLine).find('.transform-type').val(),
+                    params: $(transformLine).find('.transform-param').val()
+                };
+                mapping.transforms.push(transform);
+            });
             jobData.mappings.push(mapping);
         });
 
