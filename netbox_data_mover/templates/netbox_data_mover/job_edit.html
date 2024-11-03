@@ -116,7 +116,7 @@
 
     function populateSourcesAndDestinations() {
         $.ajax({
-            url: '/api/plugins/netbox_data_mover/datamoverdatasources/',
+            url: '/api/plugins/datamover/datasources/',
             method: 'GET',
             success: function(data) {
                 let selectSource = $('#source');

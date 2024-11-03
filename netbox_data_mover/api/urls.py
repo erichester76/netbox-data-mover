@@ -1,7 +1,6 @@
 from netbox.api.routers import NetBoxRouter
+from django.urls import path
 from . import views
-
-app_name = 'netbox_data_mover'
 
 router = NetBoxRouter()
 router.register(r'datasources', views.DataMoverDataSourceViewSet)
