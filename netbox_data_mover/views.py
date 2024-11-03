@@ -4,6 +4,7 @@ from .forms import DataMoverConfigForm, DataMoverDataSourceForm
 from .tables import DataMoverConfigTable, DataMoverDataSourceTable
 from .filtersets import DataMoverConfigFilterSet, DataMoverDataSourceFilterSet
 from django.contrib import messages
+from .base_views import BaseChangeLogView,  BaseObjectView
 
 class DataMoverConfigListView(generic.ObjectListView):
     queryset = DataMoverConfig.objects.all()
@@ -17,7 +18,7 @@ class DataMoverConfigListView(generic.ObjectListView):
             }
         return super().get(request, *args, **kwargs)
     
-class DataMoverConfigDetailView(generic.ObjectView):
+class DataMoverConfigDetailView(BaseObjectView):
     queryset = DataMoverConfig.objects.all()
     permission_required = 'netbox_data_mover.view_datamoverconfig'
 
@@ -55,7 +56,7 @@ class DataMoverDataSourceListView(generic.ObjectListView):
     table = DataMoverDataSourceTable
     permission_required = 'netbox_data_mover.view_datamoverdatasource'
 
-class DataMoverDataSourceDetailView(generic.ObjectView):
+class DataMoverDataSourceDetailView(BaseObjectView):
     queryset = DataMoverDataSource.objects.all()
     permission_required = 'netbox_data_mover.view_datamoverdatasource'
 
