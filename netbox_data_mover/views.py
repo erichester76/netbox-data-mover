@@ -12,9 +12,11 @@ class DataMoverConfigListView(generic.ObjectListView):
     
     def get(self, request, *args, **kwargs):
         if not DataMoverDataSource.objects.exists():
-            messages.warning(request, "No Data Sources available. Please add a Data Source before creating a Data Mover Config.")
+            self.extra_context = {
+                'no_data_source_warning': "No Data Sources available. Please add a <a href='test'>Data Source</a> before creating a Data Mover Config."
+            }
         return super().get(request, *args, **kwargs)
-
+    
 class DataMoverConfigDetailView(generic.ObjectView):
     queryset = DataMoverConfig.objects.all()
     permission_required = 'netbox_data_mover.view_datamoverconfig'
