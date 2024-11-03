@@ -4,8 +4,8 @@ from .models import DataMoverConfig, DataMoverDataSource
 
 class DataMoverConfigTable(NetBoxTable):
     name = tables.Column(linkify=True)
-    source_api = tables.Column(linkify=True)
-    destination_api = tables.Column(linkify=True)
+    source = tables.Column(linkify=True)
+    destination = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = DataMoverConfig
