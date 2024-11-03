@@ -7,7 +7,7 @@ class DataMoverConfigTable(NetBoxTable):
     
     class Meta:
         model = DataMoverConfig
-        fields = ('name', 'description', 'schedule', 'source', 'destination', 'last_run_status', 'last_run_records_changed', 'last_run_time')
+        fields = ( 'pk', 'id', 'name', 'description', 'schedule', 'source', 'destination', 'fetch_data_definition', 'transformations', 'last_run_status', 'last_run_records_changed', 'last_run_time')
         default_columns = ('name', 'description', 'schedule', 'last_run_status', 'last_run_time')
 
 class DataMoverDataSourceTable(NetBoxTable):
@@ -15,5 +15,5 @@ class DataMoverDataSourceTable(NetBoxTable):
     
     class Meta:
         model = DataMoverDataSource
-        fields = ('name', 'type', 'api_url', 'auth_details')
+        fields = ( 'pk', 'id', 'name', 'type', 'api_url', 'auth_details')
         default_columns = ('name', 'type', 'api_url', 'auth_details')

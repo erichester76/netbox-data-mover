@@ -18,7 +18,7 @@ class DataMoverDataSource(NetBoxModel):
         return self.name
     
     def get_absolute_url(self):
-        return reverse('plugins:netbox_data_mover:datamoverdatasource', kwargs={'pk': self.pk})
+        return reverse('plugins:netbox_data_mover:datasource', kwargs={'pk': self.pk})
 
 class DataMoverConfig(NetBoxModel):
     name = models.CharField(max_length=100)
@@ -42,4 +42,4 @@ class DataMoverConfig(NetBoxModel):
     
      
     def get_absolute_url(self):
-        return reverse('plugins:netbox_data_mover:datamoverconfig', kwargs={'pk': self.pk})
+        return reverse('plugins:netbox_data_mover:config', kwargs={'pk': self.pk})

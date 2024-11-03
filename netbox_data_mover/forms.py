@@ -1,11 +1,10 @@
-from django import forms
 from .models import DataMoverConfig, DataMoverDataSource
 from netbox.forms import NetBoxModelForm
 
 class DataMoverForm(NetBoxModelForm):
     class Meta:
         model = DataMoverConfig
-        fields = ['name', 'description', 'schedule', 'source', 'destination', 'fetch_data_definition', 'transformations']
+        fields = [ 'name', 'description', 'schedule', 'source', 'destination'  ]
         
 class DataMoverDataSourceForm(NetBoxModelForm):
     class Meta:
