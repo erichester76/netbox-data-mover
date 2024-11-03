@@ -57,8 +57,8 @@ class DataMoverDeleteView(generic.ObjectEditView):
 
 class DataMoverListView(generic.ObjectListView):
     queryset = DataMoverConfig.objects.all()
-    form = DataMoverForm
-
+    table = DataMoverConfigTable
+     
 class DataMoverDataSourceListView(generic.ObjectListView):
     queryset = DataMoverDataSource.objects.all()
     table = DataMoverDataSourceTable
