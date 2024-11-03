@@ -1,12 +1,12 @@
+from django import forms
 from .models import DataMoverConfig, DataMoverDataSource
-from netbox.forms import NetBoxModelForm
 
-class DataMoverForm(NetBoxModelForm):
+class DataMoverConfigForm(forms.ModelForm):
     class Meta:
         model = DataMoverConfig
-        fields = [ 'name', 'description', 'schedule', 'source', 'destination' ]
-        
-class DataMoverDataSourceForm(NetBoxModelForm):
+        fields = ['name', 'description', 'schedule', 'source_api', 'source_endpoint', 'destination_api', 'destination_endpoint', 'mapping']
+
+class DataMoverDataSourceForm(forms.ModelForm):
     class Meta:
         model = DataMoverDataSource
-        fields = [ 'name', 'type', 'api_url', 'auth_details' ]
+        fields = ['name', 'type', 'module', 'auth_method', 'auth_function', 'find_function', 'create_function', 'update_function', 'fetch_function', 'auth_args', 'base_urls']
