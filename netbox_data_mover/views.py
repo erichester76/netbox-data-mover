@@ -3,7 +3,6 @@ from .models import DataMoverConfig, DataMoverDataSource
 from .forms import DataMoverConfigForm, DataMoverDataSourceForm
 from .tables import DataMoverConfigTable, DataMoverDataSourceTable
 from .filtersets import DataMoverConfigFilterSet, DataMoverDataSourceFilterSet
-from django.contrib import messages
 from .base_views import BaseChangeLogView,  BaseObjectView, BaseChangeLogView
 
 class DataMoverConfigListView(generic.ObjectListView):
