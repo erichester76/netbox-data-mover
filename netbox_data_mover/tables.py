@@ -12,7 +12,6 @@ class DataMoverConfigTable(NetBoxTable):
 
 class DataMoverDataSourceTable(NetBoxTable):
     name = tables.Column(linkify=True)
-
     
     class Meta:
         model = DataMoverDataSource
