@@ -10,13 +10,13 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">Data Mover Job Editor</h2>
+                    <h2 class="card-title">Job Editor</h2>
                 </div>
                 <div class="card-body">
                     <form id="job-editor-form">
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="source" class="form-label">Source API</label>
+                                <label for="source" class="form-label">Source</label>
                                 <select id="source" class="form-select" required>
                                     <option value="">Select Source</option>
                                 </select>
@@ -28,7 +28,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="destination" class="form-label">Destination API</label>
+                                <label for="destination" class="form-label">Destination</label>
                                 <select id="destination" class="form-select" required>
                                     <option value="">Select Destination</option>
                                 </select>
@@ -117,13 +117,13 @@
 
     function populateSourcesAndDestinations() {
         $.ajax({
-            url: '{% url "plugins-api:netbox_data_mover:datamoverdatasource-list" %}',
+            url: '{% url "plugins-api:datamover:datasources" %}',
             method: 'GET',
             success: function(data) {
                 let selectSource = $('#source');
                 let selectDestination = $('#destination');
-                selectSource.empty().append('<option value="">Select Source API</option>');
-                selectDestination.empty().append('<option value="">Select Destination API</option>');
+                selectSource.empty().append('<option value="">Select Source</option>');
+                selectDestination.empty().append('<option value="">Select Destination</option>');
                 $.each(data, function(index, datasource) {
                     selectSource.append(`<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`);
                     selectDestination.append(`<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`);
