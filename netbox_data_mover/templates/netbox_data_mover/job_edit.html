@@ -1,224 +1,198 @@
-{% extends 'base.html' %}
-
-{% block content %}
-<div class="container">
-    <h2 class="mt-5">Create or Edit Data Mover Job</h2>
-
-    <form id="job-form" method="post">
-        {% csrf_token %}
-        
-        <!-- Section to Define Data Sources and Other Details -->
-        <div id="source-container" class="source-section">
-            <h4>Define Data Sources and Destination</h4>
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label for="source" class="form-label">Source</label>
-                    <select id="source" name="source" class="form-select">
-                        <option value="">Select Source</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="destination" class="form-label">Destination</label>
-                    <select id="destination" name="destination" class="form-select">
-                        <option value="">Select Destination</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="fetch-data" class="form-label">Fetch Data Definition</label>
-                    <input type="text" id="fetch-data" name="fetch_data" class="form-control" placeholder="Fetch Data Definition">
-                </div>
+<!-- Dynamic Job Editor HTML Template -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Mover Job Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.20.0/cytoscape.min.js"></script>
+</head>
+<body>
+    <div class="container my-5">
+        <h2>Data Mover Job Editor</h2>
+        <form id="job-editor-form">
+            <div class="mb-3">
+                <label for="source" class="form-label">Source API</label>
+                <select id="source" class="form-select" required>
+                    <option value="">Select Source API</option>
+                </select>
             </div>
-        </div>
+            <div class="mb-3">
+                <label for="source-endpoint" class="form-label">Source Endpoint</label>
+                <input type="text" id="source-endpoint" class="form-control" placeholder="Enter Source Endpoint" required>
+            </div>
+            <div class="mb-3">
+                <label for="destination" class="form-label">Destination API</label>
+                <select id="destination" class="form-select" required>
+                    <option value="">Select Destination API</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="destination-endpoint" class="form-label">Destination Endpoint</label>
+                <input type="text" id="destination-endpoint" class="form-control" placeholder="Enter Destination Endpoint" required>
+            </div>
 
-        <!-- Mapping Lines Section -->
-        <div id="config-container" class="mt-4">
-            <!-- Dynamic Configuration Lines will be inserted here -->
-        </div>
-        <button id="add-config-line" type="button" class="btn btn-primary mt-3">Add Mapping Line</button>
-        <button id="submit-config" type="submit" class="btn btn-success mt-3">Submit Configuration</button>
-    </form>
+            <h4>Field Mappings</h4>
+            <div id="mappings-container" class="mb-3"></div>
+            <button type="button" id="add-mapping" class="btn btn-secondary mb-3">Add Mapping Line</button>
 
-    <!-- Cytoscape Diagram -->
-    <div id="cy" style="width: 100%; height: 400px; margin-top: 30px;"></div>
-</div>
+            <button type="submit" class="btn btn-primary">Save Job</button>
+        </form>
 
-<script>
-    let configLineCounter = 0;
-    let cy;
+        <h4 class="mt-5">Mapping Diagram</h4>
+        <div id="cy" style="width: 100%; height: 400px; border: 1px solid #ccc;"></div>
+    </div>
 
-    $(document).ready(function() {
-        populateSources();
-        populateDestinations();
+    <script>
+        $(document).ready(function() {
+            // Populate sources and destinations from API
+            populateSourcesAndDestinations();
 
-        // Initialize Cytoscape Diagram
-        cy = cytoscape({
-            container: document.getElementById('cy'),
-            elements: [],
-            style: [
-                {
-                    selector: 'node',
-                    style: {
-                        'label': 'data(label)',
-                        'width': 50,
-                        'height': 50,
-                        'background-color': '#007bff',
-                        'color': '#fff',
-                        'text-valign': 'center'
+            // Add mapping line functionality
+            $('#add-mapping').click(function() {
+                addMappingLine();
+            });
+
+            // Form submit handler
+            $('#job-editor-form').submit(function(event) {
+                event.preventDefault();
+                saveJobConfiguration();
+            });
+
+            // Initialize Cytoscape diagram
+            var cy = cytoscape({
+                container: document.getElementById('cy'),
+                elements: [],
+                style: [
+                    {
+                        selector: 'node',
+                        style: {
+                            'label': 'data(label)',
+                            'text-valign': 'center',
+                            'color': '#000',
+                            'background-color': '#007bff',
+                            'width': 'label',
+                            'height': 30
+                        }
+                    },
+                    {
+                        selector: 'edge',
+                        style: {
+                            'curve-style': 'bezier',
+                            'width': 3,
+                            'line-color': '#9dbaea',
+                            'target-arrow-color': '#9dbaea',
+                            'target-arrow-shape': 'triangle',
+                            'label': 'data(transform)'
+                        }
                     }
-                },
-                {
-                    selector: 'edge',
-                    style: {
-                        'width': 2,
-                        'line-color': '#ccc',
-                        'target-arrow-color': '#ccc',
-                        'target-arrow-shape': 'triangle'
-                    }
-                }
-            ],
-            layout: {
-                name: 'grid',
-                rows: 1
-            }
-        });
-    });
-
-    // AJAX call to fetch source options
-    function populateSources() {
-        $.ajax({
-            url: '{% url "plugins-api:netbox_data_mover:datasource" %}',
-            method: 'GET',
-            success: function(data) {
-                let select = $('#source');
-                select.empty().append('<option value="">Select Source</option>');
-                $.each(data, function(index, source) {
-                    select.append(`<option value="${source.id}">${source.name} (${source.type})</option>`);
-                });
-            },
-            error: function(error) {
-                console.error("Failed to load sources", error);
-            }
-        });
-    }
-
-    // AJAX call to fetch destination options
-    function populateDestinations() {
-        $.ajax({
-            url: '{% url "plugins-api:netbox_data_mover:datasource" %}',
-            method: 'GET',
-            success: function(data) {
-                let select = $('#destination');
-                select.empty().append('<option value="">Select Destination</option>');
-                $.each(data, function(index, destination) {
-                    select.append(`<option value="${destination.id}">${destination.name} (${destination.type})</option>`);
-                });
-            },
-            error: function(error) {
-                console.error("Failed to load destinations", error);
-            }
-        });
-    }
-
-
-    // Add a new configuration line dynamically
-    $(document).on('click', '#add-config-line', function() {
-        addConfigLine();
-        updateDiagramFromForm();
-    });
-
-    // Remove a specific configuration line
-    $(document).on('click', '.remove-config-line', function() {
-        let lineId = $(this).data('line');
-        $(`#config-line-${lineId}`).remove();
-        updateDiagramFromForm();
-    });
-
-    // Handle submit of the entire configuration
-    $(document).on('click', '#submit-config', function() {
-        updateDiagramFromForm();
-    });
-
-    // Function to add a new configuration line
-    function addConfigLine() {
-        configLineCounter++;
-        let newConfigLine = `
-            <div class="row config-line" id="config-line-${configLineCounter}">
-                <div class="col-md-2">
-                    <select class="form-select source-object" data-line="${configLineCounter}">
-                        <option value="">Select Source Object</option>
-                        <!-- Options will be populated dynamically -->
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <select class="form-select destination-object" data-line="${configLineCounter}">
-                        <option value="">Select Destination Object</option>
-                        <!-- Options will be populated dynamically -->
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <select class="form-select transformation" data-line="${configLineCounter}">
-                        <option value="">Select Transformation</option>
-                        <option value="uppercase">Uppercase</option>
-                        <option value="lowercase">Lowercase</option>
-                        <option value="regex_replace">Regex Replace</option>
-                        <option value="replace">Replace</option>
-                    </select>
-                </div>
-                <div class="col-md-4 transformation-params" id="params-${configLineCounter}">
-                    <!-- Transformation Parameters will be dynamically generated here -->
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-danger remove-config-line" data-line="${configLineCounter}">Remove</button>
-                </div>
-            </div>`;
-        
-        $('#config-container').append(newConfigLine);
-        populateSourceFields(configLineCounter);
-        populateDestinationFields(configLineCounter);
-    }
-
-    // Update Cytoscape diagram based on configuration
-    function updateDiagramFromForm() {
-        cy.elements().remove();
-        let nodes = [];
-        let edges = [];
-
-        // Collect data from each configuration line
-        $('.config-line').each(function(index) {
-            let lineId = $(this).attr('id');
-            let source = $(this).find('.source-object').val();
-            let destination = $(this).find('.destination-object').val();
-            let transformation = $(this).find('.transformation').val();
-
-            if (source && destination) {
-                let sourceNodeId = `source_${lineId}`;
-                let destinationNodeId = `destination_${lineId}`;
-                
-                // Add source and destination nodes for each line uniquely
-                nodes.push({ data: { id: sourceNodeId, label: source } });
-                nodes.push({ data: { id: destinationNodeId, label: destination } });
-                
-                // Add edge with transformation label between source and destination for the current line
-                edges.push({ data: { source: sourceNodeId, target: destinationNodeId, label: transformation } });
-            }
-        });
-
-        // Add nodes and edges to Cytoscape
-        cy.add(nodes);
-        cy.add(edges);
-        cy.edges().forEach(function(edge) {
-            edge.style({
-                'label': edge.data('label'),
-                'text-background-opacity': 1,
-                'text-background-color': '#ffffff',
-                'text-valign': 'top',
-                'font-size': 12,
-                'color': '#000'
+                ]
             });
         });
 
-        cy.layout({ name: 'breadthfirst' }).run();
-        cy.resize();
-    }
-</script>
-{% endblock %}
+        function populateSourcesAndDestinations() {
+            $.ajax({
+                url: '{% url "plugins-api:netbox_data_mover:datamoverdatasource-list" %}',
+                method: 'GET',
+                success: function(data) {
+                    let selectSource = $('#source');
+                    let selectDestination = $('#destination');
+                    selectSource.empty().append('<option value="">Select Source API</option>');
+                    selectDestination.empty().append('<option value="">Select Destination API</option>');
+                    $.each(data, function(index, datasource) {
+                        selectSource.append(`<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`);
+                        selectDestination.append(`<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`);
+                    });
+                },
+                error: function(error) {
+                    console.error("Failed to load sources and destinations", error);
+                }
+            });
+        }
+
+        function addMappingLine() {
+            let mappingLineHtml = `
+                <div class="row mb-3 mapping-line">
+                    <div class="col">
+                        <input type="text" class="form-control source-field" placeholder="Source Field">
+                    </div>
+                    <div class="col">
+                        <select class="form-select transform-type">
+                            <option value="">Select Transform</option>
+                            <option value="replace">Replace</option>
+                            <option value="replace_map">Replace Map</option>
+                            <option value="lookup_object">Lookup Object</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control transform-param" placeholder="Transform Parameters">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control destination-field" placeholder="Destination Field">
+                    </div>
+                </div>
+            `;
+            $('#mappings-container').append(mappingLineHtml);
+            updateDiagramFromForm();
+        }
+
+        function updateDiagramFromForm() {
+            let nodes = [];
+            let edges = [];
+
+            let source = $('#source option:selected').text();
+            let destination = $('#destination option:selected').text();
+
+            if (source) {
+                nodes.push({ data: { id: 'source', label: source } });
+            }
+
+            if (destination) {
+                nodes.push({ data: { id: 'destination', label: destination } });
+            }
+
+            $('.mapping-line').each(function(index, line) {
+                let sourceField = $(line).find('.source-field').val();
+                let destinationField = $(line).find('.destination-field').val();
+                let transform = $(line).find('.transform-type').val();
+
+                if (sourceField && destinationField) {
+                    nodes.push({ data: { id: `source-${index}`, label: sourceField } });
+                    nodes.push({ data: { id: `destination-${index}`, label: destinationField } });
+                    edges.push({ data: { source: `source-${index}`, target: `destination-${index}`, transform: transform } });
+                }
+            });
+
+            cy.elements().remove();
+            cy.add(nodes);
+            cy.add(edges);
+            cy.layout({ name: 'breadthfirst' }).run();
+        }
+
+        function saveJobConfiguration() {
+            let jobData = {
+                source: $('#source').val(),
+                source_endpoint: $('#source-endpoint').val(),
+                destination: $('#destination').val(),
+                destination_endpoint: $('#destination-endpoint').val(),
+                mappings: []
+            };
+
+            $('.mapping-line').each(function(index, line) {
+                let mapping = {
+                    source: $(line).find('.source-field').val(),
+                    transform: $(line).find('.transform-type').val(),
+                    params: $(line).find('.transform-param').val(),
+                    destination: $(line).find('.destination-field').val()
+                };
+                jobData.mappings.push(mapping);
+            });
+
+            console.log('Job Data:', jobData);
+            // AJAX POST to save the job configuration here...
+        }
+    </script>
+</body>
+</html>
