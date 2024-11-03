@@ -19,7 +19,8 @@ class DataMoverConfigDetailView(generic.ObjectView):
     permission_required = 'netbox_data_mover.view_datamoverconfig'
 
 class DataMoverConfigEditView(generic.ObjectEditView):
-    queryset = DataMoverConfig.objects.all()
+    queryset = DataMoverConfig.objects.all()    
+    template_name = 'netbox_data_mover/job_edit.html'
     form = DataMoverConfigForm
     permission_required = 'netbox_data_mover.add_datamoverconfig'
 
