@@ -1,5 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'generic/object_edit.html' %}
 {% load static %}
+{% load buttons %}
+{% load helpers %}
+{% load plugins %}
 
 {% block content %}
 <div class="container-fluid">
@@ -114,7 +117,7 @@
 
     function populateSourcesAndDestinations() {
         $.ajax({
-            url: '{% url "plugins-api:datamover:datasources" %}',
+            url: '{% url "plugins-api:netbox_data_mover:datamoverdatasource-list" %}',
             method: 'GET',
             success: function(data) {
                 let selectSource = $('#source');
@@ -232,5 +235,6 @@
         console.log('Job Data:', jobData);
         // AJAX POST to save the job configuration here...
     }
+
 </script>
 {% endblock %}
