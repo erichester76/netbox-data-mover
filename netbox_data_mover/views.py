@@ -13,7 +13,7 @@ class DataMoverConfigListView(generic.ObjectListView):
     def get(self, request, *args, **kwargs):
         if not DataMoverDataSource.objects.exists():
             self.extra_context = {
-                'no_data_source_warning': "No Data Sources available. Please add a <a href='test'>Data Source</a> before creating a Data Mover Config."
+                'no_data_source_warning': "No Data Sources available. Please add a <a href='test'>Data Source</a> before creating a Mover Job."
             }
         return super().get(request, *args, **kwargs)
     
