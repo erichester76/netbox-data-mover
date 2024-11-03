@@ -65,17 +65,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.20.0/cytoscape.min.js"></script>
 <script>
-    $(document).ready(function() {
+    $(function() {
         // Populate sources and destinations from API
         populateSourcesAndDestinations();
 
         // Add mapping line functionality
-        $('#add-mapping').click(function() {
+        $(document).on('click', '#add-mapping', function() {
             addMappingLine();
         });
 
         // Form submit handler
-        $('#job-editor-form').submit(function(event) {
+        $(document).on('submit', '#job-editor-form', function(event) {
             event.preventDefault();
             saveJobConfiguration();
         });
