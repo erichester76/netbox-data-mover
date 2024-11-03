@@ -33,6 +33,14 @@ setup(
     license="ApacheV2",
     url="https://github.com/erichester76/netbox-data-mover.git",
     packages=find_packages(),
+    package_data={
+        'netbox_data_mover': ['templates/**'],
+    },
+    entry_points={
+        'netbox_plugins': [
+            'netbox_data_mover = netbox_data_mover:Plugin',
+        ],
+    },
     long_description=long_description,
     long_description_content_type="text/markdown",
     include_package_data=True,
