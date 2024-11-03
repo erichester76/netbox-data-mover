@@ -16,7 +16,7 @@ class DataMoverDataSource(NetBoxModel):
 
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=50, choices=TYPE_CHOICES)
-    module = models.CharField(max_length=100)
+    module = models.CharField(max_length=100, null=True)
     auth_method = models.CharField(max_length=50, blank=True, null=True)
     auth_function = models.TextField(blank=True, null=True) 
     find_function = models.TextField(blank=True, null=True) 
