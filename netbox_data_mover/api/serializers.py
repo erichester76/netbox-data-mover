@@ -8,8 +8,6 @@ class DataMoverDataSourceSerializer(NetBoxModelSerializer):
         fields = '__all__'
 
 class DataMoverConfigSerializer(NetBoxModelSerializer):
-    source = serializers.PrimaryKeyRelatedField(queryset=DataMoverDataSource.objects.all())
-    destination = serializers.PrimaryKeyRelatedField(queryset=DataMoverDataSource.objects.all())
 
     class Meta:
         model = DataMoverConfig
