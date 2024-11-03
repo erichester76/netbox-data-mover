@@ -5,7 +5,6 @@ from .models import DataMoverConfig, DataMoverDataSource
 from .forms import DataMoverForm, DataMoverDataSourceForm
 from .tables import DataMoverConfigTable, DataMoverDataSourceTable
 from .jobs import DataMoverJob
-from django.views.generic import View
 from django.http import JsonResponse
 import requests
 from netbox.views import generic
