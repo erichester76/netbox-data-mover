@@ -31,7 +31,7 @@ class DataSourceFieldsView(APIView):
         try:
             # Retrieve DataMoverDataSource instance
             datasource = DataMoverDataSource.objects.get(pk=datasource_id)
-
+            return Response({'info': datasource.id})
             # Authenticate to the data source
             client = DataSourceAuth.authenticate(datasource)
 
