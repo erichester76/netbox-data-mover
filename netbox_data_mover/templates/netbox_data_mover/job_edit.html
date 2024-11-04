@@ -127,7 +127,7 @@
                 $.each(data, function(index, datasource) {
                     // Use the datasource_id to dynamically get module and class data
                     $.ajax({
-                        url: `/plugins/datamover/inspect_module/?datasource_id=${datasource.id}`,
+                        url: `/plugins/datamover/inspect_datasource/?datasource_id=${datasource.id}`,
                         method: 'GET',
                         success: function(moduleData) {
                             let optgroupSource = $('<optgroup>', { label: datasource.name + " (" + datasource.type + ")" });
