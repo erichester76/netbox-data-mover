@@ -104,11 +104,11 @@
             saveJobConfiguration();
         });
 
-        // Trigger inspect_module when the source or destination changes
+        // Trigger get_fields when the source or destination changes
         $(document).on('change', '#source, #destination', function() {
             let datasourceId = $(this).val();
             if (datasourceId) {
-                inspectModule(datasourceId, $(this).attr('id'));
+                get_fields(datasourceId, $(this).attr('id'));
             }
         });
 
@@ -143,7 +143,7 @@
         });
     });
 
-    function inspectModule(datasourceId, selectId) {
+    function get_fields(datasourceId, selectId) {
         console.log(`Inspecting module for datasource ID: ${datasourceId}`);
         // The inspectModule function remains as is, as we assume the endpoints list might still need to be dynamic
     }

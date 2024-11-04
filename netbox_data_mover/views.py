@@ -33,23 +33,39 @@ class DataMoverConfigEditView(generic.ObjectEditView):
         model = DataMoverConfig
         fields = '__all__'
 
+    def dispatch(self, request, *args, **kwargs):
+        # Setting these values directly
+        if self.object:
+            self.selected_source = self.object.source.id
+            self.selected_source_endpoint = self.object.source_endpoint
+            self.selected_destination = self.object.destination.id
+            self.selected_destination_endpoint = self.object.destination_endpoint
+        else:
+            self.selected_source = None
+            self.selected_source_endpoint = None
+            self.selected_destination = None
+            self.selected_destination_endpoint = None
+
+        self.sources = DataMoverDataSource.objects.all()
+        self.destinations = DataMoverDataSource.objects.all()
+        self.source_endpoints = ["Endpoint A", "Endpoint B", "Endpoint C"]  # Replace with real values
+        self.destination_endpoints = ["Endpoint X", "Endpoint Y", "Endpoint Z"]  # Replace with real values
+
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.object:
-            context['selected_source'] = self.object.source.id
-            context['selected_source_endpoint'] = self.object.source_endpoint
-            context['selected_destination'] = self.object.destination.id
-            context['selected_destination_endpoint'] = self.object.destination_endpoint
-        else:
-            context['selected_source'] = None
-            context['selected_source_endpoint'] = None
-            context['selected_destination'] = None
-            context['selected_destination_endpoint'] = None
-
-        context['sources'] = DataMoverDataSource.objects.all()
-        context['destinations'] = DataMoverDataSource.objects.all()
-        context['source_endpoints'] = []
-        context['destination_endpoints'] = []  
+        # Adding the context variables directly to the context dictionary
+        context.update({
+            'selected_source': self.selected_source,
+            'selected_source_endpoint': self.selected_source_endpoint,
+            'selected_destination': self.selected_destination,
+            'selected_destination_endpoint': self.selected_destination_endpoint,
+            'sources': self.sources,
+            'destinations': self.destinations,
+            'source_endpoints': self.source_endpoints,
+            'destination_endpoints': self.destination_endpoints
+        })
         return context
 
 class DataMoverConfigDeleteView(generic.ObjectDeleteView):
