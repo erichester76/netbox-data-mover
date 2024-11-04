@@ -24,18 +24,33 @@ class DataMoverConfigDetailView(BaseObjectView):
     permission_required = 'netbox_data_mover.view_datamoverconfig'
 
 class DataMoverConfigEditView(generic.ObjectEditView):
-    queryset = DataMoverConfig.objects.all()  
+    queryset = DataMoverConfig.objects.all()
     form = DataMoverConfigForm
-    # dynamic javascript template to have more of a wizard feel  
     template_name = 'netbox_data_mover/job_edit.html'
-    permission_required = 'netbox_data_mover.add_datamoverconfig'
-    sources = DataMoverDataSource.objects.all()
-    destinations = DataMoverDataSource.objects.all()  # Assuming destinations are the same model
-    
-    context = {
-        'sources': sources,
-        'destinations': destinations,
-    }
+    permission_required = 'netbox_data_mover.change_datamoverconfig'
+
+    class Meta:
+        model = DataMoverConfig
+        fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.object:
+            context['selected_source'] = self.object.source.id
+            context['selected_source_endpoint'] = self.object.source_endpoint
+            context['selected_destination'] = self.object.destination.id
+            context['selected_destination_endpoint'] = self.object.destination_endpoint
+        else:
+            context['selected_source'] = None
+            context['selected_source_endpoint'] = None
+            context['selected_destination'] = None
+            context['selected_destination_endpoint'] = None
+
+        context['sources'] = DataMoverDataSource.objects.all()
+        context['destinations'] = DataMoverDataSource.objects.all()
+        context['source_endpoints'] = []
+        context['destination_endpoints'] = []  
+        return context
 
 class DataMoverConfigDeleteView(generic.ObjectDeleteView):
     queryset = DataMoverConfig.objects.all()
