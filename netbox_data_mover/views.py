@@ -10,34 +10,54 @@ import inspect
 import importlib
 from django.http import JsonResponse
 
-def inspect_module(request):
-    # Get the datasource ID and find the corresponding DataMoverDataSource instance
+# views.py
+import importlib
+import inspect
+from django.http import JsonResponse
+from .models import DataMoverDataSource
+from .auth_utils import DataSourceAuth
+
+def inspect_datasource(request):
     datasource_id = request.GET.get('datasource_id')
+
     try:
+        # Retrieve DataMoverDataSource instance
         datasource = DataMoverDataSource.objects.get(pk=datasource_id)
+        
+        # Authenticate to the data source
+        client = DataSourceAuth.authenticate(datasource)
+
+        # Use the fetch function to get the data
         module_name = datasource.module
-        class_name = datasource.auth_function
+        fetch_function_name = datasource.fetch_function
+        module = importlib.import_module(module_name)
 
-        # Import the module and get the class specified by auth_function
-        lib_module = importlib.import_module(module_name)
-        class_obj = getattr(lib_module, class_name, None)
+        fetch_function = getattr(module, fetch_function_name, None)
+        if fetch_function is None:
+            return JsonResponse({'error': f'Fetch function "{fetch_function_name}" not found in module "{module_name}".'}, status=400)
 
-        if class_obj is None:
-            return JsonResponse({'error': f'Class {class_name} not found in module {module_name}.'}, status=400)
+        # Assuming the fetch_function takes a client and returns data from an endpoint
+        data = fetch_function(client, datasource.base_urls[0], datasource.source_endpoint)
 
-        # Get all attributes and methods of the class
-        attributes = [attr for attr, _ in inspect.getmembers(class_obj)]
-        response_data = {
-            'class_name': class_name,
-            'attributes': attributes
-        }
-        return JsonResponse(response_data)
+        # Extract fields from the first row of the data (assuming the data is list-like or dict-like)
+        if isinstance(data, list) and len(data) > 0:
+            first_row = data[0]
+        elif isinstance(data, dict):
+            first_row = data
+        else:
+            return JsonResponse({'error': 'Unexpected data format returned by fetch function.'}, status=400)
+
+        # Extract field names from the first row
+        fields = list(first_row.keys()) if isinstance(first_row, dict) else dir(first_row)
+
+        return JsonResponse({'fields': fields})
 
     except DataMoverDataSource.DoesNotExist:
         return JsonResponse({'error': 'Data source not found.'}, status=404)
-    except ModuleNotFoundError:
-        return JsonResponse({'error': f'Module {module_name} not found.'}, status=400)
-
+    except ImportError as e:
+        return JsonResponse({'error': str(e)}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 class DataMoverConfigListView(generic.ObjectListView):
     queryset = DataMoverConfig.objects.all()
