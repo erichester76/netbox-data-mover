@@ -34,12 +34,14 @@ class DataMoverConfigEditView(generic.ObjectEditView):
         fields = '__all__'
 
     def dispatch(self, request, *args, **kwargs):
-        # Setting these values directly
-        if self.object:
-            self.selected_source = self.object.source.id
-            self.selected_source_endpoint = self.object.source_endpoint
-            self.selected_destination = self.object.destination.id
-            self.selected_destination_endpoint = self.object.destination_endpoint
+        # Setting these values directly using instance
+        instance = self.get_object() if 'pk' in kwargs else None
+
+        if instance:
+            self.selected_source = instance.source.id
+            self.selected_source_endpoint = instance.source_endpoint
+            self.selected_destination = instance.destination.id
+            self.selected_destination_endpoint = instance.destination_endpoint
         else:
             self.selected_source = None
             self.selected_source_endpoint = None
@@ -48,14 +50,13 @@ class DataMoverConfigEditView(generic.ObjectEditView):
 
         self.sources = DataMoverDataSource.objects.all()
         self.destinations = DataMoverDataSource.objects.all()
-        self.source_endpoints = ["Endpoint A", "Endpoint B", "Endpoint C"]  # Replace with real values
-        self.destination_endpoints = ["Endpoint X", "Endpoint Y", "Endpoint Z"]  # Replace with real values
+        self.source_endpoints = []  
+        self.destination_endpoints = []  
 
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Adding the context variables directly to the context dictionary
         context.update({
             'selected_source': self.selected_source,
             'selected_source_endpoint': self.selected_source_endpoint,
