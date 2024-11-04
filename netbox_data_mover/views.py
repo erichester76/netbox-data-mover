@@ -29,6 +29,13 @@ class DataMoverConfigEditView(generic.ObjectEditView):
     # dynamic javascript template to have more of a wizard feel  
     template_name = 'netbox_data_mover/job_edit.html'
     permission_required = 'netbox_data_mover.add_datamoverconfig'
+    sources = DataMoverDataSource.objects.all()
+    destinations = DataMoverDataSource.objects.all()  # Assuming destinations are the same model
+    
+    context = {
+        'sources': sources,
+        'destinations': destinations,
+    }
 
 class DataMoverConfigDeleteView(generic.ObjectDeleteView):
     queryset = DataMoverConfig.objects.all()

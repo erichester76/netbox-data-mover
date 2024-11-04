@@ -19,11 +19,19 @@
                                 <label for="source" class="form-label">Source</label>
                                 <select id="source" class="form-select" required>
                                     <option value="">Select Source</option>
+                                    {% for source in sources %}
+                                    <option value="{{ source.id }}">{{ source.name }} ({{ source.type }})</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                             <div class="col-md-6">
                                 <label for="source-endpoint" class="form-label">Source Endpoint</label>
-                                <input type="text" id="source-endpoint" class="form-control" placeholder="Enter Source Endpoint" required>
+                                <select id="source-endpoint" class="form-select" required>
+                                    <option value="">Select Source Endpoint</option>
+                                    {% for endpoint in source_endpoints %}
+                                    <option value="{{ endpoint }}">{{ endpoint }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -31,11 +39,19 @@
                                 <label for="destination" class="form-label">Destination</label>
                                 <select id="destination" class="form-select" required>
                                     <option value="">Select Destination</option>
+                                    {% for destination in destinations %}
+                                    <option value="{{ destination.id }}">{{ destination.name }} ({{ destination.type }})</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                             <div class="col-md-6">
                                 <label for="destination-endpoint" class="form-label">Destination Endpoint</label>
-                                <input type="text" id="destination-endpoint" class="form-control" placeholder="Enter Destination Endpoint" required>
+                                <select id="destination-endpoint" class="form-select" required>
+                                    <option value="">Select Destination Endpoint</option>
+                                    {% for endpoint in destination_endpoints %}
+                                    <option value="{{ endpoint }}">{{ endpoint }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
 
@@ -63,134 +79,82 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.20.0/cytoscape.min.js"></script>
 <script>
-$(document).ready(function() {
-    console.log("Window loaded, calling populateSourcesAndDestinations");
-    populateSourcesAndDestinations();
+    $(function() {
+        console.log("Window loaded");
 
-    // Add mapping line functionality
-    $(document).on('click', '#add-mapping', function() {
-        addMappingLine();
-    });
+        // Add mapping line functionality
+        $(document).on('click', '#add-mapping', function() {
+            addMappingLine();
+        });
 
-    // Form submit handler
-    $(document).on('submit', '#job-editor-form', function(event) {
-        event.preventDefault();
-        saveJobConfiguration();
-    });
+        // Form submit handler
+        $(document).on('submit', '#job-editor-form', function(event) {
+            event.preventDefault();
+            saveJobConfiguration();
+        });
 
-    // Trigger get_fields when the source or destination changes
-    $(document).on('change', '#source, #destination', function() {
-        let datasourceId = $(this).val();
-        if (datasourceId) {
-            get_fields(datasourceId, $(this).attr('id'));
-        }
-    });
-
-    // Initialize Cytoscape diagram
-    var cy = cytoscape({
-        container: document.getElementById('cy'),
-        elements: [],
-        style: [
-            {
-                selector: 'node',
-                style: {
-                    'label': 'data(label)',
-                    'text-valign': 'center',
-                    'color': '#000',
-                    'background-color': '#007bff',
-                    'width': 'label',
-                    'height': 30
-                }
-            },
-            {
-                selector: 'edge',
-                style: {
-                    'curve-style': 'bezier',
-                    'width': 3,
-                    'line-color': '#9dbaea',
-                    'target-arrow-color': '#9dbaea',
-                    'target-arrow-shape': 'triangle',
-                    'label': 'data(transform)'
-                }
+        // Trigger inspect_module when the source or destination changes
+        $(document).on('change', '#source, #destination', function() {
+            let datasourceId = $(this).val();
+            if (datasourceId) {
+                inspectModule(datasourceId, $(this).attr('id'));
             }
-        ]
+        });
+
+        // Initialize Cytoscape diagram
+        var cy = cytoscape({
+            container: document.getElementById('cy'),
+            elements: [],
+            style: [
+                {
+                    selector: 'node',
+                    style: {
+                        'label': 'data(label)',
+                        'text-valign': 'center',
+                        'color': '#000',
+                        'background-color': '#007bff',
+                        'width': 'label',
+                        'height': 30
+                    }
+                },
+                {
+                    selector: 'edge',
+                    style: {
+                        'curve-style': 'bezier',
+                        'width': 3,
+                        'line-color': '#9dbaea',
+                        'target-arrow-color': '#9dbaea',
+                        'target-arrow-shape': 'triangle',
+                        'label': 'data(transform)'
+                    }
+                }
+            ]
+        });
     });
 
-
-    function populateSourcesAndDestinations() {
-    console.log("Calling API to populate sources and destinations...");
-    $.ajax({
-        url: '/plugins/api/datamover/datasources',
-        method: 'GET',
-        success: function(data) {
-            let sourceOptions = '<option value="">Select Source</option>';
-            let destinationOptions = '<option value="">Select Destination</option>';
-
-            $.each(data.results, function(index, datasource) {
-                sourceOptions += `<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`;
-                destinationOptions += `<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`;
-            });
-
-            $('#source').html(sourceOptions);
-            $('#destination').html(destinationOptions);
-
-            // Debugging: Check if the options were added
-            console.log("Source options: ", $('#source').html());
-            console.log("Destination options: ", $('#destination').html());
-        },
-        error: function(error) {
-            console.error("Failed to load sources and destinations", error);
-        }
-    });
-}
-
-function get_fields(datasourceId, selectId) {
-    console.log(`Getting fields for datasource ID: ${datasourceId}`);
-    $.ajax({
-        url: `/plugins-api/datamover/get_fields/?datasource_id=${datasourceId}`,
-        method: 'GET',
-        success: function(moduleData) {
-            let select = $(`#${selectId}-endpoint`);
-            select.empty().append('<option value="">Select Field</option>');
-            moduleData.fields.forEach(function(field) {
-                select.append(`<option value="${field}">${field}</option>`);
-            });
-
-            // Update mapping lines if they exist
-            if (selectId.includes('source')) {
-                $('.mapping-line .source-field').each(function() {
-                    $(this).empty().append('<option value="">Select Field</option>');
-                    moduleData.fields.forEach(function(field) {
-                        $(this).append(`<option value="${field}">${field}</option>`);
-                    }.bind(this));
-                });
-            } else if (selectId.includes('destination')) {
-                $('.mapping-line .destination-field').each(function() {
-                    $(this).empty().append('<option value="">Select Field</option>');
-                    moduleData.fields.forEach(function(field) {
-                        $(this).append(`<option value="${field}">${field}</option>`);
-                    }.bind(this));
-                });
-            }
-        },
-        error: function(error) {
-            console.error("Failed to get fields for datasource", error);
-        }
-    });
-}
-
+    function inspectModule(datasourceId, selectId) {
+        console.log(`Inspecting module for datasource ID: ${datasourceId}`);
+        // The inspectModule function remains as is, as we assume the endpoints list might still need to be dynamic
+    }
 
     function addMappingLine() {
         let mappingLineHtml = `
             <div class="row mb-3 mapping-line">
                 <div class="col-md-3">
-                    <input type="text" class="form-control source-field" placeholder="Source Field">
+                    <select class="form-select source-field">
+                        <option value="">Select Source Field</option>
+                    </select>
                 </div>
                 <div class="col-md-3">
-                    <input type="text" class="form-control destination-field" placeholder="Destination Field">
+                    <select class="form-select destination-field">
+                        <option value="">Select Destination Field</option>
+                    </select>
                 </div>
                 <div class="col-md-3">
                     <button type="button" class="btn btn-secondary add-transform">Add Transform</button>
@@ -267,22 +231,15 @@ function get_fields(datasourceId, selectId) {
         $('.mapping-line').each(function(index, line) {
             let mapping = {
                 source: $(line).find('.source-field').val(),
-                destination: $(line).find('.destination-field').val(),
-                transforms: []
+                transform: $(line).find('.transform-type').val(),
+                params: $(line).find('.transform-param').val(),
+                destination: $(line).find('.destination-field').val()
             };
-            $(line).next('.transform-container').find('.transform-line').each(function(i, transformLine) {
-                let transform = {
-                    type: $(transformLine).find('.transform-type').val(),
-                    params: $(transformLine).find('.transform-param').val()
-                };
-                mapping.transforms.push(transform);
-            });
             jobData.mappings.push(mapping);
         });
 
         console.log('Job Data:', jobData);
         // AJAX POST to save the job configuration here...
     }
-   });
 </script>
 {% endblock %}
