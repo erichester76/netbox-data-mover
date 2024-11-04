@@ -85,7 +85,7 @@
     $(document).on('change', '#source, #destination', function() {
         let datasourceId = $(this).val();
         if (datasourceId) {
-            inspectModule(datasourceId, $(this).attr('id'));
+            get_fields(datasourceId, $(this).attr('id'));
         }
     });
 
@@ -142,8 +142,8 @@ function populateSourcesAndDestinations() {
     });
 }
 
-function inspectModule(datasourceId, selectId) {
-    console.log(`Inspecting module for datasource ID: ${datasourceId}`);
+function get_fields(datasourceId, selectId) {
+    console.log(`Getting Fields for datasource ID: ${datasourceId}`);
     $.ajax({
         url: `/api/plugins/datamover/datasource/get_fields?datasource_id=${datasourceId}`,
         method: 'GET',
@@ -155,7 +155,7 @@ function inspectModule(datasourceId, selectId) {
             });
         },
         error: function(error) {
-            console.error("Failed to inspect module for datasource", error);
+            console.error("Failed to iget fields for datasource", error);
         }
     });
 }
