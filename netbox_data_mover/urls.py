@@ -26,6 +26,5 @@ urlpatterns = [
     path('datamoverdatasources/<int:pk>/delete/', views.DataMoverDataSourceDeleteView.as_view(), name='datamoverdatasource_delete'),
     path('datamoverdatasources/<int:pk>/changelog/', views.DataMoverDataSourceChangeLogView.as_view(), name='datamoverdatasource_changelog'),
     path('datamoverdatasourcess/<int:pk>/clone/', views.DataMoverDataSourceCloneView.as_view(), name='datamoverdatasource_clone'),
-    path('inspect_datasource/', views.inspect_datasource, name='inspect_module'),
 
 ]
