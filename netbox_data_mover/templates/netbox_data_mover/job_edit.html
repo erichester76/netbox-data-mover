@@ -157,9 +157,9 @@ function populateSourcesAndDestinations() {
 }
 
 function get_fields(datasourceId, selectId) {
-    console.log(`Getting Fields for datasource ID: ${datasourceId}`);
+    console.log(`Getting fields for datasource ID: ${datasourceId}`);
     $.ajax({
-        url: `/api/plugins/datamover/datasource/get_fields?datasource_id=${datasourceId}`,
+        url: `/plugins-api/datamover/get_fields/?datasource_id=${datasourceId}`,
         method: 'GET',
         success: function(moduleData) {
             let select = $(`#${selectId}-endpoint`);
@@ -167,9 +167,26 @@ function get_fields(datasourceId, selectId) {
             moduleData.fields.forEach(function(field) {
                 select.append(`<option value="${field}">${field}</option>`);
             });
+
+            // Update mapping lines if they exist
+            if (selectId.includes('source')) {
+                $('.mapping-line .source-field').each(function() {
+                    $(this).empty().append('<option value="">Select Field</option>');
+                    moduleData.fields.forEach(function(field) {
+                        $(this).append(`<option value="${field}">${field}</option>`);
+                    }.bind(this));
+                });
+            } else if (selectId.includes('destination')) {
+                $('.mapping-line .destination-field').each(function() {
+                    $(this).empty().append('<option value="">Select Field</option>');
+                    moduleData.fields.forEach(function(field) {
+                        $(this).append(`<option value="${field}">${field}</option>`);
+                    }.bind(this));
+                });
+            }
         },
         error: function(error) {
-            console.error("Failed to iget fields for datasource", error);
+            console.error("Failed to get fields for datasource", error);
         }
     });
 }
