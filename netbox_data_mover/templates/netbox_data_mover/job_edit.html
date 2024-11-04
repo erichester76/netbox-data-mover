@@ -128,17 +128,14 @@ function populateSourcesAndDestinations() {
         success: function(data) {
             let selectSource = document.getElementById('source');
             let selectDestination = document.getElementById('destination');
-
+            console.log(data)
             $.each(data.results, function(index, datasource) { 
                 let option = document.createElement('option');
                 option.value = datasource.id;
-                option.text = `${datasource.name} (${datasource.type})`;
+                option.text = `${datasource.name}`;
+                console.log(datasource.name)
                 selectSource.add(option);
-
-                let destinationOption = document.createElement('option');
-                destinationOption.value = datasource.id;
-                destinationOption.text = `${datasource.name} (${datasource.type})`;
-                selectDestination.add(destinationOption);
+                selectDestination.add(option);
             });
         },
         error: function(error) {
