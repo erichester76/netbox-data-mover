@@ -146,7 +146,7 @@
     function getFields(datasourceId, isSource) {
         console.log(`Getting fields for datasource ID: ${datasourceId}`);
         $.ajax({
-            url: `/api/plugins/netbox_data_mover/datasources/get_fields/${datasourceId}/`,
+            url: `/api/plugins/datamover/datasources/get_fields/${datasourceId}/`,
             method: 'GET',
             success: function(data) {
                 if (isSource) {
