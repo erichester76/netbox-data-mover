@@ -8,27 +8,19 @@
 <form id="job-editor-form">
     {% csrf_token %}
     <div class="row mb-3">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <label for="name" class="form-label">Name</label>
             {{ form.name }}
+        </div>
+        <div class="col-md-6">
+            <label for="schedule" class="form-label">Schedule</label>
+            {{ form.schedule }}
         </div>
     </div>
     <div class="row mb-3">
         <div class="col-md-12">
             <label for="description" class="form-label">Description</label>
             {{ form.description }}
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-12">
-            <label for="schedule" class="form-label">Schedule</label>
-<select id="schedule" name="schedule" class="form-select">
-    <option value="">Select Schedule</option>
-    <option value="hourly">Hourly</option>
-    <option value="daily">Daily</option>
-    <option value="weekly">Weekly</option>
-    <option value="monthly">Monthly</option>
-</select>
         </div>
     </div>
     <div class="row mb-3">
@@ -200,11 +192,7 @@
 
     // Add transform line functionality
     $(document).on('click', '.add-transform', function() {
-        let transformType = $(this).closest('.mapping-line').find('.transform-type').val();
-        let transformHtml;
-
-        if (transformType === 'replace' || transformType === 'lookup_id' || transformType === 'nested_item') {
-            transformHtml = `
+         let transformHtml = `
                 <div class="row mb-3 transform-line">
                     <div class="col-md-4 offset-md-1">
                         <select class="form-select transform-type">
@@ -228,29 +216,7 @@
                         <button type="button" class="btn btn-danger remove-transform" style="background: none; border: none;"><i class="material-icons">X</i></button>
                     </div>
                 </div>`;
-        } else {
-            transformHtml = `
-                <div class="row mb-3 transform-line">
-                    <div class="col-md-4 offset-md-1">
-                        <select class="form-select transform-type">
-                            <option value="">Select Transform</option>
-                            <option value="upper">Upper</option>
-                            <option value="lower">Lower</option>
-                            <option value="title">Title</option>
-                            <option value="replace">Replace</option>
-                            <option value="replace_map">Replace Map</option>
-                            <option value="lookup_id">Lookup Object</option>
-                            <option value="nested_item">Lookup Object</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" class="form-control transform-param" placeholder="Transform Parameters">
-                    </div>
-                    <div class="col-md-3">
-                        <button type="button" class="btn btn-danger remove-transform" style="background: none; border: none;"><i class="material-icons">close</i></button>
-                    </div>
-                </div>`;
-        }
+
 
         $(this).closest('.mapping-line').next('.transform-container').append(transformHtml);
     });
