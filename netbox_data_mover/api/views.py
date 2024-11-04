@@ -21,6 +21,7 @@ class DataMoverConfigViewSet(NetBoxModelViewSet):
 @api_view(['GET'])
 def get_fields(request):
     datasource_id = request.GET.get('datasource_id')
+    queryset = DataMoverDataSource.objects.all()
 
     try:
         # Retrieve DataMoverDataSource instance
