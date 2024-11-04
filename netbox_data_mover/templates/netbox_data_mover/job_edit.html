@@ -126,16 +126,28 @@ function populateSourcesAndDestinations() {
         url: '/api/plugins/datamover/datasources',
         method: 'GET',
         success: function(data) {
+    
             let selectSource = document.getElementById('source');
             let selectDestination = document.getElementById('destination');
-            console.log(data)
-            $.each(data.results, function(index, datasource) { 
-                let option = document.createElement('option');
-                option.value = datasource.id;
-                option.text = `${datasource.name}`;
-                console.log(datasource.name)
-                selectSource.add(option);
-                selectDestination.add(option);
+
+            selectSource.innerHTML = '<option value="">Select Source</option>';
+            selectDestination.innerHTML = '<option value="">Select Destination</option>';
+
+            $.each(data.results, function(index, datasource) {
+                console.log(datasource.name);
+
+                // Create separate options for source and destination
+                let sourceOption = document.createElement('option');
+                sourceOption.value = datasource.id;
+                sourceOption.text = `${datasource.name}`;
+
+                let destinationOption = document.createElement('option');
+                destinationOption.value = datasource.id;
+                destinationOption.text = `${datasource.name}`;
+
+                // Add options to both select elements
+                selectSource.add(sourceOption);
+                selectDestination.add(destinationOption);
             });
         },
         error: function(error) {
