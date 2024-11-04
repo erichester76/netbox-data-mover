@@ -4,7 +4,7 @@ from ..filtersets import DataMoverConfigFilterSet, DataMoverDataSourceFilterSet
 from .serializers import DataMoverDataSourceSerializer, DataMoverConfigSerializer
 from netbox.api.viewsets import NetBoxModelViewSet
 from django.http import JsonResponse
-from ..auth_utils import DataSourceAuth
+from ..api_utils import DataSourceAuth
 import importlib
 
 class DataMoverDataSourceViewSet(NetBoxModelViewSet):
@@ -27,17 +27,8 @@ def datasource_fields(request):
         # Authenticate to the data source
         client = DataSourceAuth.authenticate(datasource)
 
-        # Use the fetch function to get the data
-        module_name = datasource.module
-        fetch_function_name = datasource.fetch_function
-        module = importlib.import_module(module_name)
-
-        fetch_function = getattr(module, fetch_function_name, None)
-        if fetch_function is None:
-            return JsonResponse({'error': f'Fetch function "{fetch_function_name}" not found in module "{module_name}".'}, status=400)
-
-        # Assuming the fetch_function takes a client and returns data from an endpoint
-        data = fetch_function(client, datasource.base_urls[0], datasource.source_endpoint)
+        # Use the fetch_data method to get the data
+        data = DataSourceAuth.fetch_data(datasource, client)
 
         # Extract fields from the first row of the data (assuming the data is list-like or dict-like)
         if isinstance(data, list) and len(data) > 0:
