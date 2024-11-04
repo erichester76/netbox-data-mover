@@ -98,6 +98,17 @@
             addMappingLine();
         });
 
+        $(document).on('click', '.remove-mapping', function() {
+            $(this).closest('.mapping-line').next('.transform-container').remove();
+            $(this).closest('.mapping-line').remove();
+            updateDiagramFromForm();
+        });
+
+        $(document).on('click', '.remove-transform', function() {
+            $(this).closest('.transform-line').remove();
+            updateDiagramFromForm();
+        });
+
         // Form submit handler
         $(document).on('submit', '#job-editor-form', function(event) {
             event.preventDefault();
@@ -111,6 +122,8 @@
                 get_fields(datasourceId, $(this).attr('id'));
             }
         });
+
+
 
         // Initialize Cytoscape diagram
         var cy = cytoscape({
