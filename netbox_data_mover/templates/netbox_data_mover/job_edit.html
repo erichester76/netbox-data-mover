@@ -71,6 +71,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.20.0/cytoscape.min.js"></script>
 <script>
     var cy; // Define `cy` at the top to make it accessible globally
+    var sourceFields = {};
+    var destinationFields = {};
 
     $(function() {
         console.log("Window loaded");
@@ -129,34 +131,42 @@
             saveJobConfiguration();
         });
 
-        // Trigger getFields when the source or destination changes
+        // Update fields when source or destination changes
         $(document).on('change', '#source, #destination', function() {
             let datasourceId = $(this).val();
-            if (datasourceId) {
-                getFields(datasourceId, $(this).attr('id'));
-            }
+            let isSource = $(this).attr('id') === 'source';
 
-            // Reset all mapping lines when source or destination changes
-            $('.mapping-line').each(function() {
-                $(this).find('.source-field').empty().append('<option value="">Select Source Field</option>');
-                $(this).find('.destination-field').empty().append('<option value="">Select Destination Field</option>');
-            });
-            updateDiagramFromForm();
+            if (datasourceId) {
+                getFields(datasourceId, isSource);
+            }
         });
     });
 
-    function getFields(datasourceId, selectId) {
+    // Fetch fields once and store globally
+    function getFields(datasourceId, isSource) {
         console.log(`Getting fields for datasource ID: ${datasourceId}`);
         $.ajax({
             url: `/api/plugins/netbox_data_mover/datasources/get_fields/${datasourceId}/`,
             method: 'GET',
             success: function(data) {
-                let selectElement = $(`#${selectId}-endpoint`);
-                selectElement.empty();
-                selectElement.append('<option value="">Select Field</option>');
-                $.each(data.fields, function(index, field) {
-                    selectElement.append(`<option value="${field}">${field}</option>`);
+                if (isSource) {
+                    sourceFields = data.fields;  // Store source fields globally
+                } else {
+                    destinationFields = data.fields;  // Store destination fields globally
+                }
+
+                // Update all existing mapping lines
+                $('.mapping-line').each(function() {
+                    let sourceFieldSelect = $(this).find('.source-field');
+                    let destinationFieldSelect = $(this).find('.destination-field');
+
+                    if (isSource) {
+                        populateFields(sourceFieldSelect, sourceFields);
+                    } else {
+                        populateFields(destinationFieldSelect, destinationFields);
+                    }
                 });
+                console.log("Fields updated for all existing mapping lines");
             },
             error: function(error) {
                 console.error("Failed to get fields", error);
@@ -164,34 +174,43 @@
         });
     }
 
-    function addMappingLine() {
-        let mappingLineHtml = `
-            <div class="row mb-3 mapping-line">
-                <div class="col-md-3">
-                    <select class="form-select source-field">
-                        <option value="">Select Source Field</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <select class="form-select destination-field">
-                        <option value="">Select Destination Field</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <button type="button" class="btn btn-secondary add-transform">Add Transform</button>
-                </div>
-                <div class="col-md-3">
-                    <button type="button" class="btn btn-danger remove-mapping" style="background: none; border: none;"><i class="material-icons">close</i></button>
-                </div>
+    // Helper function to populate fields into a select element
+    function populateFields(selectElement, fields) {
+        selectElement.empty();
+        selectElement.append('<option value="">Select Field</option>');
+        $.each(fields, function(index, field) {
+            selectElement.append(`<option value="${field}">${field}</option>`);
+        });
+    }
+
+    function addMappingLine() {    
+        let mappingLineHtml = `    
+        <div class="row mb-3 mapping-line">
+            <div class="col-md-3">
+                <select class="form-select source-field">
+                    <option value="">Select Source Field</option>
+                </select>
             </div>
-            <div class="transform-container"></div>`;
+            <div class="col-md-3">
+                <select class="form-select destination-field">
+                    <option value="">Select Destination Field</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-secondary add-transform">Add Transform</button>
+            </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-danger remove-mapping" style="background: none; border: none;"><i class="material-icons">close</i></button>
+            </div>
+        </div>
+        <div class="transform-container"></div>`;
 
         $('#mappings-container').append(mappingLineHtml);
         let newMappingLine = $('#mappings-container').children('.mapping-line').last();
 
-        // Populate the fields for the new mapping line
-        getFields($('#source').val(), newMappingLine.find('.source-field').attr('id', `source-field-${newMappingLine.index()}`));
-        getFields($('#destination').val(), newMappingLine.find('.destination-field').attr('id', `destination-field-${newMappingLine.index()}`));
+        // Populate the fields for the new mapping line with stored values
+        populateFields(newMappingLine.find('.source-field'), sourceFields);
+        populateFields(newMappingLine.find('.destination-field'), destinationFields);
 
         updateDiagramFromForm();
     }
@@ -227,138 +246,71 @@
     });
 
     function updateDiagramFromForm() {
-    let nodes = [];
-    let edges = [];
+        let nodes = [];
+        let edges = [];
 
-    let source = $('#source option:selected').text();
-    let destination = $('#destination option:selected').text();
+        let source = $('#source option:selected').text();
+        let destination = $('#destination option:selected').text();
 
-    // Add large nodes for source and destination
-    if (source) {
-        nodes.push({
-            data: { id: 'source', label: `Source: ${source} / ${source_endpoint}` },
-            classes: 'header-node'
-        });
-    }
-
-    if (destination) {
-        nodes.push({
-            data: { id: 'destination', label: `Destination: ${destination} / ${destination_endpoint}` },
-            classes: 'header-node'
-        });
-    }
-
-    // Add nodes for each mapping line and link them
-    $('.mapping-line').each(function(index, line) {
-        let sourceField = $(line).find('.source-field').val();
-        let destinationField = $(line).find('.destination-field').val();
-        let transform = $(line).find('.transform-type').val();
-
-        if (sourceField && destinationField) {
-            nodes.push({ data: { id: `source-${index}`, label: sourceField } });
-            nodes.push({ data: { id: `destination-${index}`, label: destinationField } });
-            edges.push({
-                data: { source: `source-${index}`, target: `destination-${index}`, transform: transform }
-            });
-        }
-    });
-
-    // Link large nodes to their respective fields
-    $('.mapping-line').each(function(index, line) {
-        let sourceField = $(line).find('.source-field').val();
-        let destinationField = $(line).find('.destination-field').val();
-
-        if (sourceField) {
-            edges.push({
-                data: { source: 'source', target: `source-${index}` }
+        // Add large nodes for source and destination
+        if (source) {
+            nodes.push({
+                data: { id: 'source', label: `Source: ${source}` },
+                classes: 'header-node'
             });
         }
 
-        if (destinationField) {
-            edges.push({
-                data: { source: `destination-${index}`, target: 'destination' }
+        if (destination) {
+            nodes.push({
+                data: { id: 'destination', label: `Destination: ${destination}` },
+                classes: 'header-node'
             });
         }
-    });
 
-    // Clear existing elements and add new nodes and edges to the diagram
-    cy.elements().remove();
-    cy.add(nodes);
-    cy.add(edges);
-
-    // Run layout with new settings to visually align elements better
-    cy.layout({
-        name: 'breadthfirst',
-        directed: true,
-        padding: 10
-    }).run();
-}
-
-// CSS Styling for larger header nodes
-cy.style()
-    .selector('.header-node')
-    .style({
-        'background-color': '#ff9800',
-        'width': 100,
-        'height': 40,
-        'font-size': '16px',
-        'font-weight': 'bold'
-    })
-    .update();
-
-
-    function saveJobConfiguration() {
-        let jobData = {
-            source: $('#source').val(),
-            source_endpoint: $('#source-endpoint').val(),
-            destination: $('#destination').val(),
-            destination_endpoint: $('#destination-endpoint').val(),
-            mappings: []
-        };
-
+        // Add nodes for each mapping line and link them
         $('.mapping-line').each(function(index, line) {
-            let mapping = {
-                source: $(line).find('.source-field').val(),
-                transforms: [],
-                destination: $(line).find('.destination-field').val()
-            };
-            
-            // Collect transforms for the current mapping
-            $(line).next('.transform-container').find('.transform-line').each(function() {
-                let transform = {
-                    type: $(this).find('.transform-type').val(),
-                    params: []
-                };
+            let sourceField = $(line).find('.source-field').val();
+            let destinationField = $(line).find('.destination-field').val();
+            let transform = $(line).find('.transform-type').val();
 
-                // Collect parameters for the current transform
-                $(this).find('.transform-param').each(function() {
-                    transform.params.push($(this).val());
+            if (sourceField && destinationField) {
+                nodes.push({ data: { id: `source-${index}`, label: sourceField } });
+                nodes.push({ data: { id: `destination-${index}`, label: destinationField } });
+                edges.push({
+                    data: { source: `source-${index}`, target: `destination-${index}`, transform: transform }
                 });
-
-                mapping.transforms.push(transform);
-            });
-
-            jobData.mappings.push(mapping);
-        });
-    }
-
-        console.log('Job Data:', jobData);
-        // AJAX POST to save the job configuration here...
-        $.ajax({
-            url: '{% url "plugins:netbox_data_mover:datamoverconfig_add" %}',
-            type: 'POST',
-            data: JSON.stringify(jobData),
-            contentType: 'application/json',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            success: function(response) {
-                alert("Job saved successfully!");
-            },
-            error: function(error) {
-                console.error("Failed to save job configuration", error);
             }
         });
 
+        // Link large nodes to their respective fields
+        $('.mapping-line').each(function(index, line) {
+            let sourceField = $(line).find('.source-field').val();
+            let destinationField = $(line).find('.destination-field').val();
+
+            if (sourceField) {
+                edges.push({
+                    data: { source: 'source', target: `source-${index}` }
+                });
+            }
+
+            if (destinationField) {
+                edges.push({
+                    data: { source: `destination-${index}`, target: 'destination' }
+                });
+            }
+        });
+
+        // Clear existing elements and add new nodes and edges to the diagram
+        cy.elements().remove();
+        cy.add(nodes);
+        cy.add(edges);
+
+        // Run layout with new settings to visually align elements better
+        cy.layout({
+            name: 'breadthfirst',
+            directed: true,
+            padding: 10
+        }).run();
+    }
 </script>
 {% endblock %}
