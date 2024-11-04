@@ -4,6 +4,10 @@
 {% load helpers %}
 {% load plugins %}
 
+{% block extrahead %}
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 <form id="job-editor-form">
     {% csrf_token %}
