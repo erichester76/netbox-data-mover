@@ -20,7 +20,7 @@
                                 <select id="source" class="form-select" required>
                                     <option value="">Select Source</option>
                                     {% for source in sources %}
-                                    <option value="{{ source.id }}" {% if source.id = selected_source %}selected{% endif %}>
+                                    <option value="{{ source.id }}" {% if source.id == selected_source %}selected{% endif %}>
                                         {{ source.name }} ({{ source.type }})
                                     </option>
                                     {% endfor %}
@@ -31,7 +31,7 @@
                                 <select id="source-endpoint" class="form-select" required>
                                     <option value="">Select Source Endpoint</option>
                                     {% for endpoint in source_endpoints %}
-                                    <option value="{{ endpoint }}" {% if endpoint = selected_source_endpoint %}selected{% endif %}>
+                                    <option value="{{ endpoint }}" {% if endpoint == selected_source_endpoint %}selected{% endif %}>
                                         {{ endpoint }}
                                     </option>
                                     {% endfor %}
@@ -44,7 +44,7 @@
                                 <select id="destination" class="form-select" required>
                                     <option value="">Select Destination</option>
                                     {% for destination in destinations %}
-                                    <option value="{{ destination.id }}" {% if destination.id = selected_destination %}selected{% endif %}>
+                                    <option value="{{ destination.id }}" {% if destination.id == selected_destination %}selected{% endif %}>
                                         {{ destination.name }} ({{ destination.type }})
                                     </option>
                                     {% endfor %}
@@ -55,7 +55,7 @@
                                 <select id="destination-endpoint" class="form-select" required>
                                     <option value="">Select Destination Endpoint</option>
                                     {% for endpoint in destination_endpoints %}
-                                    <option value="{{ endpoint }}" {% if endpoint = selected_destination_endpoint %}selected{% endif %}>
+                                    <option value="{{ endpoint }}" {% if endpoint == selected_destination_endpoint %}selected{% endif %}>
                                         {{ endpoint }}
                                     </option>
                                     {% endfor %}
