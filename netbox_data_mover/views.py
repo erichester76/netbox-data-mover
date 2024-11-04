@@ -28,23 +28,11 @@ class DataMoverConfigEditView(generic.ObjectEditView):
     form = DataMoverConfigForm
     template_name = 'netbox_data_mover/job_edit.html'
     permission_required = 'netbox_data_mover.change_datamoverconfig'
-    sources = DataMoverDataSource.objects.all(),
-    destinations =  DataMoverDataSource.objects.all(),
-   
+
     class Meta:
         model = DataMoverConfig
         fields = '__all__'
 
-    # def get_extra_context(self, request, instance):
-    #     context = {
-    #         'selected_source': instance.source if instance else None,
-    #         'selected_source_endpoint': instance.source_endpoint if instance else None,
-    #         'selected_destination': instance.destination if instance else None,
-    #         'selected_destination_endpoint': instance.destination_endpoint if instance else None,
-    #         'source_endpoints': [], 
-    #         'destination_endpoints': []  
-    #     }
-    #     return context
 
 class DataMoverConfigDeleteView(generic.ObjectDeleteView):
     queryset = DataMoverConfig.objects.all()

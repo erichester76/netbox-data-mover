@@ -13,58 +13,9 @@
                     <h2 class="card-title">Job Editor</h2>
                 </div>
                 <div class="card-body">
-                    <form id="job-editor-form">
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="source" class="form-label">Source</label>
-                                <select id="source" class="form-select" required>
-                                    <option value="">Select Source</option>
-                                    {% for source in sources %}
-                                    <option value="{{ source.id }}" {% if source.id == selected_source %}selected{% endif %}>
-                                        {{ source.name }} ({{ source.type }})
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="source-endpoint" class="form-label">Source Endpoint</label>
-                                <select id="source-endpoint" class="form-select" required>
-                                    <option value="">Select Source Endpoint</option>
-                                    {% for endpoint in source_endpoints %}
-                                    <option value="{{ endpoint }}" {% if endpoint == selected_source_endpoint %}selected{% endif %}>
-                                        {{ endpoint }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="destination" class="form-label">Destination</label>
-                                <select id="destination" class="form-select" required>
-                                    <option value="">Select Destination</option>
-                                    {% for destination in destinations %}
-                                    <option value="{{ destination.id }}" {% if destination.id == selected_destination %}selected{% endif %}>
-                                        {{ destination.name }} ({{ destination.type }})
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="destination-endpoint" class="form-label">Destination Endpoint</label>
-                                <select id="destination-endpoint" class="form-select" required>
-                                    <option value="">Select Destination Endpoint</option>
-                                    {% for endpoint in destination_endpoints %}
-                                    <option value="{{ endpoint }}" {% if endpoint == selected_destination_endpoint %}selected{% endif %}>
-                                        {{ endpoint }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-
-                        <h2>Source to Destination Field Mappings</h2>
-                        <div id="mappings-container" class="mb-3"></div>
+                    <form id="job-editor-form" method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
                         <div class="d-flex justify-content-between mt-3">
                             <button type="button" id="add-mapping" class="btn btn-secondary">Add Field Mapping</button>
                             <button type="submit" class="btn btn-primary">Save Job</button>
