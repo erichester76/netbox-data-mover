@@ -123,7 +123,7 @@
 function populateSourcesAndDestinations() {
     console.log("Calling API to populate sources and destinations...");
     $.ajax({
-        url: '/plugins/api/datamover/datasources',
+        url: '/api/plugins/datamover/datasources',
         method: 'GET',
         success: function(data) {
             let selectSource = $('#source');
@@ -145,7 +145,7 @@ function populateSourcesAndDestinations() {
 function inspectModule(datasourceId, selectId) {
     console.log(`Inspecting module for datasource ID: ${datasourceId}`);
     $.ajax({
-        url: `/plugins/api/datamover/datasource/get_fields?datasource_id=${datasourceId}`,
+        url: `/api/plugins/datamover/datasource/get_fields?datasource_id=${datasourceId}`,
         method: 'GET',
         success: function(moduleData) {
             let select = $(`#${selectId}-endpoint`);
