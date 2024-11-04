@@ -145,7 +145,7 @@ function populateSourcesAndDestinations() {
 function inspectModule(datasourceId, selectId) {
     console.log(`Inspecting module for datasource ID: ${datasourceId}`);
     $.ajax({
-        url: `/plugins-api/datamover/inspect_module/?datasource_id=${datasourceId}`,
+        url: `/plugins/api/datamover/datasource/get_fields?datasource_id=${datasourceId}`,
         method: 'GET',
         success: function(moduleData) {
             let select = $(`#${selectId}-endpoint`);
