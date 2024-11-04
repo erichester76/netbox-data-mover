@@ -116,7 +116,7 @@
     function populateSourcesAndDestinations() {
         console.log("Calling API to populate sources and destinations...");
         $.ajax({
-            url: '/api/plugins/datamover/',
+            url: '/api/plugins/datamover/datasources/',
             method: 'GET',
             success: function(data) {
                 let selectSource = $('#source');
