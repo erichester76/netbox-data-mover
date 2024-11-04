@@ -67,91 +67,98 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.20.0/cytoscape.min.js"></script>
 <script>
    $(window).on('load', function() {
-        console.log("Window loaded, calling populateSourcesAndDestinations");
-        populateSourcesAndDestinations();
+    console.log("Window loaded, calling populateSourcesAndDestinations");
+    populateSourcesAndDestinations();
 
-        // Add mapping line functionality
-        $(document).on('click', '#add-mapping', function() {
-            addMappingLine();
-        });
-
-        // Form submit handler
-        $(document).on('submit', '#job-editor-form', function(event) {
-            event.preventDefault();
-            saveJobConfiguration();
-        });
-
-
-        // Initialize Cytoscape diagram
-        var cy = cytoscape({
-            container: document.getElementById('cy'),
-            elements: [],
-            style: [
-                {
-                    selector: 'node',
-                    style: {
-                        'label': 'data(label)',
-                        'text-valign': 'center',
-                        'color': '#000',
-                        'background-color': '#007bff',
-                        'width': 'label',
-                        'height': 30
-                    }
-                },
-                {
-                    selector: 'edge',
-                    style: {
-                        'curve-style': 'bezier',
-                        'width': 3,
-                        'line-color': '#9dbaea',
-                        'target-arrow-color': '#9dbaea',
-                        'target-arrow-shape': 'triangle',
-                        'label': 'data(transform)'
-                    }
-                }
-            ]
-        });
+    // Add mapping line functionality
+    $(document).on('click', '#add-mapping', function() {
+        addMappingLine();
     });
 
-    function populateSourcesAndDestinations() {
-        console.log("Calling API to populate sources and destinations...");
-        $.ajax({
-            url: '/api/plugins/datamover/datasources/',
-            method: 'GET',
-            success: function(data) {
-                let selectSource = $('#source');
-                let selectDestination = $('#destination');
-                selectSource.empty().append('<option value="">Select Source</option>');
-                selectDestination.empty().append('<option value="">Select Destination</option>');
+    // Form submit handler
+    $(document).on('submit', '#job-editor-form', function(event) {
+        event.preventDefault();
+        saveJobConfiguration();
+    });
 
-                $.each(data, function(index, datasource) {
-                    // Use the datasource_id to dynamically get module and class data
-                    $.ajax({
-                        url: `/plugins/datamover/inspect_datasource/?datasource_id=${datasource.id}`,
-                        method: 'GET',
-                        success: function(moduleData) {
-                            let optgroupSource = $('<optgroup>', { label: datasource.name + " (" + datasource.type + ")" });
-                            let optgroupDestination = $('<optgroup>', { label: datasource.name + " (" + datasource.type + ")" });
-                            
-                            moduleData.attributes.forEach(function(attr) {
-                                optgroupSource.append(`<option value="${moduleData.class_name}.${attr}">${moduleData.class_name} - ${attr}</option>`);
-                                optgroupDestination.append(`<option value="${moduleData.class_name}.${attr}">${moduleData.class_name} - ${attr}</option>`);
-                            });
-                            
-                            selectSource.append(optgroupSource);
-                            selectDestination.append(optgroupDestination);
-                        },
-                        error: function(error) {
-                            console.error("Failed to load module data for", datasource.module, error);
-                        }
-                    });
-                });
+    // Trigger inspect_module when the source or destination changes
+    $(document).on('change', '#source, #destination', function() {
+        let datasourceId = $(this).val();
+        if (datasourceId) {
+            inspectModule(datasourceId, $(this).attr('id'));
+        }
+    });
+
+    // Initialize Cytoscape diagram
+    var cy = cytoscape({
+        container: document.getElementById('cy'),
+        elements: [],
+        style: [
+            {
+                selector: 'node',
+                style: {
+                    'label': 'data(label)',
+                    'text-valign': 'center',
+                    'color': '#000',
+                    'background-color': '#007bff',
+                    'width': 'label',
+                    'height': 30
+                }
             },
-            error: function(error) {
-                console.error("Failed to load sources and destinations", error);
+            {
+                selector: 'edge',
+                style: {
+                    'curve-style': 'bezier',
+                    'width': 3,
+                    'line-color': '#9dbaea',
+                    'target-arrow-color': '#9dbaea',
+                    'target-arrow-shape': 'triangle',
+                    'label': 'data(transform)'
+                }
             }
-        });
-    }
+        ]
+    });
+
+
+function populateSourcesAndDestinations() {
+    console.log("Calling API to populate sources and destinations...");
+    $.ajax({
+        url: '/plugins/api/datamover/datasources',
+        method: 'GET',
+        success: function(data) {
+            let selectSource = $('#source');
+            let selectDestination = $('#destination');
+            selectSource.empty().append('<option value="">Select Source</option>');
+            selectDestination.empty().append('<option value="">Select Destination</option>');
+
+            $.each(data, function(index, datasource) {
+                selectSource.append(`<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`);
+                selectDestination.append(`<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`);
+            });
+        },
+        error: function(error) {
+            console.error("Failed to load sources and destinations", error);
+        }
+    });
+}
+
+function inspectModule(datasourceId, selectId) {
+    console.log(`Inspecting module for datasource ID: ${datasourceId}`);
+    $.ajax({
+        url: `/plugins-api/datamover/inspect_module/?datasource_id=${datasourceId}`,
+        method: 'GET',
+        success: function(moduleData) {
+            let select = $(`#${selectId}-endpoint`);
+            select.empty().append('<option value="">Select Field</option>');
+            moduleData.fields.forEach(function(field) {
+                select.append(`<option value="${field}">${field}</option>`);
+            });
+        },
+        error: function(error) {
+            console.error("Failed to inspect module for datasource", error);
+        }
+    });
+}
 
 
     function addMappingLine() {
@@ -254,6 +261,6 @@
         console.log('Job Data:', jobData);
         // AJAX POST to save the job configuration here...
     }
-
+   });
 </script>
 {% endblock %}
