@@ -1,17 +1,14 @@
 from django import forms
 from .models import DataMoverConfig, DataMoverDataSource
 
-
-from django import forms
-from .models import DataMoverConfig
-
 class DataMoverConfigForm(forms.ModelForm):
     class Meta:
         SCHEDULE_CHOICES = [
-        ('0 * * * *', 'Hourly'),
-        ('0 0 * * *', 'Daily'),
-        ('0 0 * * 0', 'Weekly'),
-        ('0 0 1 * *', 'Monthly'),
+            ('0 * * * *', 'Hourly'),
+            ('0 0 * * *', 'Daily'),
+            ('0 0 * * 0', 'Weekly'),
+            ('0 0 1 * *', 'Monthly'),
+        ]
         model = DataMoverConfig
         fields = ['name', 'schedule', 'description', 'source', 'source_endpoint', 'destination', 'destination_endpoint']
         widgets = {
