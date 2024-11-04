@@ -232,14 +232,14 @@
     // Add large nodes for source and destination
     if (source) {
         nodes.push({
-            data: { id: 'source', label: `Source: ${source}` },
+            data: { id: 'source', label: `Source: ${source} / ${source_endpoint}` },
             classes: 'header-node'
         });
     }
 
     if (destination) {
         nodes.push({
-            data: { id: 'destination', label: `Destination: ${destination}` },
+            data: { id: 'destination', label: `Destination: ${destination} / ${destination_endpoint}` },
             classes: 'header-node'
         });
     }
@@ -302,7 +302,7 @@ cy.style()
     })
     .update();
 
-    
+
     function saveJobConfiguration() {
         let jobData = {
             source: $('#source').val(),
