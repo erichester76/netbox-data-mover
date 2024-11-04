@@ -81,7 +81,7 @@
         saveJobConfiguration();
     });
 
-    // Trigger inspect_module when the source or destination changes
+    // Trigger get_fields when the source or destination changes
     $(document).on('change', '#source, #destination', function() {
         let datasourceId = $(this).val();
         if (datasourceId) {
@@ -131,7 +131,7 @@ function populateSourcesAndDestinations() {
             selectSource.empty().append('<option value="">Select Source</option>');
             selectDestination.empty().append('<option value="">Select Destination</option>');
 
-            $.each(data, function(index, datasource) {
+            $.each(data, function(index, data) {
                 selectSource.append(`<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`);
                 selectDestination.append(`<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`);
             });
