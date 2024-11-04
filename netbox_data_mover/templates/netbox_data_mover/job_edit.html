@@ -129,7 +129,7 @@ function populateSourcesAndDestinations() {
             let selectSource = document.getElementById('source');
             let selectDestination = document.getElementById('destination');
 
-            data.forEach((datasource) => {
+            $.each(data.results, function(index, datasource) { 
                 let option = document.createElement('option');
                 option.value = datasource.id;
                 option.text = `${datasource.name} (${datasource.type})`;
