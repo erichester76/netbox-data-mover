@@ -4,6 +4,7 @@ from .models import DataMoverConfig, DataMoverDataSource
 class DataMoverConfigForm(forms.ModelForm):
     class Meta:
         SCHEDULE_CHOICES = [
+            ('','None - Manual Only'),
             ('0 * * * *', 'Hourly'),
             ('0 0 * * *', 'Daily'),
             ('0 0 * * 0', 'Weekly'),
