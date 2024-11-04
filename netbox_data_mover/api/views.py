@@ -19,36 +19,37 @@ class DataMoverConfigViewSet(NetBoxModelViewSet):
     filterset = DataMoverConfigFilterSet
 
 @api_view(['GET'])
-def get_fields(request):
-    datasource_id = request.GET.get('datasource_id')
-    queryset = DataMoverDataSource.objects.all()
+class DatasourceFieldsView(NetBoxModelViewSet):
 
-    try:
-        # Retrieve DataMoverDataSource instance
-        datasource = DataMoverDataSource.objects.get(pk=datasource_id)
+    def get(self, request, datasource_id, format=None):
+        datasource_id = request.GET.get('datasource_id')
 
-        # Authenticate to the data source
-        client = DataSourceAuth.authenticate(datasource)
+        try:
+            # Retrieve DataMoverDataSource instance
+            datasource = DataMoverDataSource.objects.get(pk=datasource_id)
 
-        # Use the fetch_data method to get the data
-        data = DataSourceAuth.fetch_data(datasource, client)
+            # Authenticate to the data source
+            client = DataSourceAuth.authenticate(datasource)
 
-        # Extract fields from the first row of the data
-        if isinstance(data, list) and len(data) > 0:
-            first_row = data[0]
-        elif isinstance(data, dict):
-            first_row = data
-        else:
-            return Response({'error': 'Unexpected data format returned by fetch function.'}, status=400)
+            # Use the fetch_data method to get the data
+            data = DataSourceAuth.fetch_data(datasource, client)
 
-        # Extract field names from the first row
-        fields = list(first_row.keys()) if isinstance(first_row, dict) else dir(first_row)
+            # Extract fields from the first row of the data
+            if isinstance(data, list) and len(data) > 0:
+                first_row = data[0]
+            elif isinstance(data, dict):
+                first_row = data
+            else:
+                return Response({'error': 'Unexpected data format returned by fetch function.'}, status=400)
 
-        return Response({'fields': fields})
+            # Extract field names from the first row
+            fields = list(first_row.keys()) if isinstance(first_row, dict) else dir(first_row)
 
-    except DataMoverDataSource.DoesNotExist:
-        return Response({'error': 'Data source not found.'}, status=404)
-    except ImportError as e:
-        return Response({'error': str(e)}, status=400)
-    except Exception as e:
-        return Response({'error': str(e)}, status=500)
+            return Response({'fields': fields})
+
+        except DataMoverDataSource.DoesNotExist:
+            return Response({'error': 'Data source not found.'}, status=404)
+        except ImportError as e:
+            return Response({'error': str(e)}, status=400)
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
