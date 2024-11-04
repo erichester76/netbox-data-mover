@@ -5,6 +5,7 @@ from . import views
 router = NetBoxRouter()
 router.register(r'datasources', views.DataMoverDataSourceViewSet)
 router.register(r'datamoverconfigs', views.DataMoverConfigViewSet)
-router.register(r'datasources/get_fields', views.datasource_fields)
 
-urlpatterns = router.urls
+urlpatterns = router.urls + [
+    path('datasources/get_fields/', views.get_fields, name='datasource_fields'),
+]
