@@ -63,7 +63,7 @@
                             </div>
                         </div>
 
-                        <h4>Field Mappings</h4>
+                        <h2>Source to Destination Field Mappings</h2>
                         <div id="mappings-container" class="mb-3"></div>
                         <div class="d-flex justify-content-between mt-3">
                             <button type="button" id="add-mapping" class="btn btn-secondary">Add Field Mapping</button>
@@ -92,7 +92,7 @@
 <script>
     $(function() {
         console.log("Window loaded");
-
+        console.log("{{ selected_source }}")
         // Add mapping line functionality
         $(document).on('click', '#add-mapping', function() {
             addMappingLine();
