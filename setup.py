@@ -53,7 +53,7 @@ setup(
         'dnacentersdk',
         'pysnmp',
         'prometheus-api-client',
-        'pandas'
+        'pandas',
     ],
     min_version="4.0.2",
     max_version="4.1.5"

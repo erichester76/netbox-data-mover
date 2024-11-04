@@ -1,19 +1,24 @@
 from django import forms
 from .models import DataMoverConfig, DataMoverDataSource
 
+
 class DataMoverConfigForm(forms.ModelForm):
     class Meta:
         model = DataMoverConfig
-        fields = ['name', 'description', 'schedule', 'source', 'destination', 'source_endpoint', 'destination_endpoint', 'mappings', 'last_run_records_changed', 'last_run_status', 'last_run_time']
+        fields = ['name', 'description', 'schedule', 'source', 'source_endpoint', 'destination', 'destination_endpoint']
         widgets = {
             'source': forms.Select(attrs={'class': 'form-select'}),
+            'source_endpoint': forms.Select(attrs={'class': 'form-select'}),
             'destination': forms.Select(attrs={'class': 'form-select'}),
+            'destination_endpoint': forms.Select(attrs={'class': 'form-select'}),
         }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['source'].queryset = DataMoverDataSource.objects.all()
-        self.fields['destination'].queryset = DataMoverDataSource.objects.all()   
-        
+        self.fields['source'].widget.attrs.update({'class': 'form-select d-inline-block col-md-6'})
+        self.fields['source_endpoint'].widget.attrs.update({'class': 'form-select d-inline-block col-md-6'})
+        self.fields['destination'].widget.attrs.update({'class': 'form-select d-inline-block col-md-6'})
+        self.fields['destination_endpoint'].widget.attrs.update({'class': 'form-select d-inline-block col-md-6'})   
             
 class DataMoverDataSourceForm(forms.ModelForm):
     class Meta:
