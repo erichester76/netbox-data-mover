@@ -143,10 +143,12 @@ function populateSourcesAndDestinations() {
                 let sourceOption = document.createElement('option');
                 sourceOption.value = datasource.id;
                 sourceOption.text = `${datasource.name}`;
+                console.log(sourceOption.text);
 
                 let destinationOption = document.createElement('option');
                 destinationOption.value = datasource.id;
                 destinationOption.text = `${datasource.name}`;
+                console.log(destinationOption.text);
 
                 // Add options to both select elements
                 selectSource.add(sourceOption);
