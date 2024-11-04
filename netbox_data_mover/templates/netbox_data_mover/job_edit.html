@@ -67,6 +67,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.20.0/cytoscape.min.js"></script>
 <script>
     $(function() {
+        var cy; // Define `cy` at the top to make it accessible globally
         console.log("Window loaded");
 
         // Add mapping line functionality
@@ -108,8 +109,8 @@
             updateDiagramFromForm();
         });
 
-        // Initialize Cytoscape diagram
-        var cy = cytoscape({
+        // Initialize Cytoscape diagram globally
+        cy = cytoscape({
             container: document.getElementById('cy'),
             elements: [],
             style: [
@@ -137,7 +138,7 @@
                 }
             ]
         });
-    });
+
 
     function getFields(datasourceId, selectId) {
         console.log(`Getting fields for datasource ID: ${datasourceId}`);
