@@ -7,5 +7,5 @@ router.register(r'datasources', views.DataMoverDataSourceViewSet)
 router.register(r'datamoverconfigs', views.DataMoverConfigViewSet)
 
 urlpatterns = router.urls + [
-    path('get_ds_fields/', views.get_fields, name='datasource_fields'),
+path('get_fields/<int:datasource_id>/', views.get_fields, name='datasource_fields')
 ]
