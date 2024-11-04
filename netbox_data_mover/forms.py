@@ -16,9 +16,9 @@ class DataMoverConfigForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
             'schedule': forms.Select(choices=SCHEDULE_CHOICES, attrs={'class': 'form-select d-inline-block col-md-6'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'source': forms.Select(attrs={'class': 'form-select d-inline-block col-md-6'}),
+            'source': forms.Select(attrs={'class': 'form-select', 'id': 'source'}),
             'source_endpoint': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
-            'destination': forms.Select(attrs={'class': 'form-select d-inline-block col-md-6'}),
+            'destination': forms.Select(attrs={'class': 'form-select', 'id': 'destination'}),
             'destination_endpoint': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
         }
 
