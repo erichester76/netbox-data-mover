@@ -6,7 +6,10 @@ from netbox.api.viewsets import NetBoxModelViewSet
 from django.http import JsonResponse
 from ..api_utils import DataSourceAuth
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import NotFound
 
 class DataMoverDataSourceViewSet(NetBoxModelViewSet):
     queryset = DataMoverDataSource.objects.all()
@@ -18,9 +21,9 @@ class DataMoverConfigViewSet(NetBoxModelViewSet):
     serializer_class = DataMoverConfigSerializer
     filterset = DataMoverConfigFilterSet
 
-@api_view(['GET'])
-class DatasourceFieldsView(NetBoxModelViewSet):
-    queryset = DataMoverDataSource.objects.all()
+
+class DataSourceFieldsView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, datasource_id, format=None):
         datasource_id = request.GET.get('datasource_id')
