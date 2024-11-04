@@ -223,38 +223,86 @@
     });
 
     function updateDiagramFromForm() {
-        let nodes = [];
-        let edges = [];
+    let nodes = [];
+    let edges = [];
 
-        let source = $('#source option:selected').text();
-        let destination = $('#destination option:selected').text();
+    let source = $('#source option:selected').text();
+    let destination = $('#destination option:selected').text();
 
-        if (source) {
-            nodes.push({ data: { id: 'source', label: source } });
-        }
-
-        if (destination) {
-            nodes.push({ data: { id: 'destination', label: destination } });
-        }
-
-        $('.mapping-line').each(function(index, line) {
-            let sourceField = $(line).find('.source-field').val();
-            let destinationField = $(line).find('.destination-field').val();
-            let transform = $(line).find('.transform-type').val();
-
-            if (sourceField && destinationField) {
-                nodes.push({ data: { id: `source-${index}`, label: sourceField } });
-                nodes.push({ data: { id: `destination-${index}`, label: destinationField } });
-                edges.push({ data: { source: `source-${index}`, target: `destination-${index}`, transform: transform } });
-            }
+    // Add large nodes for source and destination
+    if (source) {
+        nodes.push({
+            data: { id: 'source', label: `Source: ${source}` },
+            classes: 'header-node'
         });
-
-        cy.elements().remove();
-        cy.add(nodes);
-        cy.add(edges);
-        cy.layout({ name: 'breadthfirst' }).run();
     }
 
+    if (destination) {
+        nodes.push({
+            data: { id: 'destination', label: `Destination: ${destination}` },
+            classes: 'header-node'
+        });
+    }
+
+    // Add nodes for each mapping line and link them
+    $('.mapping-line').each(function(index, line) {
+        let sourceField = $(line).find('.source-field').val();
+        let destinationField = $(line).find('.destination-field').val();
+        let transform = $(line).find('.transform-type').val();
+
+        if (sourceField && destinationField) {
+            nodes.push({ data: { id: `source-${index}`, label: sourceField } });
+            nodes.push({ data: { id: `destination-${index}`, label: destinationField } });
+            edges.push({
+                data: { source: `source-${index}`, target: `destination-${index}`, transform: transform }
+            });
+        }
+    });
+
+    // Link large nodes to their respective fields
+    $('.mapping-line').each(function(index, line) {
+        let sourceField = $(line).find('.source-field').val();
+        let destinationField = $(line).find('.destination-field').val();
+
+        if (sourceField) {
+            edges.push({
+                data: { source: 'source', target: `source-${index}` }
+            });
+        }
+
+        if (destinationField) {
+            edges.push({
+                data: { source: `destination-${index}`, target: 'destination' }
+            });
+        }
+    });
+
+    // Clear existing elements and add new nodes and edges to the diagram
+    cy.elements().remove();
+    cy.add(nodes);
+    cy.add(edges);
+
+    // Run layout with new settings to visually align elements better
+    cy.layout({
+        name: 'breadthfirst',
+        directed: true,
+        padding: 10
+    }).run();
+}
+
+// CSS Styling for larger header nodes
+cy.style()
+    .selector('.header-node')
+    .style({
+        'background-color': '#ff9800',
+        'width': 100,
+        'height': 40,
+        'font-size': '16px',
+        'font-weight': 'bold'
+    })
+    .update();
+
+    
     function saveJobConfiguration() {
         let jobData = {
             source: $('#source').val(),
