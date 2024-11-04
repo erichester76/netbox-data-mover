@@ -125,19 +125,19 @@
                 selectDestination.empty().append('<option value="">Select Destination</option>');
 
                 $.each(data, function(index, datasource) {
-                    // Use the datasource.module to dynamically get module data
+                    // Use the datasource_id to dynamically get module and class data
                     $.ajax({
-                        url: `/plugins-api/datamover/inspect_module/?module_name=${datasource.module}`,
+                        url: `/plugins/datamover/inspect_module/?datasource_id=${datasource.id}`,
                         method: 'GET',
                         success: function(moduleData) {
                             let optgroupSource = $('<optgroup>', { label: datasource.name + " (" + datasource.type + ")" });
                             let optgroupDestination = $('<optgroup>', { label: datasource.name + " (" + datasource.type + ")" });
-                            $.each(moduleData, function(className, attributes) {
-                                attributes.forEach(function(attr) {
-                                    optgroupSource.append(`<option value="${className}.${attr}">${className} - ${attr}</option>`);
-                                    optgroupDestination.append(`<option value="${className}.${attr}">${className} - ${attr}</option>`);
-                                });
+                            
+                            moduleData.attributes.forEach(function(attr) {
+                                optgroupSource.append(`<option value="${moduleData.class_name}.${attr}">${moduleData.class_name} - ${attr}</option>`);
+                                optgroupDestination.append(`<option value="${moduleData.class_name}.${attr}">${moduleData.class_name} - ${attr}</option>`);
                             });
+                            
                             selectSource.append(optgroupSource);
                             selectDestination.append(optgroupDestination);
                         },
@@ -152,6 +152,7 @@
             }
         });
     }
+
 
     function addMappingLine() {
         let mappingLineHtml = `

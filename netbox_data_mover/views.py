@@ -11,15 +11,30 @@ import importlib
 from django.http import JsonResponse
 
 def inspect_module(request):
-    module_name = request.GET.get('module_name')
+    # Get the datasource ID and find the corresponding DataMoverDataSource instance
+    datasource_id = request.GET.get('datasource_id')
     try:
+        datasource = DataMoverDataSource.objects.get(pk=datasource_id)
+        module_name = datasource.module
+        class_name = datasource.auth_function
+
+        # Import the module and get the class specified by auth_function
         lib_module = importlib.import_module(module_name)
-        classes = inspect.getmembers(lib_module, inspect.isclass)
-        response_data = {}
-        for class_name, class_obj in classes:
-            attributes = [attr for attr, _ in inspect.getmembers(class_obj)]
-            response_data[class_name] = attributes
+        class_obj = getattr(lib_module, class_name, None)
+
+        if class_obj is None:
+            return JsonResponse({'error': f'Class {class_name} not found in module {module_name}.'}, status=400)
+
+        # Get all attributes and methods of the class
+        attributes = [attr for attr, _ in inspect.getmembers(class_obj)]
+        response_data = {
+            'class_name': class_name,
+            'attributes': attributes
+        }
         return JsonResponse(response_data)
+
+    except DataMoverDataSource.DoesNotExist:
+        return JsonResponse({'error': 'Data source not found.'}, status=404)
     except ModuleNotFoundError:
         return JsonResponse({'error': f'Module {module_name} not found.'}, status=400)
 
