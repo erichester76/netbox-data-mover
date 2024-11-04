@@ -58,8 +58,8 @@ class DataMoverConfig(NetBoxModel):
 
     class Meta:
         ordering = ['name']
-        verbose_name = ('Mover')
-        verbose_name_plural = ('Movers')    
+        verbose_name = ('Data Mover Job')
+        verbose_name_plural = ('Data Mover Jobs')    
 
     def __str__(self):
         return self.name
