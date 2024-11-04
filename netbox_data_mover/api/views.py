@@ -20,6 +20,7 @@ class DataMoverConfigViewSet(NetBoxModelViewSet):
 
 @api_view(['GET'])
 class DatasourceFieldsView(NetBoxModelViewSet):
+    queryset = DataMoverDataSource.objects.all()
 
     def get(self, request, datasource_id, format=None):
         datasource_id = request.GET.get('datasource_id')
