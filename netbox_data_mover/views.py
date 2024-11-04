@@ -33,40 +33,17 @@ class DataMoverConfigEditView(generic.ObjectEditView):
         model = DataMoverConfig
         fields = '__all__'
 
-    def dispatch(self, request, *args, **kwargs):
-        # Setting these values directly using instance
-        instance = self.get_object() if 'pk' in kwargs else None
-
-        if instance:
-            self.selected_source = instance.source.id
-            self.selected_source_endpoint = instance.source_endpoint
-            self.selected_destination = instance.destination.id
-            self.selected_destination_endpoint = instance.destination_endpoint
-        else:
-            self.selected_source = None
-            self.selected_source_endpoint = None
-            self.selected_destination = None
-            self.selected_destination_endpoint = None
-
-        self.sources = DataMoverDataSource.objects.all()
-        self.destinations = DataMoverDataSource.objects.all()
-        self.source_endpoints = []  
-        self.destination_endpoints = []  
-
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'selected_source': self.selected_source,
-            'selected_source_endpoint': self.selected_source_endpoint,
-            'selected_destination': self.selected_destination,
-            'selected_destination_endpoint': self.selected_destination_endpoint,
-            'sources': self.sources,
-            'destinations': self.destinations,
-            'source_endpoints': self.source_endpoints,
-            'destination_endpoints': self.destination_endpoints
-        })
+    def get_extra_context(self, request, instance):
+        context = {
+            'sources': DataMoverDataSource.objects.all(),
+            'destinations': DataMoverDataSource.objects.all(),
+            'selected_source': instance.source.id if instance else None,
+            'selected_source_endpoint': instance.source_endpoint if instance else None,
+            'selected_destination': instance.destination.id if instance else None,
+            'selected_destination_endpoint': instance.destination_endpoint if instance else None,
+            'source_endpoints': [],  # Replace with real values
+            'destination_endpoints': []  # Replace with real values
+        }
         return context
 
 class DataMoverConfigDeleteView(generic.ObjectDeleteView):
