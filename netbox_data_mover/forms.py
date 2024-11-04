@@ -2,37 +2,31 @@ from django import forms
 from .models import DataMoverConfig, DataMoverDataSource
 
 
+from django import forms
+from .models import DataMoverConfig
+
 class DataMoverConfigForm(forms.ModelForm):
     class Meta:
+        SCHEDULE_CHOICES = [
+        ('0 * * * *', 'Hourly'),
+        ('0 0 * * *', 'Daily'),
+        ('0 0 * * 0', 'Weekly'),
+        ('0 0 1 * *', 'Monthly'),
         model = DataMoverConfig
         fields = ['name', 'schedule', 'description', 'source', 'source_endpoint', 'destination', 'destination_endpoint']
         widgets = {
-            'source': forms.Select(attrs={'class': 'form-select'}),
-            'source_endpoint': forms.Select(attrs={'class': 'form-select'}),
-            'destination': forms.Select(attrs={'class': 'form-select'}),
-            'destination_endpoint': forms.Select(attrs={'class': 'form-select'}),
+            'name': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
+            'schedule': forms.Select(choices=SCHEDULE_CHOICES, attrs={'class': 'form-select d-inline-block col-md-6'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'source': forms.Select(attrs={'class': 'form-select d-inline-block col-md-6'}),
+            'source_endpoint': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
+            'destination': forms.Select(attrs={'class': 'form-select d-inline-block col-md-6'}),
+            'destination_endpoint': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
         }
-        SCHEDULE_CHOICES = [
-            ('0 * * * *', 'Hourly'),
-            ('0 0 * * *', 'Daily'),
-            ('0 0 * * 0', 'Weekly'),
-            ('0 0 1 * *', 'Monthly'),
-        ]
-
-        name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control d-inliune-block col-md-6'}))
-        schedule = forms.ChoiceField(
-        choices=SCHEDULE_CHOICES,
-        widget=forms.Select(attrs={'class': 'form-select d-inliune-block col-md-6'})
-    )
-
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields[]
-        self.fields['source'].widget.attrs.update({'class': 'form-select d-inline-block col-md-6'})
-        self.fields['source_endpoint'].widget.attrs.update({'class': 'form-select d-inline-block col-md-6'})
-        self.fields['destination'].widget.attrs.update({'class': 'form-select d-inline-block col-md-6'})
-        self.fields['destination_endpoint'].widget.attrs.update({'class': 'form-select d-inline-block col-md-6'})   
+        # Any custom initialization can go here if required
             
 class DataMoverDataSourceForm(forms.ModelForm):
     class Meta:
