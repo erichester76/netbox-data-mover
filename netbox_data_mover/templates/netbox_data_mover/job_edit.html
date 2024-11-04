@@ -66,7 +66,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.20.0/cytoscape.min.js"></script>
 <script>
-   $(window).on('load', function() {
+$(document).ready(function() {
     console.log("Window loaded, calling populateSourcesAndDestinations");
     populateSourcesAndDestinations();
 
@@ -120,22 +120,26 @@
     });
 
 
-function populateSourcesAndDestinations() {
+    function populateSourcesAndDestinations() {
     console.log("Calling API to populate sources and destinations...");
     $.ajax({
-        url: '/api/plugins/datamover/datasources',
+        url: '/plugins/api/datamover/datasources',
         method: 'GET',
         success: function(data) {
-            let selectSource = $('#source');
-            let selectDestination = $('#destination');
-            selectSource.empty().append('<option value="">Select Source</option>');
-            selectDestination.empty().append('<option value="">Select Destination</option>');
+            let sourceOptions = '<option value="">Select Source</option>';
+            let destinationOptions = '<option value="">Select Destination</option>';
 
             $.each(data.results, function(index, datasource) {
-                let optionHtml = `<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`;
-                selectSource.append(optionHtml);
-                selectDestination.append(optionHtml);
+                sourceOptions += `<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`;
+                destinationOptions += `<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`;
             });
+
+            $('#source').html(sourceOptions);
+            $('#destination').html(destinationOptions);
+
+            // Debugging: Check if the options were added
+            console.log("Source options: ", $('#source').html());
+            console.log("Destination options: ", $('#destination').html());
         },
         error: function(error) {
             console.error("Failed to load sources and destinations", error);
