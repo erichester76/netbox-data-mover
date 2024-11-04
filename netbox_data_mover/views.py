@@ -41,8 +41,8 @@ class DataMoverConfigEditView(generic.ObjectEditView):
             'selected_source_endpoint': instance.source_endpoint if instance else None,
             'selected_destination': instance.destination if instance else None,
             'selected_destination_endpoint': instance.destination_endpoint if instance else None,
-            'source_endpoints': [],  # Replace with real values
-            'destination_endpoints': []  # Replace with real values
+            'source_endpoints': [], 
+            'destination_endpoints': []  
         }
         return context
 
