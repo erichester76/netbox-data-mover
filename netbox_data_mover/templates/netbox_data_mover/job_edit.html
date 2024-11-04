@@ -130,8 +130,9 @@ function populateSourcesAndDestinations() {
             let selectDestination = $('#destination');
             selectSource.empty().append('<option value="">Select Source</option>');
             selectDestination.empty().append('<option value="">Select Destination</option>');
-
-            $.each(data, function(index, data) {
+            console.log(data)
+            $.each(data, function(index, datasource) {
+                console.log(datasource.name)
                 selectSource.append(`<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`);
                 selectDestination.append(`<option value="${datasource.id}">${datasource.name} (${datasource.type})</option>`);
             });
