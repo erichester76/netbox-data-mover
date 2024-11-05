@@ -58,7 +58,7 @@ $(function() {
     var sourceFields = {};
     var destinationFields = {};  
 
-    $(document).on('change', '#source, #destination', function() {
+    $(document).on('change', '#id_source, #id_destination', function() {
         let datasourceId = $(this).val();
         let isSource = $(this).attr('id') === 'source';
 
@@ -67,7 +67,7 @@ $(function() {
                 url: `/api/plugins/netbox_data_mover/datasources/${datasourceId}/get_endpoints/`,
                 method: 'GET',
                 success: function(data) {
-                    let endpointSelect = isSource ? $('#source_endpoint') : $('#destination_endpoint');
+                    let endpointSelect = isSource ? $('#id_source_endpoint') : $('#id_destination_endpoint');
                     endpointSelect.empty();
                     endpointSelect.append('<option value="">Select Endpoint</option>');
                     data.endpoints.forEach(function(endpoint) {
@@ -81,9 +81,9 @@ $(function() {
         }
     });
 
-    $(document).on('change', '#source_endpoint, #destination_endpoint', function() {
-        let isSource = $(this).attr('id') === 'source_endpoint';
-        let datasourceId = isSource ? $('#source').val() : $('#destination').val();
+    $(document).on('change', '#id_source_endpoint, #id_destination_endpoint', function() {
+        let isSource = $(this).attr('id') === 'id_source_endpoint';
+        let datasourceId = isSource ? $('#id_source').val() : $('#id_destination').val();
         let endpoint = $(this).val();
 
         if (datasourceId && endpoint) {
@@ -212,10 +212,10 @@ $(function() {
 
     function saveJobConfiguration() {
         let jobData = {
-            source: $('#source').val(),
-            source_endpoint: $('#source_endpoint').val(),
-            destination: $('#destination').val(),
-            destination_endpoint: $('#destination_endpoint').val(),
+            source: $('#id_source').val(),
+            source_endpoint: $('#id_source_endpoint').val(),
+            destination: $('#id_destination').val(),
+            destination_endpoint: $('#id_destination_endpoint').val(),
             mappings: []
         };
 
