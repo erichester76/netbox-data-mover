@@ -1,6 +1,7 @@
 from django import forms
 from .models import DataMoverConfig, DataMoverDataSource
 
+    
 class DataMoverConfigForm(forms.ModelForm):
     class Meta:
         SCHEDULE_CHOICES = [
@@ -24,8 +25,7 @@ class DataMoverConfigForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Any custom initialization can go here if required
-            
+ 
 class DataMoverDataSourceForm(forms.ModelForm):
     class Meta:
         model = DataMoverDataSource

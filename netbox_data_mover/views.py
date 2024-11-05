@@ -33,7 +33,16 @@ class DataMoverConfigEditView(generic.ObjectEditView):
         model = DataMoverConfig
         fields = '__all__'
 
-
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({
+            'initial': {
+                'source': self.object.source if self.object else None,
+                'destination': self.object.destination if self.object else None
+            }
+        })
+        return kwargs
+    
 class DataMoverConfigDeleteView(generic.ObjectDeleteView):
     queryset = DataMoverConfig.objects.all()
     permission_required = 'netbox_data_mover.delete_datamoverconfig'
