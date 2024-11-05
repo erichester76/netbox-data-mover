@@ -60,7 +60,7 @@ $(function() {
 
     $(document).on('change', '#id_source, #id_destination', function() {
         let datasourceId = $(this).val();
-        let isSource = $(this).attr('id') === 'source';
+        let isSource = $(this).attr('id') === 'id_source';
 
         if (datasourceId) {
             $.ajax({
@@ -71,6 +71,7 @@ $(function() {
                     endpointSelect.empty();
                     endpointSelect.append('<option value="">Select Endpoint</option>');
                     data.endpoints.forEach(function(endpoint) {
+                        console.log(endpoint)
                         endpointSelect.append(`<option value="${endpoint}">${endpoint}</option>`);
                     });
                     // Refresh the Select2 dropdown
