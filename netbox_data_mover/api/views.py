@@ -56,14 +56,15 @@ class DataMoverConfigViewSet(NetBoxModelViewSet):
 
 class DataSourceFieldsView(NetBoxModelViewSet):
     queryset = DataMoverDataSource.objects.all()
-    serializer_class = DataSourceFieldSerializer
+    serializer_class = DataMoverDataSourceSerializer
 
-    @action(detail=True, methods=['get'])
-    def get_fields(self, request, pk=None):
+    @action(detail=True, methods=['get'], url_path='get_fields/(?P<endpoint>[^/.]+)')
+    def get_fields(self, request, pk=None, endpoint=None):
         try:
             datasource = self.get_object()
-            # Assuming `get_available_fields` is a method you implemented to retrieve fields.
-            fields = get_available_fields(datasource)
+            fields = get_available_fields(datasource, endpoint)
             return Response({'fields': fields})
         except DataMoverDataSource.DoesNotExist:
             return Response({"error": "Data source not found."}, status=404)
+        except Exception as e:
+            return Response({"error": str(e)}, status=400)
