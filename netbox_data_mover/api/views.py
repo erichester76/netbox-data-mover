@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from ..models import DataMoverDataSource, DataMoverConfig
 from ..filtersets import DataMoverConfigFilterSet, DataMoverDataSourceFilterSet 
-from .serializers import DataMoverDataSourceSerializer, DataMoverConfigSerializer, DataSourceFieldSerializer
+from .serializers import DataMoverDataSourceSerializer, DataMoverConfigSerializer, DataSourceFieldsSerializer
 from netbox.api.viewsets import NetBoxModelViewSet
 from django.http import JsonResponse
 from ..api_utils import DataSourceAuth
@@ -56,7 +56,6 @@ class DataMoverConfigViewSet(NetBoxModelViewSet):
 
 class DataSourceFieldsView(NetBoxModelViewSet):
     queryset = DataMoverDataSource.objects.all()
-    serializer_class = DataMoverDataSourceSerializer
 
     @action(detail=True, methods=['get'], url_path='get_fields/(?P<endpoint>[^/.]+)')
     def get_fields(self, request, pk=None, endpoint=None):

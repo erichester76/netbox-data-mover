@@ -12,7 +12,7 @@ class DataMoverConfigSerializer(NetBoxModelSerializer):
         model = DataMoverConfig
         fields = ['id', 'name', 'description', 'schedule', 'source', 'destination', 'last_run_records_changed', 'last_run_status', 'last_run_time']
 
-class DataSourceFieldSerializer(NetBoxModelSerializer):
+class DataSourceFieldsSerializer(NetBoxModelSerializer):
     class Meta:
         model = DataMoverDataSource
         fields = ['id', 'name', 'module', 'auth_function']
