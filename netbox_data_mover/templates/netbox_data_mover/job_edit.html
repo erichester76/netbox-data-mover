@@ -71,8 +71,10 @@ $(function() {
                     endpointSelect.empty();
                     endpointSelect.append('<option value="">Select Endpoint</option>');
                     data.endpoints.forEach(function(endpoint) {
-                        endpointSelect.append(`<option value="${endpoint}">${endpoint}</option>`);
+                    endpointSelect.append(`<option value="${endpoint}">${endpoint}</option>`);
                     });
+                    // Refresh the Select2 dropdown
+                    endpointSelect.trigger('change.select2');
                 },
                 error: function(error) {
                     console.error("Failed to load endpoints", error);
