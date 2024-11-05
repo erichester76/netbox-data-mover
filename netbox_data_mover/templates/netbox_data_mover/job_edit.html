@@ -131,27 +131,52 @@
             saveJobConfiguration();
         });
 
-    // Update fields when source or destination changes
-    $(document).on('change', '#source, #source-endpoint', function() {
-        let endpoint = $('source-endpoint').val();
-        if (endpoint) {
-            let id = $('#source').val();
-            if (id) {
-               getFields(id, endpoint, true);
-            }        
-        }
-    });
-
-    // Update destination fields when destination changes
-    $(document).on('change', '#destination, #destination-endpoint', function() {
-        let endpoint = $('#destination-endpoint').val();
-        if (endpoint) {
-            let id = $('#destination').val();
-            if (id) {
-               getFields(id, endpoint, false);
+        // Update fields when source or destination changes
+        $(document).on('change', '#source, #source-endpoint', function() {
+            let endpoint = $('source-endpoint').val();
+            if (endpoint) {
+                let id = $('#source').val();
+                if (id) {
+                getFields(id, endpoint, true);
+                }        
             }
-        }
-    });
+        });
+
+        // Update fields when source changes
+        $(document).on('change', '#source', function() {
+            let datasourceId = $(this).val();
+            let endpoint = $('#source_endpoint').val();
+            if (datasourceId && endpoint) {
+                getFields(datasourceId, endpoint, true);
+            }
+        });
+
+        // Update fields when destination changes
+        $(document).on('change', '#destination', function() {
+            let datasourceId = $(this).val();
+            let endpoint = $('#destination_endpoint').val();
+            if (datasourceId && endpoint) {
+                getFields(datasourceId, endpoint, false);
+            }
+        });
+
+        // Update fields when the source endpoint changes
+        $(document).on('change', '#source_endpoint', function() {
+            let datasourceId = $('#source').val();
+            let endpoint = $(this).val();
+            if (datasourceId && endpoint) {
+                getFields(datasourceId, endpoint, true);
+            }
+        });
+
+        // Update fields when the destination endpoint changes
+        $(document).on('change', '#destination_endpoint', function() {
+            let datasourceId = $('#destination').val();
+            let endpoint = $(this).val();
+            if (datasourceId && endpoint) {
+                getFields(datasourceId, endpoint, false);
+            }
+        });
 
 });
 
