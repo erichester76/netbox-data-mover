@@ -132,21 +132,30 @@
         });
 
         // Update fields when source or destination changes
-        $(document).on('change', '#source, #destination', function() {
-            let datasourceId = $(this).val();
-            let isSource = $(this).attr('id') === 'source';
+         // Update source fields when source changes
+    $(document).on('change', '#source', function() {
+        let datasourceId = $(this).val();
+        if (datasourceId) {
+            let endpoint = $('#source-endpoint').val();
+            getFields(datasourceId, endpoint, true);
+        }
+    });
 
-            if (datasourceId) {
-                getFields(datasourceId, isSource);
-            }
-        });
+    // Update destination fields when destination changes
+    $(document).on('change', '#destination', function() {
+        let datasourceId = $(this).val();
+        if (datasourceId) {
+            let endpoint = $('#destination-endpoint').val();
+            getFields(datasourceId, endpoint, false);
+        }
+    });
     });
 
     // Fetch fields once and store globally
-    function getFields(datasourceId, isSource) {
-        console.log(`Getting fields for datasource ID: ${datasourceId}`);
+    function getFields(datasourceId, endpoint, isSource) {
+        console.log(`Getting fields for datasource ID: ${datasourceId} and endpoint: ${endpoint}`);
         $.ajax({
-            url: `/api/plugins/datamover/datasources/get_fields/${datasourceId}/`,
+            url: `/api/plugins/netbox_data_mover/datasources/get_fields/${datasourceId}/${endpoint}/`,
             method: 'GET',
             success: function(data) {
                 if (isSource) {

@@ -37,7 +37,7 @@ class DataSourceAuth:
             raise RuntimeError(f'Failed to authenticate: {str(e)}')
 
     @staticmethod
-    def fetch_data(datasource, client):
+    def fetch_data(datasource, client, endpoint):
         """
         Fetch data using the provided data source details and the authenticated client.
 
@@ -63,15 +63,9 @@ class DataSourceAuth:
                 
                 if not callable(fetch_function):
                     raise ValueError("Evaluated fetch_function is not callable.")
-            else:
-                # Otherwise, retrieve the function from the imported module
-                module = importlib.import_module(datasource.module)
-                fetch_function = getattr(module, fetch_function_code, None)
-                if fetch_function is None:
-                    raise ImportError(f'Fetch function "{fetch_function_code}" not found in module "{datasource.module}".')
-
+            
             # Assuming the fetch function takes a client and an endpoint as arguments
-            return fetch_function(client, datasource.base_urls[0], datasource.source_endpoint)
+            return fetch_function(client, datasource.base_urls[0], endpoint, 1)
 
         except Exception as e:
             raise RuntimeError(f'Failed to fetch data: {str(e)}')
