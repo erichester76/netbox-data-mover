@@ -28,21 +28,14 @@ class DataMoverConfigEditView(generic.ObjectEditView):
     form = DataMoverConfigForm
     template_name = 'netbox_data_mover/job_edit.html'
     permission_required = 'netbox_data_mover.change_datamoverconfig'
-
+    sources = DataMoverDataSource.objects.all(),
+    destinations =  DataMoverDataSource.objects.all(),
+   
     class Meta:
         model = DataMoverConfig
         fields = '__all__'
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update({
-            'initial': {
-                'source': self.object.source if self.object else None,
-                'destination': self.object.destination if self.object else None
-            }
-        })
-        return kwargs
-    
+
 class DataMoverConfigDeleteView(generic.ObjectDeleteView):
     queryset = DataMoverConfig.objects.all()
     permission_required = 'netbox_data_mover.delete_datamoverconfig'

@@ -1,7 +1,6 @@
 from django import forms
 from .models import DataMoverConfig, DataMoverDataSource
 
-    
 class DataMoverConfigForm(forms.ModelForm):
     class Meta:
         SCHEDULE_CHOICES = [
@@ -17,15 +16,16 @@ class DataMoverConfigForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
             'schedule': forms.Select(choices=SCHEDULE_CHOICES, attrs={'class': 'form-select d-inline-block col-md-6'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'source': forms.Select(attrs={'class': 'form-select', 'id': 'source'}),
+            'source': forms.Select(attrs={'class': 'form-select d-inline-block col-md-6'}),
             'source_endpoint': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
-            'destination': forms.Select(attrs={'class': 'form-select', 'id': 'destination'}),
+            'destination': forms.Select(attrs={'class': 'form-select d-inline-block col-md-6'}),
             'destination_endpoint': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
- 
+        # Any custom initialization can go here if required
+            
 class DataMoverDataSourceForm(forms.ModelForm):
     class Meta:
         model = DataMoverDataSource
