@@ -81,7 +81,26 @@
             }
         });
 
-});
+         // Remove mapping line functionality
+        $(document).on('click', '.remove-mapping', function() {
+                    $(this).closest('.mapping-line').next('.transform-container').remove();
+                    $(this).closest('.mapping-line').remove();
+                    updateDiagramFromForm();
+        });
+
+        // Remove transform line functionality
+        $(document).on('click', '.remove-transform', function() {
+            $(this).closest('.transform-line').remove();
+            updateDiagramFromForm();
+        });
+
+        // Form submit handler
+        $(document).on('submit', '#job-editor-form', function(event) {
+            event.preventDefault();
+            saveJobConfiguration();
+        });
+
+    });
 
     // Fetch fields once and store globally
     function getFields(datasourceId, endpoint, isSource) {
@@ -181,24 +200,57 @@
         $(this).closest('.mapping-line').next('.transform-container').append(transformHtml);
     });
 
-    // Remove mapping line functionality
-    $(document).on('click', '.remove-mapping', function() {
-                $(this).closest('.mapping-line').next('.transform-container').remove();
-                $(this).closest('.mapping-line').remove();
-                updateDiagramFromForm();
-    });
+    function saveJobConfiguration() {
+        let jobData = {
+            source: $('#source').val(),
+            source_endpoint: $('#source-endpoint').val(),
+            destination: $('#destination').val(),
+            destination_endpoint: $('#destination-endpoint').val(),
+            mappings: []
+        };
 
-    // Remove transform line functionality
-    $(document).on('click', '.remove-transform', function() {
-        $(this).closest('.transform-line').remove();
-        updateDiagramFromForm();
-    });
+        $('.mapping-line').each(function(index, line) {
+            let mapping = {
+                source: $(line).find('.source-field').val(),
+                transforms: [],
+                destination: $(line).find('.destination-field').val()
+            };
+            
+            // Collect transforms for the current mapping
+            $(line).next('.transform-container').find('.transform-line').each(function() {
+                let transform = {
+                    type: $(this).find('.transform-type').val(),
+                    params: []
+                };
 
-    // Form submit handler
-    $(document).on('submit', '#job-editor-form', function(event) {
-        event.preventDefault();
-        saveJobConfiguration();
-    });
+                // Collect parameters for the current transform
+                $(this).find('.transform-param').each(function() {
+                    transform.params.push($(this).val());
+                });
+
+                mapping.transforms.push(transform);
+            });
+
+            jobData.mappings.push(mapping);
+            console.log('Job Data:', jobData);
+            // AJAX POST to save the job configuration here...
+            $.ajax({
+                url: '{% url "plugins:netbox_data_mover:datamoverconfig_add" %}',
+                type: 'POST',
+                data: JSON.stringify(jobData),
+                contentType: 'application/json',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    alert("Job saved successfully!");
+                },
+                error: function(error) {
+                    console.error("Failed to save job configuration", error);
+                }
+            });
+        });
+    }
 
     </script>
 {% endblock %}

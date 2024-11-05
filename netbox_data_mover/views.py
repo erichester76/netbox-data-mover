@@ -35,7 +35,6 @@ class DataMoverConfigEditView(generic.ObjectEditView):
         model = DataMoverConfig
         fields = '__all__'
 
-
 class DataMoverConfigDeleteView(generic.ObjectDeleteView):
     queryset = DataMoverConfig.objects.all()
     permission_required = 'netbox_data_mover.delete_datamoverconfig'
