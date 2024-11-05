@@ -51,59 +51,43 @@
     </div>
 </form>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script>
-    
+<script> 
 $(function() {
     console.log("DOM Ready!");
 
     var sourceFields = {};
     var destinationFields = {};  
 
-    // Update fields when source changes
-    $(document).on('change', '#source', function() {
-        console.log("Source change triggered");
-        let endpoint = $('#source_endpoint').val();
-        if (endpoint) {
-            let id = $('#source').val();
-            if (id) {
-                getFields(id, endpoint, true);
-            }        
+    $(document).on('change', '#source, #destination', function() {
+        let datasourceId = $(this).val();
+        let isSource = $(this).attr('id') === 'source';
+
+        if (datasourceId) {
+            $.ajax({
+                url: `/api/plugins/netbox_data_mover/datasources/${datasourceId}/get_endpoints/`,
+                method: 'GET',
+                success: function(data) {
+                    let endpointSelect = isSource ? $('#source_endpoint') : $('#destination_endpoint');
+                    endpointSelect.empty();
+                    endpointSelect.append('<option value="">Select Endpoint</option>');
+                    data.endpoints.forEach(function(endpoint) {
+                        endpointSelect.append(`<option value="${endpoint}">${endpoint}</option>`);
+                    });
+                },
+                error: function(error) {
+                    console.error("Failed to load endpoints", error);
+                }
+            });
         }
     });
 
-    // Update fields when source endpoint changes
-    $(document).on('change', '#source_endpoint', function() {
-        console.log("Source endpoint change triggered");
-        let endpoint = $('#source_endpoint').val();
-        if (endpoint) {
-            let id = $('#source').val();
-            if (id) {
-                getFields(id, endpoint, true);
-            }        
-        }
-    });
+    $(document).on('change', '#source_endpoint, #destination_endpoint', function() {
+        let isSource = $(this).attr('id') === 'source_endpoint';
+        let datasourceId = isSource ? $('#source').val() : $('#destination').val();
+        let endpoint = $(this).val();
 
-    // Update fields when destination changes
-    $(document).on('change', '#destination', function() {
-        console.log("Destination change triggered");
-        let endpoint = $('#destination_endpoint').val();
-        if (endpoint) {
-            let id = $('#destination').val();
-            if (id) {
-                getFields(id, endpoint, false);
-            }        
-        }
-    });
-
-    // Update fields when destination endpoint changes
-    $(document).on('change', '#destination_endpoint', function() {
-        console.log("Destination endpoint change triggered");
-        let endpoint = $('#destination_endpoint').val();
-        if (endpoint) {
-            let id = $('#destination').val();
-            if (id) {
-                getFields(id, endpoint, false);
-            }        
+        if (datasourceId && endpoint) {
+            getFields(datasourceId, endpoint, isSource);
         }
     });
 

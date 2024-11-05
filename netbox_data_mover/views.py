@@ -19,6 +19,11 @@ class DataMoverConfigListView(generic.ObjectListView):
             }
         return super().get(request, *args, **kwargs)
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['data_sources'] = DataMoverDataSource.objects.all()
+        return context
+    
 class DataMoverConfigDetailView(BaseObjectView):
     queryset = DataMoverConfig.objects.all()
     permission_required = 'netbox_data_mover.view_datamoverconfig'

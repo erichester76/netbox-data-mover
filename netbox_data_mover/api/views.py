@@ -48,6 +48,13 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
     queryset = DataMoverDataSource.objects.all()
     serializer_class = DataMoverDataSourceSerializer
     filterset = DataMoverDataSourceFilterSet
+    
+    @action(detail=True, methods=['get'])
+    def get_endpoints(self, request, pk=None):
+        datasource = self.get_object()
+        endpoints = datasource.endpoints.split(',')
+        return Response({'endpoints': [endpoint.strip() for endpoint in endpoints]})
+
 
 class DataMoverConfigViewSet(NetBoxModelViewSet):
     queryset = DataMoverConfig.objects.all()

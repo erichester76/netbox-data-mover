@@ -17,12 +17,14 @@ class DataMoverDataSource(NetBoxModel):
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=50, choices=TYPE_CHOICES)
     module = models.CharField(max_length=100, null=True)
-    auth_method = models.CharField(max_length=50, blank=True, null=True)
-    auth_function = models.TextField(blank=True, null=True) 
-    find_function = models.TextField(blank=True, null=True) 
-    create_function = models.TextField(blank=True, null=True) 
-    update_function = models.TextField(blank=True, null=True) 
-    fetch_function = models.TextField(blank=True, null=True)  
+    auth_method = models.CharField(max_length=50, null=True)
+    auth_function = models.TextField(null=True) 
+    find_function = models.TextField(null=True) 
+    create_function = models.TextField(null=True) 
+    update_function = models.TextField(null=True) 
+    fetch_function = models.TextField(null=True)  
+    endpoints = models.TextField(null=True, help_text="Comma separated list of available endpoints.")
+
     auth_args = models.JSONField(blank=True, null=True)  
     base_urls = models.JSONField(null=True)  
 
@@ -48,6 +50,7 @@ class DataMoverConfig(NetBoxModel):
     
     destination = models.ForeignKey(DataMoverDataSource, on_delete=models.CASCADE, related_name="destination")
     destination_endpoint = models.CharField(max_length=100,null=True)
+
 
     mappings = models.JSONField(null=True)  
 
