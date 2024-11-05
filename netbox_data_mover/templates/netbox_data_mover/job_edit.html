@@ -67,17 +67,14 @@ $(function() {
                 url: `/api/plugins/datamover/datasources/${datasourceId}/get_endpoints/`,
                 method: 'GET',
                 success: function(data) {
-                    console.log('success on get_endpoint')
                     let endpointSelect = isSource ? $('#id_source_endpoint') : $('#id_destination_endpoint');
                     endpointSelect.empty();
                     endpointSelect.append('<option value="">Select Endpoint</option>');
                     data.endpoints.forEach(function(endpoint) {
                         endpointSelect.append(`<option value="${endpoint}">${endpoint}</option>`);
                     });
-                    console.log(endpointSelect.html());
                     // Refresh the Select2 dropdown
-                    endpointSelect.trigger('change.select2');
-                    endpointSelect.trigger('change');
+                    endpointSelect.select2('destroy').select2({ width: 'resolve' });
 
                 },
                 error: function(error) {
