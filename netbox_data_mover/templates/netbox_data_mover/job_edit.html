@@ -59,39 +59,59 @@
     $(function() {
         console.log("Window loaded");
         
-        // Update fields when source or destination changes
-        $(document).on('change', '#source, #source-endpoint', function() {
+        // Update fields when source changes
+        $(document).on('change', '#source', function() {
             let endpoint = $('source-endpoint').val();
             if (endpoint) {
                 let id = $('#source').val();
                 if (id) {
-                getFields(id, endpoint, true);
+                    getFields(id, endpoint, true);
                 }        
             }
         });
 
-        // Update fields when source or destination changes
-        $(document).on('change', '#destination, #destination-endpoint', function() {
+        // Update fields when source endpoint changes
+        $(document).on('change', '#source-endpoint', function() {
+            let endpoint = $('source-endpoint').val();
+            if (endpoint) {
+                let id = $('#source').val();
+                if (id) {
+                    getFields(id, endpoint, true);
+                }        
+            }
+        });
+
+        // Update fields when destination changes
+        $(document).on('change', '#destination', function() {
             let endpoint = $('destination-endpoint').val();
             if (endpoint) {
                 let id = $('#destination').val();
                 if (id) {
-                getFields(id, endpoint, true);
+                    getFields(id, endpoint, true);
+                }        
+            }
+        });
+
+        // Update fields when destination endpoint hanges
+        $(document).on('change', '#destination-endpoint', function() {
+            let endpoint = $('destination-endpoint').val();
+            if (endpoint) {
+                let id = $('#destination').val();
+                if (id) {
+                    getFields(id, endpoint, true);
                 }        
             }
         });
 
          // Remove mapping line functionality
         $(document).on('click', '.remove-mapping', function() {
-                    $(this).closest('.mapping-line').next('.transform-container').remove();
-                    $(this).closest('.mapping-line').remove();
-                    updateDiagramFromForm();
+            $(this).closest('.mapping-line').next('.transform-container').remove();
+            $(this).closest('.mapping-line').remove();
         });
 
         // Remove transform line functionality
         $(document).on('click', '.remove-transform', function() {
             $(this).closest('.transform-line').remove();
-            updateDiagramFromForm();
         });
 
         // Form submit handler
