@@ -133,23 +133,28 @@
 
         // Update fields when source or destination changes
          // Update source fields when source changes
-    $(document).on('change', '#source', function() {
-        let datasourceId = $(this).val();
-        if (datasourceId) {
-            let endpoint = $('#source-endpoint').val();
-            getFields(datasourceId, endpoint, true);
+    $(document).on('change', '#source, #source-endpoint', function() {
+        let endpoint = $(this).val();
+        if (endpoint) {
+            let id = $('#source').val();
+            if (id) {
+               getFields(datasourceId, endpoint, true);
+            }        
         }
     });
 
     // Update destination fields when destination changes
-    $(document).on('change', '#destination', function() {
-        let datasourceId = $(this).val();
-        if (datasourceId) {
-            let endpoint = $('#destination-endpoint').val();
-            getFields(datasourceId, endpoint, false);
+    $(document).on('change', '#destination, #destination-endpoint', function() {
+        let endpoint = $(this).val();
+        if (endpoint) {
+            let id = $('#destination').val();
+            if (id) {
+               getFields(datasourceId, endpoint, false);
+            }
         }
     });
-    });
+
+});
 
     // Fetch fields once and store globally
     function getFields(datasourceId, endpoint, isSource) {
