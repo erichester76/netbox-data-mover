@@ -131,25 +131,24 @@
             saveJobConfiguration();
         });
 
-        // Update fields when source or destination changes
-         // Update source fields when source changes
+    // Update fields when source or destination changes
     $(document).on('change', '#source, #source-endpoint', function() {
-        let endpoint = $(this).val();
+        let endpoint = $('source-endpoint').val();
         if (endpoint) {
             let id = $('#source').val();
             if (id) {
-               getFields(datasourceId, endpoint, true);
+               getFields(id, endpoint, true);
             }        
         }
     });
 
     // Update destination fields when destination changes
     $(document).on('change', '#destination, #destination-endpoint', function() {
-        let endpoint = $(this).val();
+        let endpoint = $('#destination-endpoint').val();
         if (endpoint) {
             let id = $('#destination').val();
             if (id) {
-               getFields(datasourceId, endpoint, false);
+               getFields(id, endpoint, false);
             }
         }
     });
