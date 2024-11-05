@@ -15,13 +15,8 @@ def get_available_fields(request, pk, endpoint):
     datasource = get_object_or_404(DataMoverDataSource, pk=pk)
     
     try:
-        # Retrieve DataMoverDataSource instance
         datasource = DataMoverDataSource.objects.get(pk=datasource.id)
-
-        # Authenticate to the data source
         client = DataSourceAuth.authenticate(datasource)
-
-        # Use the fetch_data method to get the data
         data = DataSourceAuth.fetch_data(datasource, client, endpoint)
 
         # Extract fields from the first row of the data
