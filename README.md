@@ -7,7 +7,7 @@ A NetBox plugin to manage data migration between various sources and destination
 
 | NetBox Version | Plugin Version |
 |-------------|-----------|
-| 4.x.x       | 0.0.1     |
+| 4.x.x       | 4.1.1     |
 
 ## Installing
 
