@@ -57,8 +57,8 @@
 
     // Update fields when source changes
     $(document).on('change', '#source', function() {
-        console.log("source change triggered")
-        let endpoint = $('source-endpoint').val();
+        console.log("Source change triggered");
+        let endpoint = $('#source_endpoint').val();
         if (endpoint) {
             let id = $('#source').val();
             if (id) {
@@ -68,9 +68,9 @@
     });
 
     // Update fields when source endpoint changes
-    $(document).on('change', '#source-endpoint', function() {
-        console.log("source endpoint change triggered")
-        let endpoint = $('source-endpoint').val();
+    $(document).on('change', '#source_endpoint', function() {
+        console.log("Source endpoint change triggered");
+        let endpoint = $('#source_endpoint').val();
         if (endpoint) {
             let id = $('#source').val();
             if (id) {
@@ -81,25 +81,24 @@
 
     // Update fields when destination changes
     $(document).on('change', '#destination', function() {
-        onsole.log("destination change triggered")
-
-        let endpoint = $('destination-endpoint').val();
+        console.log("Destination change triggered");
+        let endpoint = $('#destination_endpoint').val();
         if (endpoint) {
             let id = $('#destination').val();
             if (id) {
-                getFields(id, endpoint, true);
+                getFields(id, endpoint, false);
             }        
         }
     });
 
-    // Update fields when destination endpoint hanges
-    $(document).on('change', '#destination-endpoint', function() {
-        console.log("destination endpoint change triggered")
-        let endpoint = $('destination-endpoint').val();
+    // Update fields when destination endpoint changes
+    $(document).on('change', '#destination_endpoint', function() {
+        console.log("Destination endpoint change triggered");
+        let endpoint = $('#destination_endpoint').val();
         if (endpoint) {
             let id = $('#destination').val();
             if (id) {
-                getFields(id, endpoint, true);
+                getFields(id, endpoint, false);
             }        
         }
     });
@@ -115,7 +114,7 @@
         $(this).closest('.transform-line').remove();
     });
 
-    // Form submit handler (creates mapping json)
+    // Form submit handler (creates mapping JSON)
     $(document).on('submit', '#job-editor-form', function(event) {
         event.preventDefault();
         saveJobConfiguration();
@@ -167,10 +166,14 @@
         let mappingLineHtml = `
             <div class="row mb-3 mapping-line">
                 <div class="col-md-3">
-                    <input type="text" class="form-control source-field" placeholder="Source Field">
+                    <select class="form-select source-field">
+                        <option value="">Select Source Field</option>
+                    </select>
                 </div>
                 <div class="col-md-3">
-                    <input type="text" class="form-control destination-field" placeholder="Destination Field">
+                    <select class="form-select destination-field">
+                        <option value="">Select Destination Field</option>
+                    </select>
                 </div>
                 <div class="col-md-3">
                     <button type="button" class="btn btn-secondary add-transform">Add Transform</button>
@@ -222,9 +225,9 @@
     function saveJobConfiguration() {
         let jobData = {
             source: $('#source').val(),
-            source_endpoint: $('#source-endpoint').val(),
+            source_endpoint: $('#source_endpoint').val(),
             destination: $('#destination').val(),
-            destination_endpoint: $('#destination-endpoint').val(),
+            destination_endpoint: $('#destination_endpoint').val(),
             mappings: []
         };
 
@@ -251,25 +254,25 @@
             });
 
             jobData.mappings.push(mapping);
-            console.log('Job Data:', jobData);
-            // AJAX POST to save the job configuration here...
-            $.ajax({
-                url: '{% url "plugins:netbox_data_mover:datamoverconfig_add" %}',
-                type: 'POST',
-                data: JSON.stringify(jobData),
-                contentType: 'application/json',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                success: function(response) {
-                    alert("Job saved successfully!");
-                },
-                error: function(error) {
-                    console.error("Failed to save job configuration", error);
-                }
-            });
+        });
+
+        // Perform AJAX POST to save the job configuration
+        console.log('Job Data:', jobData);
+        $.ajax({
+            url: '{% url "plugins:netbox_data_mover:datamoverconfig_add" %}',
+            type: 'POST',
+            data: JSON.stringify(jobData),
+            contentType: 'application/json',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                alert("Job saved successfully!");
+            },
+            error: function(error) {
+                console.error("Failed to save job configuration", error);
+            }
         });
     }
-
-    </script>
+</script>
 {% endblock %}
