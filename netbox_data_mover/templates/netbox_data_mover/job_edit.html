@@ -77,7 +77,8 @@ $(function() {
                     data.endpoints.forEach(function(endpoint) {
                         endpointSelect.append(`<option value="${endpoint}">${endpoint}</option>`);
                     });
-
+                    endpointSelect.hide().show();
+                    
                     console.log("Endpoints loaded successfully into the select box.");
                 },
                 error: function(error) {
