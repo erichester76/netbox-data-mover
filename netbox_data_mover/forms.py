@@ -16,6 +16,22 @@ class DataMoverConfigForm(NetBoxModelForm):
         model = DataMoverConfig
         fields = ['name', 'schedule', 'description', 'source', 'source_endpoint', 'destination', 'destination_endpoint']
          
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
+            'schedule': forms.Select(choices=SCHEDULE_CHOICES, attrs={'class': 'form-select d-inline-block col-md-6'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+        }
+        
+        source = DynamicModelChoiceField(
+            queryset=DataMoverDataSource.objects.all(),
+            required=True,
+        )
+
+        destination = DynamicModelChoiceField(
+            queryset=DataMoverDataSource.objects.all(),
+            required=True,
+        )
+        
         source_endpoint = DynamicModelChoiceField(
             queryset=DataMoverDataSource.objects.all(),
             required=True,
@@ -27,15 +43,6 @@ class DataMoverConfigForm(NetBoxModelForm):
             required=True,
             query_params={'id': '$destination', 'type': 'endpoints'},
         )
-        
-        
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
-            'schedule': forms.Select(choices=SCHEDULE_CHOICES, attrs={'class': 'form-select d-inline-block col-md-6'}),
-            'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'source': forms.Select(attrs={'class': 'form-select d-inline-block col-md-6'}),
-            'destination': forms.Select(attrs={'class': 'form-select d-inline-block col-md-6'}),
-        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
