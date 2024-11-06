@@ -33,13 +33,13 @@ class DataMoverConfigForm(NetBoxModelForm):
         )
         
         source_endpoint = DynamicModelChoiceField(
-            queryset=DataMoverDataSource.objects.all(),
+            queryset=DataMoverDataSource.objects.none(),
             required=True,
             query_params={'id': '$source', 'type': 'endpoints'},
         )
 
         destination_endpoint = DynamicModelChoiceField(
-            queryset=DataMoverDataSource.objects.all(),
+            queryset=DataMoverDataSource.objects.none(),
             required=True,
             query_params={'id': '$destination', 'type': 'endpoints'},
         )
