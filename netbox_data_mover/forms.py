@@ -20,31 +20,32 @@ class DataMoverConfigForm(forms.ModelForm):
             'source' : DynamicModelChoiceField(
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
-                attrs={'class': 'form-control d-inline-block col-md-6'}
             ),    
             'source_endpoint': DynamicModelChoiceField(
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
                 query_params={'datamoverdatasourceid': '$source', 'type': 'endpoints'},
-                attrs={'class': 'form-control d-inline-block col-md-6'}
             ),
             'destination': DynamicModelChoiceField(
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
-                attrs={'class': 'form-control d-inline-block col-md-6'}
             ),  
             'source_endpoint': DynamicModelChoiceField(
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
                 query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
-                attrs={'class': 'form-control d-inline-block col-md-6'}),
+            ),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Any custom initialization can go here if required
-        self.fields['source_endpoint'].choices = []  # To be dynamically populated
-        self.fields['destination_endpoint'].choices = []  # To be dynamically populated
+        self.fields['source_endpoint'].choices = ['Please Chose Source First']  # To be dynamically populated
+        self.fields['destination_endpoint'].choices = ['Please Chose Destination First']  # To be dynamically populated
+        self.fields['source'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
+        self.fields['source_endpoint'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
+        self.fields['destintion'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
+        self.fields['destination_endpoint'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
     
 class DataMoverDataSourceForm(forms.ModelForm):
     class Meta:
