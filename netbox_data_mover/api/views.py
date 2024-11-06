@@ -50,6 +50,33 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
         endpoints = datasource.endpoints.split(',')
         return Response({'endpoints': [endpoint.strip() for endpoint in endpoints]})
 
+    @action(detail=True, methods=['get'])
+    def get_fields(self, request, pk=None, endpoint=None):
+        try:
+            datasource = self.get_object()
+            client = DataSourceAuth.authenticate(datasource)
+            data = DataSourceAuth.fetch_data(datasource, client, endpoint)
+
+            # Extract fields from the first row of the data
+            if isinstance(data, list) and len(data) > 0:
+                first_row = data[0]
+            elif isinstance(data, dict):
+                first_row = data
+            else:
+                return Response({'error': 'Unexpected data format returned by fetch function.'}, status=400)
+
+            # Extract field names from the first row
+            fields = list(first_row.keys()) if isinstance(first_row, dict) else dir(first_row)
+
+            return Response({'fields': fields})
+
+        except DataMoverDataSource.DoesNotExist:
+            return Response({'error': 'Data source not found.'}, status=404)
+        except ImportError as e:
+            return Response({'error': str(e)}, status=400)
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+    
 
 class DataMoverConfigViewSet(NetBoxModelViewSet):
     queryset = DataMoverConfig.objects.all()
