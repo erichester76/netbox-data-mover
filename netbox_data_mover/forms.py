@@ -5,13 +5,7 @@ from utilities.forms.fields import DynamicModelChoiceField
 
 class DataMoverConfigForm(NetBoxModelForm):
     
-    SCHEDULE_CHOICES = [
-        ('', 'None - Manual Only'),
-        ('0 * * * *', 'Hourly'),
-        ('0 0 * * *', 'Daily'),
-        ('0 0 * * 0', 'Weekly'),
-        ('0 0 1 * *', 'Monthly'),
-    ]
+    
 
     source = DynamicModelChoiceField(
         label=_('Source'),
@@ -40,6 +34,13 @@ class DataMoverConfigForm(NetBoxModelForm):
     )
 
     class Meta:
+        SCHEDULE_CHOICES = [
+        ('', 'None - Manual Only'),
+        ('0 * * * *', 'Hourly'),
+        ('0 0 * * *', 'Daily'),
+        ('0 0 * * 0', 'Weekly'),
+        ('0 0 1 * *', 'Monthly'),
+    ]
         model = DataMoverConfig
         fields = [
             'name', 'schedule', 'description', 
