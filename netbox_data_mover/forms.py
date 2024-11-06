@@ -4,7 +4,7 @@ from netbox.forms import NetBoxModelForm
 from .models import DataMoverConfig, DataMoverDataSource
 from utilities.forms.fields import DynamicModelChoiceField
 
-class DataMoverConfigForm(NetBoxModelForm):
+class DataMoverConfigForm(forms.ModelForm):
     class Meta:
         
         SCHEDULE_CHOICES = [
@@ -56,7 +56,7 @@ class DataMoverConfigForm(NetBoxModelForm):
         self.fields['destintion'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
         self.fields['destination_endpoint'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
     
-class DataMoverDataSourceForm(NetBoxModelForm):
+class DataMoverDataSourceForm(forms.ModelForm):
     class Meta:
         model = DataMoverDataSource
         fields = ['name', 'type', 'module', 'endpoints', 'auth_method', 'auth_function', 'find_function', 'create_function', 'update_function', 'fetch_function', 'auth_args', 'base_urls']
