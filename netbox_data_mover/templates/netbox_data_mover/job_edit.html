@@ -30,9 +30,7 @@
         </div>
         <div class="col-md-6">
             <label for="source_endpoint" class="form-label">Source Endpoint</label>
-            <select name="source_endpoint" id="id_source_endpoint" class="form-select">
-                <option value="">Select Source First</option>
-            </select>
+            {{ form.source_endpoint }}
         </div>
     </div>
     <div class="row mb-3">
@@ -42,9 +40,8 @@
         </div>
         <div class="col-md-6">
             <label for="destination_endpoint" class="form-label">Destination Endpoint</label>
-            <select name="destination_endpoint" id="id_destination_endpoint" class="form-select">
-                <option value="">Select Destination First</option>
-            </select>
+            {{ form.destination_endpoint }}
+
         </div>
     </div>
     <h4>Field Mappings</h4>
