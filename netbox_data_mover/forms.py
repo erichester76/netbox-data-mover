@@ -6,30 +6,26 @@ from utilities.forms.fields import DynamicModelChoiceField
 
 class DataMoverConfigForm(NetBoxModelForm):
     
-    
-
     source = DynamicModelChoiceField(
-        queryset=DataMoverDataSource.objects.none(),
+        queryset=DataMoverDataSource.objects.all(),
         required=True,        
     )
 
     destination = DynamicModelChoiceField(
-        queryset=DataMoverDataSource.objects.none(),
+        queryset=DataMoverDataSource.objects.all(),
         required=True,
     )
 
     source_endpoint = DynamicModelChoiceField(
-        queryset=DataMoverDataSource.objects.none(),  # Initially empty
+        queryset=DataMoverDataSource.objects.none(), 
         required=True,
-        query_params={'datasource_id': '$source'},  # Dynamically updates based on 'source'
-        display_field='endpoints',  # Indicating to use 'endpoints' from the API response
+        query_params={'datasource_id': '$source', 'type': 'endpoint'},
     )
 
     destination_endpoint = DynamicModelChoiceField(
-        queryset=DataMoverDataSource.objects.none(),  # Initially empty
+        queryset=DataMoverDataSource.objects.none(), 
         required=True,
-        query_params={'datasource_id': '$destination'},  # Dynamically updates based on 'destination'
-        display_field='endpoints',  # Indicating to use 'endpoints' from the API response
+        query_params={'datasource_id': '$destination', 'type': 'endpoint'}, 
     )
 
     class Meta:
