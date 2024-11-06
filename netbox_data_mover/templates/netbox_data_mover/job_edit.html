@@ -71,15 +71,18 @@ $(function() {
                 method: 'GET',
                 success: function(data) {
                     let endpointSelect = isSource ? $('#id_source_endpoint') : $('#id_destination_endpoint');
-                    endpointSelect.empty();
-                    endpointSelect.append('<option value="">Select Endpoint</option>');
-
-                    data.endpoints.forEach(function(endpoint) {
-                        endpointSelect.append(`<option value="${endpoint}">${endpoint}</option>`);
+                    let newOptions = data.endpoints.map(function(endpoint) {
+                        return new Option(endpoint, endpoint, false, false);
                     });
-                    endpointSelect.hide().show();
-                    
-                    console.log("Endpoints loaded successfully into the select box.");
+
+                    // Clear existing options
+                    endpointSelect.empty();
+
+                    // Append new options
+                    endpointSelect.append(newOptions);
+
+                    // Trigger Select2 to re-render
+                    endpointSelect.trigger('change');
                 },
                 error: function(error) {
                     console.error("Failed to load endpoints", error);
