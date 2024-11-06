@@ -35,6 +35,7 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
                     "previous": None,
                     "results": endpoint_data
                 })
+        elif type_param == 'mappings':
 
             return Response({"count": 0, "next": None, "previous": None, "results": []})
         # Default behavior: return the serialized datasource instance
