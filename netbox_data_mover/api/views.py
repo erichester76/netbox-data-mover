@@ -10,7 +10,7 @@ class DataMoverDataSourceViewSet(viewsets.ModelViewSet):
     queryset = DataMoverDataSource.objects.all()
     serializer_class = DataMoverDataSourceSerializer
    
-    def list(self, request, *args, **kwargs):
+    #def list(self, request, *args, **kwargs):
         
         # if request.query_params.get('endpoint_id'):
         #     try:
@@ -27,7 +27,7 @@ class DataMoverDataSourceViewSet(viewsets.ModelViewSet):
         #         return Response({'results': []})
 
         # Otherwise, return the full DataMoverDataSource records.
-        return super().list(request, *args, **kwargs)
+        # return super().list(request, *args, **kwargs)
     
 class DataMoverConfigViewSet(NetBoxModelViewSet):
     queryset = DataMoverConfig.objects.all()
