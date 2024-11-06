@@ -17,7 +17,7 @@ class DataMoverConfigForm(NetBoxModelForm):
         ]
         
         model = DataMoverConfig
-        fields = ['__all__']
+        fields = ['source', 'source_endpoint', 'destination', 'destination_endpoint', 'name', 'schedule', 'description']
         
         source = DynamicModelChoiceField(
            queryset=DataMoverDataSource.objects.none(),
@@ -30,15 +30,15 @@ class DataMoverConfigForm(NetBoxModelForm):
         )
         
         source_endpoint = DynamicModelChoiceField(
-            queryset=DataMoverDataSource.objects.all(),
+            queryset=DataMoverDataSource.objects.none(),
             required=True,
             query_params={'endpoint_id': '$source', 'type': 'endpoints'},
         )
 
         destination_endpoint = DynamicModelChoiceField(
-            queryset=DataMoverDataSource.objects.all(),
+            queryset=DataMoverDataSource.objects.none(),
             required=True,
-            query_params={'endpoint_d': '$destination', 'type': 'endpoints'},
+            query_params={'endpoint_id': '$destination', 'type': 'endpoints'},
         )
         
         widgets = {
