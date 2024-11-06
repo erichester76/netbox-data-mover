@@ -7,14 +7,7 @@ from utilities.forms.fields import DynamicModelChoiceField
 
 class DataMoverConfigForm(NetBoxModelForm):
 
-    source = DynamicModelChoiceField(
-        queryset=DataMoverDataSource.objects.none(),
-        required=True,        
-    )
-    destination = DynamicModelChoiceField(
-        queryset=DataMoverDataSource.objects.none(),
-        required=True,
-    )
+
     
     class Meta:
         SCHEDULE_CHOICES = [
@@ -30,6 +23,16 @@ class DataMoverConfigForm(NetBoxModelForm):
             'name', 'schedule', 'description', 
             'source', 'destination'
         ]
+        
+        source = DynamicModelChoiceField(
+           queryset=DataMoverDataSource.objects.all(),
+           required=True,        
+        )
+        
+        destination = DynamicModelChoiceField(
+           queryset=DataMoverDataSource.objects.all(),
+           required=True,
+        )
         
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
