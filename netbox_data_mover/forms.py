@@ -24,25 +24,34 @@ class DataMoverConfigForm(NetBoxModelForm):
             'source' : DynamicModelChoiceField(
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
+                widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
+
             ),    
             'source_endpoint': DynamicModelChoiceField(
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
                 query_params={'datamoverdatasourceid': '$source', 'type': 'endpoints'},
+                widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
+
             ),
             'destination': DynamicModelChoiceField(
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
+                widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
+
             ),  
             'source_endpoint': DynamicModelChoiceField(
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
                 query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
+                widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
+
             ),
             'mappings': DynamicModelChoiceField(
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
-                query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
+                query_params={'datamoverdatasourceid': '$destination', 'type': 'fields'},
+                widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
             ),
         }
 
