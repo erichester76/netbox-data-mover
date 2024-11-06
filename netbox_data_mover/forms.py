@@ -16,17 +16,29 @@ class DataMoverConfigForm(forms.ModelForm):
         model = DataMoverConfig
         fields = ['name', 'schedule', 'description', 'source', 'source_endpoint', 'destination', 'destination_endpoint']
   
+        source = DynamicModelChoiceField(
+            queryset=DataMoverDataSource.objects.all(),
+            required=True,
+            widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
+        )
+
+        destination = DynamicModelChoiceField(
+            queryset=DataMoverDataSource.objects.all(),
+            required=True,
+            widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
+        )
+         
         source_endpoint = DynamicModelChoiceField(
             queryset=DataMoverDataSource.objects.all(),
             required=True,
-            query_params={'type': 'endpoints'},
+            query_params={'datamoverdatasourceid': '$source', 'type': 'endpoints'},
             widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
         )
 
         destination_endpoint = DynamicModelChoiceField(
             queryset=DataMoverDataSource.objects.all(),
             required=True,
-            query_params={'type': 'endpoints'},
+            query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
             widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
         )
         
