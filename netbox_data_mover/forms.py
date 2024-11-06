@@ -4,7 +4,7 @@ from netbox.forms import NetBoxModelForm
 from .models import DataMoverConfig, DataMoverDataSource
 from utilities.forms.fields import DynamicModelChoiceField
 
-class DataMoverConfigForm(NetBoxModelForm):
+class DataMoverConfigForm(forms.ModelForm):
     class Meta:
         
         SCHEDULE_CHOICES = [
