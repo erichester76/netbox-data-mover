@@ -1,7 +1,6 @@
 from ..models import DataMoverConfig, DataMoverDataSource
 from netbox.api.serializers import NetBoxModelSerializer
 
-
 class DataMoverDataSourceSerializer(NetBoxModelSerializer):
     class Meta:
         model = DataMoverDataSource
