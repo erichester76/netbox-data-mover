@@ -29,8 +29,8 @@
             {{ form.source }}
         </div>
         <div class="col-md-6">
-            <label for="source-endpoint" class="form-label">Source Endpoint</label>
-            <select id="id_source_endpoint" class="form-select">
+            <label for="source_endpoint" class="form-label">Source Endpoint</label>
+            <select name="source_endpoint" id="id_source_endpoint" class="form-select">
                 <option value="">Select Source First</option>
             </select>
         </div>
@@ -41,8 +41,8 @@
             {{ form.destination }}
         </div>
         <div class="col-md-6">
-            <label for="destination-endpoint" class="form-label">Destination Endpoint</label>
-            <select id="id_destination_endpoint" class="form-select">
+            <label for="destination_endpoint" class="form-label">Destination Endpoint</label>
+            <select name="destination_endpoint" id="id_destination_endpoint" class="form-select">
                 <option value="">Select Destination First</option>
             </select>
         </div>
@@ -58,9 +58,6 @@
 <script> 
 $(function() {
     console.log("DOM Ready!");
-    $('#id_source_endpoint, #id_destination_endpoint').select2({
-        width: 'resolve'
-    });
     var sourceFields = {};
     var destinationFields = {};  
 
