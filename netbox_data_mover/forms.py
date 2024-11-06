@@ -17,11 +17,7 @@ class DataMoverConfigForm(NetBoxModelForm):
         ]
         
         model = DataMoverConfig
-        fields = [
-            'name', 'schedule', 'description', 
-            'source_endpoint', 'destination_endpoint',
-            'source', 'destination'
-        ]
+        fields = ['__all__']
         
         source = DynamicModelChoiceField(
            queryset=DataMoverDataSource.objects.none(),
