@@ -29,13 +29,13 @@ class DataMoverConfigForm(forms.ModelForm):
         source_endpoint = DynamicModelChoiceField(
             queryset=DataMoverDataSource.objects.all(),
             required=True,
-            query_params={'datamoverdatasourceid': '$source', 'type': 'endpoints'},
+            query_params={'id': '$source', 'type': 'endpoints'},
         )
 
         destination_endpoint = DynamicModelChoiceField(
             queryset=DataMoverDataSource.objects.all(),
             required=True,
-            query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
+            query_params={'id': '$destination', 'type': 'endpoints'},
         )
         
         
@@ -48,8 +48,8 @@ class DataMoverConfigForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['source_endpoint'].choices = ['Choose Source First']  # To be dynamically populated
-        self.fields['destination_endpoint'].choices = ['Choose Destination First']  # To be dynamically populated
+        self.fields['source_endpoint'].choices = ['Please Choose Source First']  # To be dynamically populated
+        self.fields['destination_endpoint'].choices = ['Please Choose Destination First']  # To be dynamically populated
         
 class DataMoverDataSourceForm(forms.ModelForm):
     class Meta:
