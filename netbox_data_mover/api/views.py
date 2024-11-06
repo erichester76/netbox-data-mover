@@ -39,44 +39,49 @@ def get_available_fields(request, pk, endpoint):
     except Exception as e:
         return Response({'error': str(e)}, status=500)
 
-class DataMoverDataSourceViewSet(NetBoxModelViewSet):
+from rest_framework.response import Response
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from .models import DataMoverDataSource
+from .serializers import DataMoverDataSourceSerializer
+
+class DataMoverDataSourceViewSet(viewsets.ModelViewSet):
     queryset = DataMoverDataSource.objects.all()
     serializer_class = DataMoverDataSourceSerializer
-    filterset = DataMoverDataSourceFilterSet
-    
-    @action(detail=True, methods=['get'])
-    def get_endpoints(self, request, pk=None):
-        datasource = self.get_object()
-        endpoints = datasource.endpoints.split(',')
-        return Response({'endpoints': [endpoint.strip() for endpoint in endpoints]})
 
-    @action(detail=True, methods=['get'])
-    def get_fields(self, request, pk=None, endpoint=None):
-        try:
-            datasource = self.get_object()
-            client = DataSourceAuth.authenticate(datasource)
-            data = DataSourceAuth.fetch_data(datasource, client, endpoint)
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        type_param = request.query_params.get('type', None)
 
-            # Extract fields from the first row of the data
-            if isinstance(data, list) and len(data) > 0:
-                first_row = data[0]
-            elif isinstance(data, dict):
-                first_row = data
-            else:
-                return Response({'error': 'Unexpected data format returned by fetch function.'}, status=400)
+        if type_param == 'endpoints':
+            if instance.endpoints:
+                # Split endpoints and create a structured response
+                endpoints = instance.endpoints.split(',')
+                endpoint_data = []
 
-            # Extract field names from the first row
-            fields = list(first_row.keys()) if isinstance(first_row, dict) else dir(first_row)
+                for index, endpoint in enumerate(endpoints):
+                    endpoint_data.append({
+                        "id": index,
+                        "url": f"https://{request.get_host()}/api/plugins/netbox_data_mover/endpoints/{index}/",
+                        "display": endpoint.strip(),
+                        "name": endpoint.strip(),
+                        "slug": endpoint.strip().replace(" ", "-").lower(),
+                        "description": ""
+                    })
 
-            return Response({'fields': fields})
+                # Response formatted in a similar way to the one provided in your example
+                return Response({
+                    "count": len(endpoint_data),
+                    "next": None,
+                    "previous": None,
+                    "results": endpoint_data
+                })
 
-        except DataMoverDataSource.DoesNotExist:
-            return Response({'error': 'Data source not found.'}, status=404)
-        except ImportError as e:
-            return Response({'error': str(e)}, status=400)
-        except Exception as e:
-            return Response({'error': str(e)}, status=500)
-    
+            return Response({"count": 0, "next": None, "previous": None, "results": []})
+
+        # Default behavior: return the serialized datasource instance
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 class DataMoverConfigViewSet(NetBoxModelViewSet):
     queryset = DataMoverConfig.objects.all()

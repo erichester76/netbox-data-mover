@@ -1,8 +1,8 @@
 from django import forms
 from .models import DataMoverConfig, DataMoverDataSource
+from utilities.forms.fields import DynamicModelChoiceField
 
 class DataMoverConfigForm(forms.ModelForm):
-   
     class Meta:
        
         SCHEDULE_CHOICES = [
@@ -20,10 +20,31 @@ class DataMoverConfigForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
             'schedule': forms.Select(choices=SCHEDULE_CHOICES, attrs={'class': 'form-select d-inline-block col-md-6'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'source': forms.Select(attrs={'class': 'form-select d-inline-block col-md-6'}),
-            'source_endpoint': forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'}),
-            'destination': forms.Select(attrs={'class': 'form-select d-inline-block col-md-6'}),
-            'destination_endpoint': forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'}),
+            'source' : DynamicModelChoiceField(
+                label=_('Source'),
+                queryset=DataMoverDataSource.objects.all(),
+                required=True,
+                attrs={'class': 'form-control d-inline-block col-md-6'}
+            ),    
+            'source_endpoint': DynamicModelChoiceField(
+                label=_('Source Endpoint'),
+                queryset=DataMoverDataSource.objects.all(),
+                required=True,
+                query_params={'datamoverdatasourceid': '$source', 'type': 'endpoints'},
+                attrs={'class': 'form-control d-inline-block col-md-6'}
+            ),
+            'destination': DynamicModelChoiceField(
+                label=_('Destination'),
+                queryset=DataMoverDataSource.objects.all(),
+                required=True,
+                attrs={'class': 'form-control d-inline-block col-md-6'}
+            ),  
+            'source_endpoint': DynamicModelChoiceField(
+                label=_('Destination Endpoint'),
+                queryset=DataMoverDataSource.objects.all(),
+                required=True,
+                query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
+                attrs={'class': 'form-control d-inline-block col-md-6'}),
         }
 
     def __init__(self, *args, **kwargs):

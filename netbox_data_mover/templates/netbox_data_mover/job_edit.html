@@ -55,49 +55,6 @@
 <script> 
 $(function() {
     console.log("DOM Ready!");
-    var sourceFields = {};
-    var destinationFields = {};  
-
-    $(document).on('change', '#id_source, #id_destination', function() {
-        let datasourceId = $(this).val();
-        let isSource = $(this).attr('id') === 'id_source';
-
-        if (datasourceId) {
-            $.ajax({
-                url: `/api/plugins/datamover/datasources/${datasourceId}/get_endpoints/`,
-                method: 'GET',
-                success: function(data) {
-                    let endpointSelect = isSource ? $('#id_source_endpoint') : $('#id_destination_endpoint');
-                    let newOptions = data.endpoints.map(function(endpoint) {
-                        return new Option(endpoint, endpoint, false, false);
-                    });
-
-                    // Clear existing options
-                    endpointSelect.empty();
-
-                    // Append new options
-                    endpointSelect.append(newOptions);
-
-                    // Trigger Select2 to re-render
-                    endpointSelect.trigger('change');
-                },
-                error: function(error) {
-                    console.error("Failed to load endpoints", error);
-                }
-            });
-    }
-
-});
-
-    $(document).on('change', '#id_source_endpoint, #id_destination_endpoint', function() {
-        let isSource = $(this).attr('id') === 'id_source_endpoint';
-        let datasourceId = isSource ? $('#id_source').val() : $('#id_destination').val();
-        let endpoint = $(this).val();
-
-        if (datasourceId && endpoint) {
-            getFields(datasourceId, endpoint, isSource);
-        }
-    });
 
     // Remove mapping line functionality
     $(document).on('click', '.remove-mapping', function() {
@@ -115,47 +72,6 @@ $(function() {
         event.preventDefault();
         saveJobConfiguration();
     });
-
-    // Fetch fields once and store globally
-    function getFields(datasourceId, endpoint, isSource) {
-        console.log(`Getting fields for datasource ID: ${datasourceId} and endpoint: ${endpoint}`);
-        $.ajax({
-            url: `/api/plugins/netboxdatamover/datasources/${datasourceId}/get_fields/${endpoint}/`,
-            method: 'GET',
-            success: function(data) {
-                if (isSource) {
-                    sourceFields = data.fields;  // Store source fields globally
-                } else {
-                    destinationFields = data.fields;  // Store destination fields globally
-                }
-
-                // Update all existing mapping lines
-                $('.mapping-line').each(function() {
-                    let sourceFieldSelect = $(this).find('.source-field');
-                    let destinationFieldSelect = $(this).find('.destination-field');
-
-                    if (isSource) {
-                        populateFields(sourceFieldSelect, sourceFields);
-                    } else {
-                        populateFields(destinationFieldSelect, destinationFields);
-                    }
-                });
-                console.log("Fields updated for all existing mapping lines");
-            },
-            error: function(error) {
-                console.error("Failed to get fields", error);
-            }
-        });
-    }
-
-    // Helper function to populate fields into a select element
-    function populateFields(selectElement, fields) {
-        selectElement.empty();
-        selectElement.append('<option value="">Select Field</option>');
-        $.each(fields, function(index, field) {
-            selectElement.append(`<option value="${field}">${field}</option>`);
-        });
-    }
 
     // Add mapping line functionality
     $(document).on('click', '#add-mapping', function() {
@@ -182,10 +98,6 @@ $(function() {
         `;
         $('#mappings-container').append(mappingLineHtml);
         let newMappingLine = $('#mappings-container').children('.mapping-line').last();
-
-        // Populate the fields for the new mapping line with stored values
-        populateFields(newMappingLine.find('.source-field'), sourceFields);
-        populateFields(newMappingLine.find('.destination-field'), destinationFields);
     }); 
 
     // Add transform line functionality
