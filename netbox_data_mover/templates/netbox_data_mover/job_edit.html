@@ -68,14 +68,23 @@ $(function() {
                 method: 'GET',
                 success: function(data) {
                     let endpointSelect = isSource ? $('#id_source_endpoint') : $('#id_destination_endpoint');
-                    endpointSelect.empty();
-                    endpointSelect.append('<option value="">Select Endpoint</option>');
-                    data.endpoints.forEach(function(endpoint) {
-                        endpointSelect.append(`<option value="${endpoint}">${endpoint}</option>`);
-                    });
-                    // Refresh the Select2 dropdown
-                    endpointSelect.select2('destroy').select2({ width: 'resolve' });
+                    
+                    // Clear current options
+                    endpointSelect.find('option').remove();
 
+                    // Append a default option
+                    endpointSelect.append('<option value="">Select Endpoint</option>');
+
+                    // Iterate over the returned endpoints and add them to the select element
+                    data.endpoints.forEach(function(endpoint) {
+                        let newOption = new Option(endpoint, endpoint, false, false);
+                        endpointSelect.append(newOption);
+                    });
+
+                    // Trigger the change event to update Select2
+                    endpointSelect.trigger('change');
+
+                    console.log("Endpoints updated successfully");
                 },
                 error: function(error) {
                     console.error("Failed to load endpoints", error);
