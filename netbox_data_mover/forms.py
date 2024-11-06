@@ -4,7 +4,7 @@ from netbox.forms import NetBoxModelForm
 from .models import DataMoverConfig, DataMoverDataSource
 from utilities.forms.fields import DynamicModelChoiceField
 
-class DataMoverConfigForm(forms.ModelForm):
+class DataMoverConfigForm(NetBoxModelForm):
     class Meta:
         
         SCHEDULE_CHOICES = [
@@ -31,28 +31,28 @@ class DataMoverConfigForm(forms.ModelForm):
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
                 query_params={'datamoverdatasourceid': '$source', 'type': 'endpoints'},
-                #widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
+                widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
 
             ),
             'destination': DynamicModelChoiceField(
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
-                #widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
+                widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
 
             ),  
             'source_endpoint': DynamicModelChoiceField(
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
                 query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
-                #widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
+                widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
 
             ),
-            'mappings': DynamicModelChoiceField(
-                queryset=DataMoverDataSource.objects.all(),
-                required=True,
-                query_params={'datamoverdatasourceid': '$destination', 'type': 'fields'},
-                #widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
-            ),
+            # 'mappings': DynamicModelChoiceField(
+            #     queryset=DataMoverDataSource.objects.all(),
+            #     required=True,
+            #     query_params={'datamoverdatasourceid': '$destination', 'type': 'fields'},
+            #     widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
+            # ),
         }
 
     def __init__(self, *args, **kwargs):
