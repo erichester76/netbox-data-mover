@@ -6,31 +6,16 @@ from utilities.forms.fields import DynamicModelChoiceField
 
 
 class DataMoverConfigForm(NetBoxModelForm):
-    
-    
 
     source = DynamicModelChoiceField(
         queryset=DataMoverDataSource.objects.none(),
         required=True,        
     )
-
     destination = DynamicModelChoiceField(
         queryset=DataMoverDataSource.objects.none(),
         required=True,
     )
-
-    source_endpoint = DynamicModelChoiceField(
-        queryset=DataMoverDataSource.objects.none(),
-        required=True,
-        query_params={'datamoverdatasourceid': '$source', 'type': 'endpoints'},
-    )
-
-    destination_endpoint = DynamicModelChoiceField(
-        queryset=DataMoverDataSource.objects.none(),
-        required=True,
-        query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
-    )
-
+    
     class Meta:
         SCHEDULE_CHOICES = [
         ('', 'None - Manual Only'),
@@ -43,7 +28,7 @@ class DataMoverConfigForm(NetBoxModelForm):
         model = DataMoverConfig
         fields = [
             'name', 'schedule', 'description', 
-            'source', 'source_endpoint', 'destination', 'destination_endpoint'
+            'source', 'destination'
         ]
         
         widgets = {
