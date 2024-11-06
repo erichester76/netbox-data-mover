@@ -53,15 +53,13 @@ class DataMoverDataSourceViewSet(viewsets.ModelViewSet):
                 endpoints = instance.endpoints.split(',')
                 endpoint_data = []
 
-                for index, endpoint in enumerate(endpoints):
-                    endpoint_data.append({
+                endpoint_data = [
+                    {
                         "id": index,
-                        "url": f"https://{request.get_host()}/api/plugins/netbox_data_mover/endpoints/{index}/",
                         "display": endpoint.strip(),
-                        "name": endpoint.strip(),
-                        "slug": endpoint.strip().replace(" ", "-").lower(),
-                        "description": ""
-                    })
+                        "name": endpoint.strip()
+                    } for index, endpoint in enumerate(endpoints)
+                ]
 
                 # Response formatted in a similar way to the one provided in your example
                 return Response({
