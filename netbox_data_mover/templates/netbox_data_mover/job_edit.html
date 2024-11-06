@@ -123,7 +123,7 @@ $(function() {
     function getFields(datasourceId, endpoint, isSource) {
         console.log(`Getting fields for datasource ID: ${datasourceId} and endpoint: ${endpoint}`);
         $.ajax({
-            url: `/api/plugins/netboxdatamover/datasources/${datasourceId}/get_fields/${endpoint}/`,
+            url: `/api/plugins/netboxdatamover/datasources/${datasourceId}/get_fields/?endpoint=${endpoint}/`,
             method: 'GET',
             success: function(data) {
                 if (isSource) {
