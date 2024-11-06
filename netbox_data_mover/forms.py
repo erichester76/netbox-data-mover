@@ -19,27 +19,23 @@ class DataMoverConfigForm(forms.ModelForm):
         source = DynamicModelChoiceField(
             queryset=DataMoverDataSource.objects.all(),
             required=True,
-            widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
         )
 
         destination = DynamicModelChoiceField(
             queryset=DataMoverDataSource.objects.all(),
             required=True,
-            widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
         )
          
         source_endpoint = DynamicModelChoiceField(
             queryset=DataMoverDataSource.objects.all(),
             required=True,
             query_params={'datamoverdatasourceid': '$source', 'type': 'endpoints'},
-            widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
         )
 
         destination_endpoint = DynamicModelChoiceField(
             queryset=DataMoverDataSource.objects.all(),
             required=True,
             query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
-            widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
         )
         
         
@@ -52,8 +48,8 @@ class DataMoverConfigForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['source_endpoint'].choices = ['Please Chose Source First']  # To be dynamically populated
-        self.fields['destination_endpoint'].choices = ['Please Chose Destination First']  # To be dynamically populated
+        self.fields['source_endpoint'].choices = ['Choose Source First']  # To be dynamically populated
+        self.fields['destination_endpoint'].choices = ['Choose Destination First']  # To be dynamically populated
         
 class DataMoverDataSourceForm(forms.ModelForm):
     class Meta:
