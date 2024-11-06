@@ -3,31 +3,28 @@ from netbox.forms import NetBoxModelForm
 from .models import DataMoverConfig, DataMoverDataSource
 from utilities.forms.fields import DynamicModelChoiceField
 
+
 class DataMoverConfigForm(NetBoxModelForm):
     
     
 
     source = DynamicModelChoiceField(
-        label=_('Source'),
         queryset=DataMoverDataSource.objects.all(),
         required=True,
     )
 
     destination = DynamicModelChoiceField(
-        label=_('Destination'),
         queryset=DataMoverDataSource.objects.all(),
         required=True,
     )
 
     source_endpoint = DynamicModelChoiceField(
-        label=_('Source Endpoint'),
         queryset=DataMoverDataSource.objects.none(),
         required=True,
         query_params={'datamoverdatasourceid': '$source', 'type': 'endpoints'},
     )
 
     destination_endpoint = DynamicModelChoiceField(
-        label=_('Destination Endpoint'),
         queryset=DataMoverDataSource.objects.none(),
         required=True,
         query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
