@@ -15,7 +15,6 @@ class DataMoverConfigForm(forms.ModelForm):
         
         model = DataMoverConfig
         fields = ['name', 'schedule', 'description', 'source', 'source_endpoint', 'destination', 'destination_endpoint']
-        
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
             'schedule': forms.Select(choices=SCHEDULE_CHOICES, attrs={'class': 'form-select d-inline-block col-md-6'}),
