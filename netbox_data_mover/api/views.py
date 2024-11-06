@@ -15,7 +15,7 @@ class DataMoverDataSourceViewSet(viewsets.ModelViewSet):
         source_id = request.query_params.get('endpoint_id')
         if source_id:
             try:
-                datasource = DataMoverDataSource.get(id=source_id)
+                datasource = self.queryset.get(id=source_id)
                 endpoints = datasource.endpoints.split(',')
                 return Response({'results': [{'id': idx, 'display': endpoint.strip()} for idx, endpoint in enumerate(endpoints)]})
             except DataMoverDataSource.DoesNotExist:
@@ -23,7 +23,7 @@ class DataMoverDataSourceViewSet(viewsets.ModelViewSet):
         source_id = request.query_params.get('fields_id')
         if source_id:
             try:
-                datasource = DataMoverDataSource.get(id=source_id)
+                datasource = self.queryset.get(id=source_id)
                 return Response({'results': [{'id': 1, 'display': 'Test 123'}]})
             except DataMoverDataSource.DoesNotExist:
                 return Response({'results': []})
