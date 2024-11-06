@@ -44,7 +44,6 @@ class DataMoverConfigForm(NetBoxModelForm):
             required=True,
             query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
         )
-
         
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
