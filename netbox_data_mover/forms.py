@@ -20,7 +20,6 @@ class DataMoverConfigForm(NetBoxModelForm):
         fields = [
             'name', 'schedule', 'description', 
             'source_endpoint', 'destination_endpoint',
-            'source_mapping_fields', 'destination_mapping_fields',
             'source', 'destination'
         ]
         
@@ -45,18 +44,7 @@ class DataMoverConfigForm(NetBoxModelForm):
             required=True,
             query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
         )
-        
-        source_mapping_fields = DynamicModelChoiceField(
-            queryset=DataMoverDataSource.objects.none(),
-            required=True,
-            query_params={'datamoverdatasourceid': '$source_endpoint', 'type': 'fields'},
-        )
 
-        destination_mapping_fields = DynamicModelChoiceField(
-            queryset=DataMoverDataSource.objects.none(),
-            required=True,
-            query_params={'datamoverdatasourceid': '$destination_endpoint', 'type': 'fields'},
-        )
         
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
