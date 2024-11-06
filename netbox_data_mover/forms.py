@@ -51,10 +51,10 @@ class DataMoverConfigForm(NetBoxModelForm):
 
         self.fields['source_endpoint'].choices = ['Please Chose Source First']  # To be dynamically populated
         self.fields['destination_endpoint'].choices = ['Please Chose Destination First']  # To be dynamically populated
-        self.fields['source'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
-        self.fields['source_endpoint'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
-        self.fields['destintion'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
-        self.fields['destination_endpoint'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
+        #self.fields['source'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
+        #self.fields['source_endpoint'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
+        #self.fields['destintion'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
+        #self.fields['destination_endpoint'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
     
 class DataMoverDataSourceForm(NetBoxModelForm):
     class Meta:
