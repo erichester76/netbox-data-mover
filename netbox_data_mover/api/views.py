@@ -13,7 +13,7 @@ class DataMoverDataSourceViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         # If 'datamoverdatasourceid' is passed as a query parameter, return only the endpoints.
         source_id = request.query_params.get('endpoint_id')
-        if source_id:
+        if source_id > 0:
             try:
                 datasource = self.queryset.get(id=source_id)
                 endpoints = datasource.endpoints.split(',')
@@ -21,7 +21,7 @@ class DataMoverDataSourceViewSet(viewsets.ModelViewSet):
             except DataMoverDataSource.DoesNotExist:
                 return Response({'results': []})
         source_id = request.query_params.get('fields_id')
-        if source_id:
+        if source_id > 0:
             try:
                 datasource = self.queryset.get(id=source_id)
                 return Response({'results': [{'id': 1, 'display': 'Test 123'}]})

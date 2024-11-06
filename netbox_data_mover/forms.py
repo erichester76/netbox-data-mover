@@ -51,7 +51,8 @@ class DataMoverConfigForm(NetBoxModelForm):
         model = DataMoverConfig
         fields = [
             'name', 'schedule', 'description', 
-            'source', 'source_endpoint', 'destination', 'destination_endpoint'
+            'source', 'source_endpoint', 'destination', 'destination_endpoint', 
+            'source_mapping_fields', 'destination_mapping_fields'
         ]
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
