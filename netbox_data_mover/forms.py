@@ -1,6 +1,5 @@
 from django import forms
 from netbox.forms import NetBoxModelForm
-
 from .models import DataMoverConfig, DataMoverDataSource
 from utilities.forms.fields import DynamicModelChoiceField
 
@@ -16,34 +15,26 @@ class DataMoverConfigForm(forms.ModelForm):
         ]  
         model = DataMoverConfig
         fields = ['name', 'schedule', 'description', 'source', 'source_endpoint', 'destination', 'destination_endpoint']
+  
+        source_endpoint = DynamicModelChoiceField(
+            queryset=DataMoverDataSource.objects.all(),
+            required=True,
+            query_params={'type': 'endpoints'},
+            widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
+        )
+
+        destination_endpoint = DynamicModelChoiceField(
+            queryset=DataMoverDataSource.objects.all(),
+            required=True,
+            query_params={'type': 'endpoints'},
+            widget=forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'})
+        )
+        
         
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
             'schedule': forms.Select(choices=SCHEDULE_CHOICES, attrs={'class': 'form-select d-inline-block col-md-6'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'source' : DynamicModelChoiceField(
-                queryset=DataMoverDataSource.objects.all(),
-                required=True,
-            ),    
-            'source_endpoint': DynamicModelChoiceField(
-                queryset=DataMoverDataSource.objects.all(),
-                required=True,
-                query_params={'datamoverdatasourceid': '$source', 'type': 'endpoints'},
-            ),
-            'destination': DynamicModelChoiceField(
-                queryset=DataMoverDataSource.objects.all(),
-                required=True,
-            ),  
-            'source_endpoint': DynamicModelChoiceField(
-                queryset=DataMoverDataSource.objects.all(),
-                required=True,
-                query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
-            ),
-            # 'mappings': DynamicModelChoiceField(
-            #     queryset=DataMoverDataSource.objects.all(),
-            #     required=True,
-            #     query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
-            # ),
         }
 
     def __init__(self, *args, **kwargs):
@@ -51,11 +42,7 @@ class DataMoverConfigForm(forms.ModelForm):
 
         self.fields['source_endpoint'].choices = ['Please Chose Source First']  # To be dynamically populated
         self.fields['destination_endpoint'].choices = ['Please Chose Destination First']  # To be dynamically populated
-        self.fields['source'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
-        self.fields['source_endpoint'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
-        self.fields['destintion'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
-        self.fields['destination_endpoint'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
-    
+        
 class DataMoverDataSourceForm(forms.ModelForm):
     class Meta:
         model = DataMoverDataSource
