@@ -20,32 +20,35 @@ class DataMoverConfigForm(NetBoxModelForm):
         fields = ['source', 'source_endpoint', 'destination', 'destination_endpoint', 'name', 'schedule', 'description']
         
         source = DynamicModelChoiceField(
-           queryset=DataMoverDataSource.objects.none(),
-           required=True,        
+            queryset=DataMoverDataSource.objects.all(),
+            required=True,
+            label="Source",
+            help_text="Select the data source."
         )
         
         destination = DynamicModelChoiceField(
-           queryset=DataMoverDataSource.objects.none(),
-           required=True,
+            queryset=DataMoverDataSource.objects.all(),
+            required=True,
+            label="Destination",
+            help_text="Select the data destination."
         )
         
         source_endpoint = DynamicModelChoiceField(
             queryset=DataMoverDataSource.objects.none(),
             required=True,
+            label="Source Endpoint",
             query_params={'endpoint_id': '$source', 'type': 'endpoints'},
+            help_text="Select an endpoint for the chosen source."
         )
 
         destination_endpoint = DynamicModelChoiceField(
             queryset=DataMoverDataSource.objects.none(),
             required=True,
+            label="Destination Endpoint",
             query_params={'endpoint_id': '$destination', 'type': 'endpoints'},
+            help_text="Select an endpoint for the chosen destination."
         )
-        
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
-            'schedule': forms.Select(choices=SCHEDULE_CHOICES, attrs={'class': 'form-select d-inline-block col-md-6'}),
-            'description': forms.Textarea(attrs={'class': 'form-control'}),
-        }
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
