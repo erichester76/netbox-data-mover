@@ -3,7 +3,6 @@ from netbox.api.serializers import NetBoxModelSerializer
 from rest_framework import serializers
 
 class DataMoverDataSourceSerializer(NetBoxModelSerializer):
-    endpoints = serializers.SerializerMethodField()
 
     class Meta:
         model = DataMoverDataSource
