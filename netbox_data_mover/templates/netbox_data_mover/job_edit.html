@@ -54,7 +54,9 @@
 <script> 
 $(function() {
     console.log("DOM Ready!");
-
+    $('#id_source_endpoint, #id_destination_endpoint').select2({
+        width: 'resolve'
+    });
     var sourceFields = {};
     var destinationFields = {};  
 
@@ -68,20 +70,19 @@ $(function() {
                 method: 'GET',
                 success: function(data) {
                     let endpointSelect = isSource ? $('#id_source_endpoint') : $('#id_destination_endpoint');
-                    
-                    // Destroy existing Select2 instance if necessary
-                    if (endpointSelect.hasClass("select2-hidden-accessible")) {
+
+                    // Destroy Select2 if it's already initialized
+                    if (endpointSelect.data('select2')) {
                         endpointSelect.select2('destroy');
                     }
 
                     // Clear current options and add new ones
                     endpointSelect.empty().append('<option value="">Select Endpoint</option>');
                     data.endpoints.forEach(function(endpoint) {
-                        let newOption = new Option(endpoint, endpoint, false, false);
-                        endpointSelect.append(newOption);
+                        endpointSelect.append(new Option(endpoint, endpoint, false, false));
                     });
 
-                    // Reinitialize Select2 after adding options
+                    // Reinitialize Select2
                     endpointSelect.select2({
                         width: 'resolve'
                     });
@@ -90,11 +91,11 @@ $(function() {
                 },
                 error: function(error) {
                     console.error("Failed to load endpoints", error);
-        }
-    });
-}
+                }
+            });
+    }
 
-    });
+});
 
     $(document).on('change', '#id_source_endpoint, #id_destination_endpoint', function() {
         let isSource = $(this).attr('id') === 'id_source_endpoint';
