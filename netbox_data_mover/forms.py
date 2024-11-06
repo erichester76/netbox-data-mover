@@ -21,6 +21,8 @@ class DataMoverConfigForm(NetBoxModelForm):
         model = DataMoverConfig
         fields = [
             'name', 'schedule', 'description', 
+            'source_endpoint', 'destination_endpoint',
+            'source_mapping_fields', 'destination_mapping_fields',
             'source', 'destination'
         ]
         
