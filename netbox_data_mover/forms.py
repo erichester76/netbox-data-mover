@@ -49,7 +49,7 @@ class DataMoverConfigForm(forms.ModelForm):
         self.fields['destination_endpoint'].choices = []  # To be dynamically populated
     
 class DataMoverDataSourceForm(forms.ModelForm):
-    
+
     class Meta:
         model = DataMoverDataSource
         fields = ['name', 'type', 'module', 'endpoints', 'auth_method', 'auth_function', 'find_function', 'create_function', 'update_function', 'fetch_function', 'auth_args', 'base_urls']
