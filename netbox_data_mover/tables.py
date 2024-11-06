@@ -9,7 +9,7 @@ class DataMoverConfigTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = DataMoverConfig
-        fields = ('pk', 'id', 'name', 'description', 'schedule', 'source', 'destination', 'source_endpoint', 'destination_endpoint', 'mappings', 'last_run_records_changed', 'last_run_status', 'last_run_time')
+        fields = ('pk', 'id', 'name', 'description', 'schedule', 'source', 'destination', 'source_endpoint', 'destination_endpoint', 'source_mapping_fields', 'destination_mapping_fields', 'mappings', 'last_run_records_changed', 'last_run_status', 'last_run_time')
         default_columns = ('name', 'description', 'schedule', 'source', 'destination', 'last_run_status', 'last_run_records_changed', 'last_run_time')
 
 class DataMoverDataSourceTable(NetBoxTable):
