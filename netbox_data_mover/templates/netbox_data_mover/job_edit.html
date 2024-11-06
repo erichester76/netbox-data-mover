@@ -77,14 +77,10 @@ $(function() {
         let mappingLineHtml = `
             <div class="row mb-3 mapping-line">
                 <div class="col-md-3">
-                    <select class="form-select source-field">
-                        <option value="">Select Source Field</option>
-                    </select>
+                    {{ source_mapping_fields }}
                 </div>
                 <div class="col-md-3">
-                    <select class="form-select destination-field">
-                        <option value="">Select Destination Field</option>
-                    </select>
+                    {{ destination_mapping_fields }}
                 </div>
                 <div class="col-md-3">
                     <button type="button" class="btn btn-secondary add-transform">Add Transform</button>
