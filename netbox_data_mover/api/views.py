@@ -55,21 +55,22 @@ class DataMoverDataSourceViewSet(viewsets.ModelViewSet):
 
         if type_param == 'endpoints':
             if instance.endpoints:
-                # Split endpoints and create a structured response
+
+                # Fake Serializer to return endpoints instead of datasources :)
                 endpoints = instance.endpoints.split(',')
                 endpoint_data = []
 
                 for index, endpoint in enumerate(endpoints):
                     endpoint_data.append({
                         "id": index,
-                        "url": f"https://{request.get_host()}/api/plugins/netbox_data_mover/endpoints/{index}/",
+                        "url": f"https://{request.get_host()}/api/plugins/datamover/endpoints/{index}/",
                         "display": endpoint.strip(),
                         "name": endpoint.strip(),
                         "slug": endpoint.strip().replace(" ", "-").lower(),
                         "description": ""
                     })
 
-                # Response formatted in a similar way to the one provided in your example
+                # Response formatted like serializer
                 return Response({
                     "count": len(endpoint_data),
                     "next": None,

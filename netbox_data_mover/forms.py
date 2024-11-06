@@ -21,26 +21,22 @@ class DataMoverConfigForm(forms.ModelForm):
             'schedule': forms.Select(choices=SCHEDULE_CHOICES, attrs={'class': 'form-select d-inline-block col-md-6'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
             'source' : DynamicModelChoiceField(
-                label=_('Source'),
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
                 attrs={'class': 'form-control d-inline-block col-md-6'}
             ),    
             'source_endpoint': DynamicModelChoiceField(
-                label=_('Source Endpoint'),
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
                 query_params={'datamoverdatasourceid': '$source', 'type': 'endpoints'},
                 attrs={'class': 'form-control d-inline-block col-md-6'}
             ),
             'destination': DynamicModelChoiceField(
-                label=_('Destination'),
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
                 attrs={'class': 'form-control d-inline-block col-md-6'}
             ),  
             'source_endpoint': DynamicModelChoiceField(
-                label=_('Destination Endpoint'),
                 queryset=DataMoverDataSource.objects.all(),
                 required=True,
                 query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
