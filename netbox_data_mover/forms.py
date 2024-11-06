@@ -19,15 +19,17 @@ class DataMoverConfigForm(NetBoxModelForm):
     )
 
     source_endpoint = DynamicModelChoiceField(
-        queryset=DataMoverDataSource.objects.none(),
+        queryset=DataMoverDataSource.objects.none(),  # Initially empty
         required=True,
-        query_params={'datamoverdatasourceid': '$source', 'type': 'endpoints'},
+        query_params={'datasource_id': '$source'},  # Dynamically updates based on 'source'
+        display_field='endpoints',  # Indicating to use 'endpoints' from the API response
     )
 
     destination_endpoint = DynamicModelChoiceField(
-        queryset=DataMoverDataSource.objects.none(),
+        queryset=DataMoverDataSource.objects.none(),  # Initially empty
         required=True,
-        query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
+        query_params={'datasource_id': '$destination'},  # Dynamically updates based on 'destination'
+        display_field='endpoints',  # Indicating to use 'endpoints' from the API response
     )
 
     class Meta:
