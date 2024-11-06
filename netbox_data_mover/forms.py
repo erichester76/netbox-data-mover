@@ -1,18 +1,19 @@
 from django import forms
-from .models import DataMoverConfig, DataMoverDataSource
+from netbox.forms import NetBoxModelForm
 
-class DataMoverConfigForm(forms.ModelForm):
-   
+from .models import DataMoverConfig, DataMoverDataSource
+from utilities.forms.fields import DynamicModelChoiceField
+
+class DataMoverConfigForm(NetBoxModelForm):
     class Meta:
-       
+        
         SCHEDULE_CHOICES = [
             ('','None - Manual Only'),
             ('0 * * * *', 'Hourly'),
             ('0 0 * * *', 'Daily'),
             ('0 0 * * 0', 'Weekly'),
             ('0 0 1 * *', 'Monthly'),
-        ]
-        
+        ]  
         model = DataMoverConfig
         fields = ['name', 'schedule', 'description', 'source', 'source_endpoint', 'destination', 'destination_endpoint']
         
@@ -20,20 +21,42 @@ class DataMoverConfigForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control d-inline-block col-md-6'}),
             'schedule': forms.Select(choices=SCHEDULE_CHOICES, attrs={'class': 'form-select d-inline-block col-md-6'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'source': forms.Select(attrs={'class': 'form-select d-inline-block col-md-6'}),
-            'source_endpoint': forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'}),
-            'destination': forms.Select(attrs={'class': 'form-select d-inline-block col-md-6'}),
-            'destination_endpoint': forms.Select(attrs={'class': 'form-control d-inline-block col-md-6'}),
+            'source' : DynamicModelChoiceField(
+                queryset=DataMoverDataSource.objects.all(),
+                required=True,
+            ),    
+            'source_endpoint': DynamicModelChoiceField(
+                queryset=DataMoverDataSource.objects.all(),
+                required=True,
+                query_params={'datamoverdatasourceid': '$source', 'type': 'endpoints'},
+            ),
+            'destination': DynamicModelChoiceField(
+                queryset=DataMoverDataSource.objects.all(),
+                required=True,
+            ),  
+            'source_endpoint': DynamicModelChoiceField(
+                queryset=DataMoverDataSource.objects.all(),
+                required=True,
+                query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
+            ),
+            # 'mappings': DynamicModelChoiceField(
+            #     queryset=DataMoverDataSource.objects.all(),
+            #     required=True,
+            #     query_params={'datamoverdatasourceid': '$destination', 'type': 'endpoints'},
+            # ),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Any custom initialization can go here if required
-        self.fields['source_endpoint'].choices = []  # To be dynamically populated
-        self.fields['destination_endpoint'].choices = []  # To be dynamically populated
+
+        self.fields['source_endpoint'].choices = ['Please Chose Source First']  # To be dynamically populated
+        self.fields['destination_endpoint'].choices = ['Please Chose Destination First']  # To be dynamically populated
+        self.fields['source'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
+        self.fields['source_endpoint'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
+        self.fields['destintion'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
+        self.fields['destination_endpoint'].widget.attrs.update({'class': 'form-control d-inline-block col-md-6 highlight'})
     
-class DataMoverDataSourceForm(forms.ModelForm):
-    
+class DataMoverDataSourceForm(NetBoxModelForm):
     class Meta:
         model = DataMoverDataSource
-        fields = ['name', 'type', 'module', 'auth_method', 'auth_function', 'find_function', 'create_function', 'update_function', 'fetch_function', 'auth_args', 'base_urls']
+        fields = ['name', 'type', 'module', 'endpoints', 'auth_method', 'auth_function', 'find_function', 'create_function', 'update_function', 'fetch_function', 'auth_args', 'base_urls']
