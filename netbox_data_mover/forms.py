@@ -47,9 +47,6 @@ class DataMoverConfigForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.fields['source_endpoint'].choices = ['Please Choose Source First']  # To be dynamically populated
-        self.fields['destination_endpoint'].choices = ['Please Choose Destination First']  # To be dynamically populated
         
 class DataMoverDataSourceForm(forms.ModelForm):
     class Meta:
