@@ -3,7 +3,7 @@ from netbox.forms import NetBoxModelForm
 from .models import DataMoverConfig, DataMoverDataSource
 from utilities.forms.fields import DynamicModelChoiceField
 
-class DataMoverConfigForm(forms.ModelForm):
+class DataMoverConfigForm(NetBoxModelForm):
     class Meta:
         
         SCHEDULE_CHOICES = [
@@ -40,7 +40,7 @@ class DataMoverConfigForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-class DataMoverDataSourceForm(forms.ModelForm):
+class DataMoverDataSourceForm(NetBoxModelForm):
     class Meta:
         model = DataMoverDataSource
         fields = ['name', 'type', 'module', 'endpoints', 'auth_method', 'auth_function', 'find_function', 'create_function', 'update_function', 'fetch_function', 'auth_args', 'base_urls']
