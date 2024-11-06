@@ -10,43 +10,25 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 
+
 class DataMoverDataSourceViewSet(viewsets.ModelViewSet):
     queryset = DataMoverDataSource.objects.all()
     serializer_class = DataMoverDataSourceSerializer
-    filterset = DataMoverDataSourceFilterSet
+   
+    def list(self, request, *args, **kwargs):
+        # If 'datamoverdatasourceid' is passed as a query parameter, return only the endpoints.
+        datamoverdatasourceid = request.query_params.get('datamoverdatasourceid')
+        if datamoverdatasourceid:
+            try:
+                datasource = self.queryset.get(id=datamoverdatasourceid)
+                endpoints = datasource.endpoints.split(',')
+                return Response({'results': [{'id': idx, 'display': endpoint.strip()} for idx, endpoint in enumerate(endpoints)]})
+            except DataMoverDataSource.DoesNotExist:
+                return Response({'results': []})
+
+        # Otherwise, return the full DataMoverDataSource records.
+        return super().list(request, *args, **kwargs)
     
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        type_param = request.query_params.get('type', None)
-
-        if type_param == 'endpoints':
-            if instance.endpoints:
-                # Fake Serializer
-                endpoints = instance.endpoints.split(',')
-                endpoint_data = []
-
-                endpoint_data = [
-                    {
-                        "id": index,
-                        "display": endpoint.strip(),
-                        "name": endpoint.strip()
-                    } for index, endpoint in enumerate(endpoints)
-                ]
-
-                # Response formatted in a similar way to the one provided in your example
-                return Response({
-                    "count": len(endpoint_data),
-                    "next": None,
-                    "previous": None,
-                    "results": endpoint_data
-                })
-
-            return Response({"count": 0, "next": None, "previous": None, "results": []})
-
-        # Default behavior: return the serialized datasource instance
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
 class DataMoverConfigViewSet(NetBoxModelViewSet):
     queryset = DataMoverConfig.objects.all()
     serializer_class = DataMoverConfigSerializer
