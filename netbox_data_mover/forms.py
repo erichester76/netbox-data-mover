@@ -7,12 +7,12 @@ from utilities.forms.fields import DynamicModelChoiceField
 class DataMoverConfigForm(NetBoxModelForm):
     
     source = DynamicModelChoiceField(
-        queryset=DataMoverDataSource.objects.none(),
+        queryset=DataMoverDataSource.objects.all(),
         required=True,        
     )
 
     destination = DynamicModelChoiceField(
-        queryset=DataMoverDataSource.objects.none(),
+        queryset=DataMoverDataSource.objects.all(),
         required=True,
     )
 
