@@ -73,7 +73,7 @@ $(function() {
                     let endpointSelect = isSource ? $('#id_source_endpoint') : $('#id_destination_endpoint');
                     endpointSelect.empty();
                     endpointSelect.append('<option value="">Select Endpoint</option>');
-s
+
                     data.endpoints.forEach(function(endpoint) {
                         endpointSelect.append(`<option value="${endpoint}">${endpoint}</option>`);
                     });
