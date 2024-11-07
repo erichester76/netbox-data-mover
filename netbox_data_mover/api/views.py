@@ -66,7 +66,7 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
                 return Response(status=404)
             
         # Default to the standard retrieve behavior
-        return super().retrieve(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     class Meta:
         model = DataMoverDataSource
