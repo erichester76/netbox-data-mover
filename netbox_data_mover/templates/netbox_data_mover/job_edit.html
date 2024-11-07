@@ -106,6 +106,14 @@ $(function() {
         let clonedSourceOptions = $('#id_source_mapping_fields').clone().removeAttr('id')
         let clonedDestinationOptions = $('#id_destination_mapping_fields').clone().removeAttr('id')
 
+        // Generate unique IDs for the cloned selects
+        let uniqueIdSource = 'id_source_mapping_fields_' + $('.mapping-line').length;
+        let uniqueIdDestination = 'id_destination_mapping_fields_' + $('.mapping-line').length;
+
+        // Set new IDs for cloned elements
+        clonedSourceSelect.attr('id', uniqueIdSource);
+        clonedDestinationSelect.attr('id', uniqueIdDestination);
+        
         // Populate the new select elements with the cloned options
         $('#replace_source').replaceWith(clonedSourceOptions);
         $('#replace_destination').replaceWith(clonedDestinationOptions);
