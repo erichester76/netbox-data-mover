@@ -42,7 +42,7 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
             return Response({"count": 0, "next": None, "previous": None, "results": []})
         
         elif request.query_params.get('nest', 'none') == 'fields':
-        
+            instance = self.get_queryset().get(id=datasource_id)
             try:
                 # Authenticate and get the client
                 client = DataSourceAuth.authenticate(instance)
