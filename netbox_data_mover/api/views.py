@@ -36,6 +36,29 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
             })
         return Response({"count": 0, "next": None, "previous": None, "results": []})
 
+    @action(detail=True, methods=['get'], url_path='endpoints/(?P<endpoint_name>[^/.]+)/fields')
+    def fields(self, request, datasource_id=None, endpoint_name=None):
+        """Custom action to get fields for a specific endpoint of a DataMoverDataSource"""
+        try:
+            field_data = [
+                {
+                    "id": 1,
+                    "display": 'Testing 123',
+                    "name": 'Testinf 123',
+                }
+            ]
+
+            return Response({
+                "count": len(field_data),
+                "next": None,
+                "previous": None,
+                "results": field_data
+            })
+
+        except DataMoverDataSource.DoesNotExist:
+            return Response(status=404)
+
+
     class Meta:
         model = DataMoverDataSource
         fields = ['id', 'name', 'display', 'type', 'module', 'auth_method', 'auth_function', 'endpoints']
