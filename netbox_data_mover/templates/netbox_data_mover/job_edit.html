@@ -81,12 +81,12 @@ $(function() {
         let mappingLineHtml = `
             <div class="row mb-3 mapping-line">
             <div class="col-md-3">
-                <select class="form-select source-mapping-field">
+                <select id="replace_source" class="form-select source-mapping-field">
                     <!-- Options will be cloned from the hidden source field -->
                 </select>
             </div>
             <div class="col-md-3">
-                <select class="form-select destination-mapping-field">
+                <select id="replace_destination" class="form-select destination-mapping-field">
                     <!-- Options will be cloned from the hidden destination field -->
                 </select>
             </div>
@@ -102,14 +102,14 @@ $(function() {
         $('#mappings-container').append(mappingLineHtml);
 
         let newMappingLine = $('#mappings-container').children('.mapping-line').last();
-        
+
         // Clone options from the hidden select boxes into the new select elements
         let clonedSourceSelect = $('#source_mapping_fields').clone().removeAttr('id')
         let clonedDestinationSelect = $('#estination_mapping_fields').clone().removeAttr('id').
 
         // Replace the empty select elements in the new mapping line
-        newMappingLine.find('.source-mapping-field').replaceWith(clonedSourceSelect);
-        newMappingLine.find('.destination-mapping-field').replaceWith(clonedDestinationSelect);
+        newMappingLine.find('#replace_source').replaceWith(clonedSourceSelect);
+        newMappingLine.find('#replace_destination').replaceWith(clonedDestinationSelect);
     }); 
 
     // Add transform line functionality
