@@ -14,7 +14,7 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
     lookup_url_kwarg = 'datasource_id'
 
     def retrieve(self, request, *args, **kwargs):
-        if request.query_params.get('type', 'none') == 'endpoints':
+        if request.query_params.get('nest', 'none') == 'endpoints':
             """Custom endpoint to get list of endpoints for a given DataMoverDataSource"""
             instance = self.get_object()
             if instance.endpoints:
@@ -36,7 +36,7 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
                     "results": endpoint_data
                 })
             return Response({"count": 0, "next": None, "previous": None, "results": []})
-        elif request.query_params.get('type', 'none') == 'endpoints':
+        elif request.query_params.get('nest', 'none') == 'fields':
             try:
                 field_data = [
                     {
