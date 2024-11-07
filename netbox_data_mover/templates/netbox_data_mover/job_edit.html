@@ -81,14 +81,19 @@ $(function() {
         let mappingLineHtml = `
           <div class="row mb-3 mapping-line">
             <div class="col-md-3">
-                <select id="replace_source" class="form-select source-mapping-field">
-                    <!-- Options will be cloned from the hidden source field -->
-                </select>
+               <div style="display: block;">
+                    <select id="replace_source" class="form-select source-mapping-field">
+                        <!-- Options will be cloned from the hidden source field -->
+                    </select>
+               </div>     
             </div>
             <div class="col-md-3">
-                <select id="replace_destination" class="form-select destination-mapping-field">
-                    <!-- Options will be cloned from the hidden destination field -->
-                </select>
+                <div style="display: block;">
+                    <select id="replace_destination" class="form-select destination-mapping-field">
+                        <!-- Options will be cloned from the hidden destination field -->
+                    </select>
+                </div>
+
             </div>
             <div class="col-md-3">
                 <button type="button" class="btn btn-secondary add-transform">Add Transform</button>
