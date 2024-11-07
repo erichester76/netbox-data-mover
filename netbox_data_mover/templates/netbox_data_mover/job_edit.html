@@ -79,7 +79,7 @@ $(function() {
     // Add mapping line functionality
     $(document).on('click', '#add-mapping', function() {
         let mappingLineHtml = `
-            <div class="row mb-3 mapping-line">
+          <div class="row mb-3 mapping-line">
             <div class="col-md-3">
                 <select id="replace_source" class="form-select source-mapping-field">
                     <!-- Options will be cloned from the hidden source field -->
@@ -96,15 +96,15 @@ $(function() {
             <div class="col-md-3">
                 <button type="button" class="btn btn-danger remove-mapping" style="background: none; border: none;">X</button>
             </div>
-        </div>
-        <div class="transform-container"></div>
+         </div>
+         <div class="transform-container"></div>
         `;
         $('#mappings-container').append(mappingLineHtml);
 
 
         // Clone the options from the hidden selects and add them to the new selects
-        let clonedSourceSelect = $('#id_source_mapping_fields').clone().removeAttr('id')
-        let clonedDestinationSelect = $('#id_destination_mapping_fields').clone().removeAttr('id')
+        let clonedSourceSelect = $('#id_source_mapping_fields').clone().removeAttr('id').removeClass('hidden');
+        let clonedDestinationSelect = $('#id_destination_mapping_fields').clone().removeAttr('id').removeClass('hidden');
 
         // Generate unique IDs for the cloned selects
         let uniqueIdSource = 'id_source_mapping_fields_' + $('.mapping-line').length;
@@ -113,7 +113,6 @@ $(function() {
         // Set new IDs for cloned elements
         clonedSourceSelect.attr('id', uniqueIdSource);
         clonedDestinationSelect.attr('id', uniqueIdDestination);
-
         // Populate the new select elements with the cloned options
         $('#replace_source').replaceWith(clonedSourceSelect);
         $('#replace_destination').replaceWith(clonedDestinationSelect);
@@ -133,7 +132,7 @@ $(function() {
                         <option value="replace">Replace</option>
                         <option value="replace_map">Replace Map</option>
                         <option value="lookup_id">Lookup Object</option>
-                        <option value="nested_item">Lookup Object</option>
+                        <option value="nested_item">Nest Object</option>
                     </select>
                 </div>
                 <div class="col-md-2">
