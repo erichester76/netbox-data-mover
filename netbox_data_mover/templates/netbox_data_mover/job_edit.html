@@ -59,8 +59,8 @@
                 <div class="col-md-3">
                     <button type="button" class="btn btn-danger remove-mapping" style="background: none; border: none;">X</button>
                 </div>
+                <div class="transform-container"></div>
             </div>
-            <div class="transform-container"></div>
         </div>
         <div class="d-flex justify-content-between mt-3">
             <button type="button" id="add-mapping" class="btn btn-secondary">Add Field Mapping</button>
@@ -110,14 +110,14 @@ $(function() {
         // Append the cloned mapping line to the container
         $('#mappings-container').append(clonedMappingLine);
 
-        // Reinitialize Select2 on the cloned selects
-        clonedMappingLine.find('select').each(function() {
-            // Destroy any existing Select2 to prevent conflicts, then reinitialize
-            if ($(this).hasClass('select2-hidden-accessible')) {
-                $(this).select2('destroy');
-            }
-            $(this).select2();
-        });
+        // // Reinitialize Select2 on the cloned selects
+        // clonedMappingLine.find('select').each(function() {
+        //     // Destroy any existing Select2 to prevent conflicts, then reinitialize
+        //     if ($(this).hasClass('select2-hidden-accessible')) {
+        //         $(this).select2('destroy');
+        //     }
+        //     $(this).select2();
+        // });
     });
 
     // Add transform line functionality
