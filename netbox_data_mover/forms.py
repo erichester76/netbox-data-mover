@@ -7,7 +7,7 @@ from .models import DataMoverConfig, DataMoverDataSource
 class DataMoverConfigForm(NetBoxModelForm):
  
     source = DynamicModelChoiceField(
-        queryset=DataMoverDataSource.objects.all(),
+        queryset=DataMoverDataSource.objects.none(),
         required=True,
         label="Source",
         help_text="Select the data source."
@@ -28,7 +28,7 @@ class DataMoverConfigForm(NetBoxModelForm):
     )
     
     destination = DynamicModelChoiceField(
-        queryset=DataMoverDataSource.objects.all(),
+        queryset=DataMoverDataSource.objects.none(),
         required=True,
         label="Destination",
         help_text="Select the data destination."

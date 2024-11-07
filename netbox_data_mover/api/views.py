@@ -9,43 +9,6 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
     queryset = DataMoverDataSource.objects.all()
     serializer_class = DataMoverDataSourceSerializer
     filterset = DataMoverDataSourceFilterSet
-    lookup_field = 'id'
-    lookup_url_kwarg = 'datasource_id'
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        type_param = request.query_params.get('type', 'none')
-        
-        if type_param == 'endpoints':
-            if instance.endpoints:
-                # Split endpoints and create a structured response
-                endpoints = instance.endpoints.split(',')
-                endpoint_data = []
-
-                for index, endpoint in enumerate(endpoints):
-                    endpoint_data.append({
-                        "id": index,
-                        "display": endpoint.strip(),
-                        "name": endpoint.strip(),
-                        "slug": endpoint.strip().replace(" ", "-").lower(),
-                        "description": ""
-                    })
-
-                # Response formatted in a similar way to the one provided in your example
-                return Response({
-                    "count": len(endpoint_data),
-                    "next": None,
-                    "previous": None,
-                    "results": endpoint_data
-                })
-            return Response({"count": 0, "next": None, "previous": None, "results": []})
-    
-        elif type_param == 'mapping_fields':
-            return Response({"count": 0, "next": None, "previous": None, "results": []})
-    
-        
-        return super().retrieve(request, *args, **kwargs)
-
     
     
 class DataMoverConfigViewSet(NetBoxModelViewSet):
