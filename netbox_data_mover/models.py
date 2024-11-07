@@ -51,7 +51,6 @@ class DataMoverConfig(NetBoxModel):
     destination = models.ForeignKey(DataMoverDataSource, on_delete=models.CASCADE, related_name="destination")
     destination_endpoint = models.CharField(max_length=100,null=True)
 
-
     mappings = models.JSONField(null=True)  
 
     # Run statistics
