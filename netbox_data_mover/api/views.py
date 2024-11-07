@@ -45,13 +45,13 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
                 field_data = [
                     {
                         "id": 1,
-                        "display": 'Testing 123',
-                        "name": 'Testing 123',
+                        "display": 'name',
+                        "name": 'name',
                     },
                     {
-                        "id": 1,
-                        "display": 'Testing 4321',
-                        "name": 'Testing 4321',
+                        "id": 2,
+                        "display": 'role',
+                        "name": 'role',
                     },
                 ]
 
