@@ -27,21 +27,6 @@ class DataMoverDataSource(NetBoxModel):
 
     auth_args = models.JSONField(blank=True, null=True)  
     base_urls = models.JSONField(null=True)  
-
-    def get_endpoints(self):
-        # Split and structure the endpoints as needed for the nested serializer
-        if self.endpoints:
-            return [
-                {
-                    "id": index,
-                    "display": endpoint.strip(),
-                    "name": endpoint.strip(),
-                    "slug": endpoint.strip().replace(" ", "-").lower(),
-                    "description": ""
-                }
-                for index, endpoint in enumerate(self.endpoints.split(','))
-            ]
-        return []
     
     class Meta:
         ordering = ['name']

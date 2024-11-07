@@ -6,16 +6,12 @@ class EndpointSerializer(NetBoxModelSerializer):
     id = serializers.IntegerField()
     display = serializers.CharField()
     name = serializers.CharField()
-    slug = serializers.CharField()
-    description = serializers.CharField()
-
+   
 class DataMoverDataSourceSerializer(NetBoxModelSerializer):
-    endpoints = EndpointSerializer(source='get_endpoints', many=True, read_only=True)
-
     class Meta:
         model = DataMoverDataSource
         fields = ['id', 'name', 'display', 'type', 'module', 'auth_method', 'auth_function', 'endpoints']
-        brief_fields=  ['id', 'display', 'name']
+        brief_fields=['id', 'display', 'name']
       
 class DataMoverConfigSerializer(NetBoxModelSerializer):
     class Meta:
