@@ -47,23 +47,21 @@ class DataMoverConfigForm(NetBoxModelForm):
         query_params={'mapping_id': '$destination_endpoint', 'type': 'mapping_fields'},
         help_text="Select the field for mapping to the destination endpoint."
     )
-    
-    class Meta:
-        
-        SCHEDULE_CHOICES = [
-            ('', 'None - Manual Only'),
-            ('0 * * * *', 'Hourly'),
-            ('0 0 * * *', 'Daily'),
-            ('0 0 * * 0', 'Weekly'),
-            ('0 0 1 * *', 'Monthly'),
-        ]
-        
+    SCHEDULE_CHOICES = [
+        ('', 'None - Manual Only'),
+        ('0 * * * *', 'Hourly'),
+        ('0 0 * * *', 'Daily'),
+        ('0 0 * * 0', 'Weekly'),
+        ('0 0 1 * *', 'Monthly'),
+    ]
+    schedule = forms.ChoiceField(choices=SCHEDULE_CHOICES)
+           
+    class Meta:    
         model = DataMoverConfig
         fields = ['source', 'source_endpoint', 'source_mapping_fields',
                   'destination', 'destination_endpoint', 'destination_mapping_fields',
                   'name', 'schedule', 'description']
-        
-        
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
