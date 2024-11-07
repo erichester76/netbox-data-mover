@@ -100,10 +100,16 @@ $(function() {
         <div class="transform-container"></div>
         `;
         $('#mappings-container').append(mappingLineHtml);
+
         let newMappingLine = $('#mappings-container').children('.mapping-line').last();
+        
         // Clone options from the hidden select boxes into the new select elements
-        newMappingLine.find('.source-mapping-field').html($('#id_source_mapping_fields').html());
-        newMappingLine.find('.destination-mapping-field').html($('#id_destination_mapping_fields').html());
+        let clonedSourceSelect = $('#source_mapping_fields').clone().removeAttr('id')
+        let clonedDestinationSelect = $('#estination_mapping_fields').clone().removeAttr('id').
+
+        // Replace the empty select elements in the new mapping line
+        newMappingLine.find('.source-mapping-field').replaceWith(clonedSourceSelect);
+        newMappingLine.find('.destination-mapping-field').replaceWith(clonedDestinationSelect);
     }); 
 
     // Add transform line functionality
