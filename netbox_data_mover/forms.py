@@ -16,14 +16,14 @@ class DataMoverConfigForm(NetBoxModelForm):
         queryset=DataMoverDataSource.objects.none(),
         required=True,
         label="Source Endpoint",
-        query_params={'endpoint_id': '$source', 'type': 'endpoints'},
+        query_params={'datasource_id': '$source', 'type': 'endpoints'},
         help_text="Select an endpoint for the chosen source."
     )
     source_mapping_fields = DynamicModelChoiceField(
         queryset=DataMoverDataSource.objects.none(),  # Start with none, will be updated dynamically
         required=False,
         label="Source Mapping Field",
-        query_params={'mapping_id': '$source_endpoint', 'type': 'mapping_fields'},
+        query_params={'datasource_id': '$source_endpoint', 'type': 'mapping_fields'},
         help_text="Select the field for mapping from the source endpoint."
     )
     
@@ -37,14 +37,14 @@ class DataMoverConfigForm(NetBoxModelForm):
         queryset=DataMoverDataSource.objects.none(),
         required=True,
         label="Destination Endpoint",
-        query_params={'endpoint_id': '$destination', 'type': 'endpoints'},
+        query_params={'datasource_id': '$destination', 'type': 'endpoints'},
         help_text="Select an endpoint for the chosen destination."
     )
     destination_mapping_fields = DynamicModelChoiceField(
         queryset=DataMoverDataSource.objects.none(),  # Start with none, will be updated dynamically
         required=False,
         label="Destination Mapping Field",
-        query_params={'mapping_id': '$destination_endpoint', 'type': 'mapping_fields'},
+        query_params={'datasource_id': '$destination_endpoint', 'type': 'mapping_fields'},
         help_text="Select the field for mapping to the destination endpoint."
     )
     SCHEDULE_CHOICES = [
