@@ -4,6 +4,8 @@ from .serializers import DataMoverDataSourceSerializer, DataMoverConfigSerialize
 from netbox.api.viewsets import NetBoxModelViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework import status
+from ..api_utils import DataSourceAuth
 
 
 class DataMoverDataSourceViewSet(NetBoxModelViewSet):
@@ -38,29 +40,53 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
                     "results": endpoint_data
                 })
             return Response({"count": 0, "next": None, "previous": None, "results": []})
+        
         elif request.query_params.get('nest', 'none') == 'fields':
-            destination_id = request.query_params.get('datasource_id', None)
-            endpoint_id = request.query_params.get('endpoint_id', None)
+        
             try:
-                field_data = [
-                    {
-                        "id": 1,
-                        "display": 'name',
-                        "name": 'name',
-                    },
-                    {
-                        "id": 2,
-                        "display": 'role',
-                        "name": 'role',
-                    },
-                ]
+                # Authenticate and get the client
+                client = DataSourceAuth.authenticate(instance)
 
-                return Response({
-                    "count": len(field_data),
-                    "next": None,
-                    "previous": None,
-                    "results": field_data
-                })
+                if not client:
+                    return Response({"detail": "Failed to authenticate with the data source."}, status=status.HTTP_400_BAD_REQUEST)
+                
+                # Fetch data from the specified endpoint
+                if request.query_params.get('endpoint_id', None):
+                    
+                    endpoint_id = request.query_params.get('endpoint_id', None)
+                    # Use the endpoint ID to get the correct endpoint value
+                    endpoints = instance.endpoints.split(',')
+                    if int(endpoint_id) < len(endpoints):
+                        selected_endpoint = endpoints[int(endpoint_id)].strip()
+                    else:
+                        return Response({"detail": "Invalid endpoint ID."}, status=status.HTTP_400_BAD_REQUEST)
+
+                    # Use fetch_data to fetch the data from the endpoint
+                    data = DataSourceAuth.fetch_data(instance, client, selected_endpoint)
+                    
+                    # If the response is not in the expected format
+                    if not data:
+                        return Response({"detail": "No data found or failed to fetch data."}, status=status.HTTP_400_BAD_REQUEST)
+
+                    # Step 3: Extract field names from the first record
+                    if isinstance(data, list) and len(data) > 0:
+                        first_record = data[0]
+                    elif isinstance(data, dict):
+                        first_record = data.get('results', [data])[0]
+                    else:
+                        return Response({"count": 0, "next": None, "previous": None, "results": []})
+
+                    # Extract field names
+                    fields = [{"id": index, "display": key, "name": key} for index, key in enumerate(first_record.keys())]
+
+                    return Response({
+                        "count": len(fields),
+                        "next": None,
+                        "previous": None,
+                        "results": fields
+                    })
+                else:
+                    return Response({"detail": "Endpoint ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
             except DataMoverDataSource.DoesNotExist:
                 return Response(status=404)
