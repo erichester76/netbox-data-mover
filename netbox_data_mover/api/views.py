@@ -44,8 +44,13 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
                 {
                     "id": 1,
                     "display": 'Testing 123',
-                    "name": 'Testinf 123',
-                }
+                    "name": 'Testing 123',
+                },
+                {
+                    "id": 1,
+                    "display": 'Testing 4321',
+                    "name": 'Testing 4321',
+                },
             ]
 
             return Response({
