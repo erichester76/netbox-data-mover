@@ -43,16 +43,30 @@
             {{ form.destination_endpoint }}
         </div>
     </div>
-    <div style="display: none;">
-            {{ form.source_mapping_fields }}
-            {{ form.destination_mapping_fields }}
-    </div>
-    <h4>Field Mappings</h4>
-    <div id="mappings-container" class="mb-3"></div>
-    <div class="d-flex justify-content-between mt-3">
-        <button type="button" id="add-mapping" class="btn btn-secondary">Add Field Mapping</button>
-        <button type="submit" class="btn btn-primary">Save Job</button>
-    </div>
+        <h4>Field Mappings</h4>
+        <div id="mappings-container" class="mb-3">
+            <!-- The first mapping line is directly included with Jinja rendered selects -->
+            <div class="row mb-3 mapping-line" id="initial-mapping-line">
+                <div class="col-md-3">
+                    {{ source_mapping_fields }}
+                </div>
+                <div class="col-md-3">
+                    {{ destination_mapping_fields }}
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-secondary add-transform">Add Transform</button>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-danger remove-mapping" style="background: none; border: none;">X</button>
+                </div>
+            </div>
+            <div class="transform-container"></div>
+        </div>
+    
+        <div class="d-flex justify-content-between mt-3">
+            <button type="button" id="add-mapping" class="btn btn-secondary">Add Field Mapping</button>
+            <button type="submit" class="btn btn-primary">Save Job</button>
+        </div>>
 </form>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script> 
@@ -76,41 +90,36 @@ $(function() {
         saveJobConfiguration();
     });
 
-    // Add mapping line functionality
     $(document).on('click', '#add-mapping', function() {
-        let mappingLineHtml = `
-          <div class="row mb-3 mapping-line">
-            <div class="col-md-3">
-                <select id="replace_source" class="form-select source-mapping-field">
-                    <!-- Options will be cloned from the hidden source field -->
-                </select>
-            </div>
-            <div class="col-md-3">
-                <select id="replace_destination" class="form-select destination-mapping-field">
-                    <!-- Options will be cloned from the hidden destination field -->
-                </select>
-            </div>
-            <div class="col-md-3">
-                <button type="button" class="btn btn-secondary add-transform">Add Transform</button>
-            </div>
-            <div class="col-md-3">
-                <button type="button" class="btn btn-danger remove-mapping" style="background: none; border: none;">X</button>
-            </div>
-         </div>
-         <div class="transform-container"></div>
-        `;
-        $('#mappings-container').append(mappingLineHtml);
+        // Clone the initial mapping line
+        let clonedMappingLine = $('#initial-mapping-line').clone();
 
-        let clonedSourceSelect = $('#id_source_mapping_fields').clone().removeAttr('id');
-        let clonedDestinationSelect = $('#id_destination_mapping_fields').clone().removeAttr('id');
-        clonedSourceSelect.wrap('<div style="display: block;"></div>').attr('id', 'id_source_mapping_fields_' + $('.mapping-line').length);
-        clonedDestinationSelect.wrap('<div style="display: block;"></div>').attr('id', 'id_destination_mapping_fields_' + $('.mapping-line').length);
-        // clonedSourceSelect.select2();
-        // clonedDestinationSelect.select2();
-        $('#replace_source').replaceWith(clonedSourceSelect);
-        $('#replace_destination').replaceWith(clonedDestinationSelect);
+        // Generate a unique identifier for each cloned element
+        // Generate unique IDs for the cloned selects
+        let uniquesuffix = $('.mapping-line').length;
 
-    }); 
+        // Update IDs for the cloned select elements and their labels if necessary
+        clonedMappingLine.find('select').each(function() {
+            // Get the old ID, generate a new unique ID, and update it
+            let oldId = $(this).attr('id');
+            let newId = `${oldId}-${uniqueSuffix}`;
+            $(this).attr('id', newId);
+            // Update the "for" attribute of the corresponding label if any exist
+            clonedMappingLine.find(`label[for="${oldId}"]`).attr('for', newId);
+        });
+
+        // Append the cloned mapping line to the container
+        $('#mappings-container').append(clonedMappingLine);
+
+        // Reinitialize Select2 on the cloned selects
+        clonedMappingLine.find('select').each(function() {
+            // Destroy any existing Select2 to prevent conflicts, then reinitialize
+            if ($(this).hasClass('select2-hidden-accessible')) {
+                $(this).select2('destroy');
+            }
+            $(this).select2();
+        });
+    });
 
     // Add transform line functionality
     $(document).on('click', '.add-transform', function() {
