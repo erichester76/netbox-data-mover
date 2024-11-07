@@ -14,7 +14,7 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
     lookup_url_kwarg = 'datasource_id'
 
     # overload the list (no pkid) view so we can add arguments to get endpoints and fields as well 
-    # using "nest" url param (see forms.py)
+    # using "nest" url param 
     def list(self, request, *args, **kwargs):
         
         if request.query_params.get('nest', 'none') == 'endpoints':
