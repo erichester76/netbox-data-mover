@@ -39,8 +39,8 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
                 })
             return Response({"count": 0, "next": None, "previous": None, "results": []})
         elif request.query_params.get('nest', 'none') == 'fields':
-            datasource_id = request.query_params.get('datasource_id', None)
-            instance = self.get_queryset().get(id=datasource_id)
+            destination_id = request.query_params.get('datasource_id', None)
+            endpoint_id = request.query_params.get('endpoint_id', None)
             try:
                 field_data = [
                     {
