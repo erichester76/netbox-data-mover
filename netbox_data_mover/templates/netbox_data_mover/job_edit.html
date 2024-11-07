@@ -81,18 +81,14 @@ $(function() {
         let mappingLineHtml = `
           <div class="row mb-3 mapping-line">
             <div class="col-md-3">
-               <div style="display: block;">
-                    <select id="replace_source" class="form-select source-mapping-field">
-                        <!-- Options will be cloned from the hidden source field -->
-                    </select>
-               </div>     
+                <select id="replace_source" class="form-select source-mapping-field">
+                    <!-- Options will be cloned from the hidden source field -->
+                </select>
             </div>
             <div class="col-md-3">
-                <div style="display: block;">
-                    <select id="replace_destination" class="form-select destination-mapping-field">
-                        <!-- Options will be cloned from the hidden destination field -->
-                    </select>
-                </div>
+                <select id="replace_destination" class="form-select destination-mapping-field">
+                    <!-- Options will be cloned from the hidden destination field -->
+                </select>
             </div>
             <div class="col-md-3">
                 <button type="button" class="btn btn-secondary add-transform">Add Transform</button>
@@ -105,13 +101,10 @@ $(function() {
         `;
         $('#mappings-container').append(mappingLineHtml);
 
-        // Clone the hidden selects and add them to the new selects
-        let clonedSourceSelect = $('#id_source_mapping_fields').html
-        let clonedDestinationSelect = $('#id_destination_mapping_fields').html
-        // Generate unique IDs for the cloned selects
-        clonedSourceSelect.attr('id', 'id_source_mapping_fields_' + $('.mapping-line').length);
-        clonedDestinationSelect.attr('id', 'id_destination_mapping_fields_' + $('.mapping-line').length);
-        // Populate the new select elements with the cloned options
+        let clonedSourceSelect = $('#id_source_mapping_fields').clone().removeAttr('id');
+        let clonedDestinationSelect = $('#id_destination_mapping_fields').clone().removeAttr('id');
+        clonedSourceSelect.wrap('<div style="display: block;"></div>').attr('id', 'id_source_mapping_fields_' + $('.mapping-line').length);
+        clonedDestinationSelect.wrap('<div style="display: block;"></div>').attr('id', 'id_destination_mapping_fields_' + $('.mapping-line').length);
         $('#replace_source').replaceWith(clonedSourceSelect);
         $('#replace_destination').replaceWith(clonedDestinationSelect);
 
