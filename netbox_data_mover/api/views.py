@@ -13,6 +13,8 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
     lookup_field = 'id'
     lookup_url_kwarg = 'datasource_id'
 
+    # overload the list (no pkid) view so we can add arguments to get endpoints and fields as well 
+    # using "nest" url param (see forms.py)
     def list(self, request, *args, **kwargs):
         
         if request.query_params.get('nest', 'none') == 'endpoints':
@@ -26,8 +28,6 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
                         "id": index,
                         "display": endpoint.strip(),
                         "name": endpoint.strip(),
-                        "slug": endpoint.strip().replace(" ", "-").lower(),
-                        "description": ""
                     }
                     for index, endpoint in enumerate(endpoints)
                 ]

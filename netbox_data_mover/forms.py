@@ -22,7 +22,7 @@ class DataMoverConfigForm(NetBoxModelForm):
     source_mapping_fields = DynamicModelChoiceField(
         queryset=DataMoverDataSource.objects.none(),  
         required=False,
-        query_params={'endpoint_name': '$source_endpoint.name', 'nest': 'endpoints'},
+        query_params={'endpoint_name': '$source_endpoint.name', 'nest': 'fields'},
         help_text="Select the field for mapping from the source endpoint."
     )
     
@@ -42,7 +42,7 @@ class DataMoverConfigForm(NetBoxModelForm):
     destination_mapping_fields = DynamicModelChoiceField(
         queryset=DataMoverDataSource.objects.none(),  
         required=False,
-        query_params={'endpoint_name': '$destination.name', 'nest': 'endpoints'},
+        query_params={'endpoint_name': '$destination.name', 'nest': 'fields'},
         help_text="Select the field for mapping to the destination endpoint."
     )
     SCHEDULE_CHOICES = [
