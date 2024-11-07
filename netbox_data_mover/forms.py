@@ -16,14 +16,13 @@ class DataMoverConfigForm(NetBoxModelForm):
         queryset=DataMoverDataSource.objects.none(),
         required=True,
         label="Source Endpoint",
-        api_url='/api/plugins/datamover/datasources/{{source}}/endpoints/', 
+        query_params={'datasource_id': '$source', 'type': 'endpoints'},
         help_text="Select an endpoint for the chosen source."
     )
     source_mapping_fields = DynamicModelChoiceField(
         queryset=DataMoverDataSource.objects.none(),  
         required=False,
         label="Source Mapping Field",
-        api_url='/api/plugins/datamover/datasources/{{source}}/endpoints/{{source_endpoint}}/fields',  
         help_text="Select the field for mapping from the source endpoint."
     )
     
@@ -37,14 +36,13 @@ class DataMoverConfigForm(NetBoxModelForm):
         queryset=DataMoverDataSource.objects.none(),
         required=True,
         label="Destination Endpoint",
-        api_url='/api/plugins/datamover/datasources/{{destination}}/endpoints/',  
+        query_params={'datasource_id': '$destination', 'type': 'endpoints'},
         help_text="Select an endpoint for the chosen destination."
     )
     destination_mapping_fields = DynamicModelChoiceField(
         queryset=DataMoverDataSource.objects.none(),  
         required=False,
         label="Destination Mapping Field",
-        api_url='/api/plugins/datamover/datasources/{{dest}}/endpoints/{{dest_endpoint}}/fields',  
         help_text="Select the field for mapping to the destination endpoint."
     )
     SCHEDULE_CHOICES = [

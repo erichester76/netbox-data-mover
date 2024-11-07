@@ -2,11 +2,6 @@ from ..models import DataMoverConfig, DataMoverDataSource
 from netbox.api.serializers import NetBoxModelSerializer
 from rest_framework import serializers
 
-class EndpointSerializer(NetBoxModelSerializer):
-    id = serializers.IntegerField()
-    display = serializers.CharField()
-    name = serializers.CharField()
-   
 class DataMoverDataSourceSerializer(NetBoxModelSerializer):
     class Meta:
         model = DataMoverDataSource
