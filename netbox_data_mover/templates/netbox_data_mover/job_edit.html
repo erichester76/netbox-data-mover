@@ -48,10 +48,10 @@
             <!-- The first mapping line is directly included with Jinja rendered selects -->
             <div class="row mb-3 mapping-line" id="initial-mapping-line">
                 <div class="col-md-3">
-                    {{ source_mapping_fields }}
+                    {{ form.source_mapping_fields }}
                 </div>
                 <div class="col-md-3">
-                    {{ destination_mapping_fields }}
+                    {{ form.destination_mapping_fields }}
                 </div>
                 <div class="col-md-3">
                     <button type="button" class="btn btn-secondary add-transform">Add Transform</button>
@@ -62,11 +62,10 @@
             </div>
             <div class="transform-container"></div>
         </div>
-    
         <div class="d-flex justify-content-between mt-3">
             <button type="button" id="add-mapping" class="btn btn-secondary">Add Field Mapping</button>
             <button type="submit" class="btn btn-primary">Save Job</button>
-        </div>>
+        </div>
 </form>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script> 
