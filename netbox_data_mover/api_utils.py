@@ -1,6 +1,6 @@
 import ssl
 import importlib
-from sources.base import DataSource
+from .models import DataMoverDataSource
 import requests
 from bravado.client import SwaggerClient
 from bravado.requests_client import RequestsClient
@@ -9,7 +9,7 @@ import inspect
 import types
 
 
-class APIDataSource(DataSource):
+class APIDataSource(DataMoverDataSource):
     def __init__(self, name, config):
         super().__init__(config)
         self.name = name
