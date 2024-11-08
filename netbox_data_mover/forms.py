@@ -23,7 +23,7 @@ class DataMoverConfigForm(NetBoxModelForm):
         queryset=DataMoverDataSource.objects.none(),  
         required=False,
         label="Source Field",
-        query_params={'datasource_id': '$destination', 'endpoint_id': '$source_endpoint', 'nest': 'fields'},
+        query_params={'datasource_id': '$source', 'endpoint_id': '$source_endpoint', 'nest': 'fields'},
         help_text="Select the field for mapping from the source endpoint."
     )
     

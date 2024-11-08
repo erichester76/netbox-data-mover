@@ -1,0 +1,6 @@
+pandas
+pynetbox
+pybsn
+pyvmomo
+dnacentersdk
+prometheus-api-client
