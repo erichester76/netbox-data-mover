@@ -49,6 +49,7 @@ setup(
         'djangorestframework',
         'django-tables2',
         'django-filter',
+        'pynetbox',
         'pyvmomi',
         'dnacentersdk',
         'pysnmp',
