@@ -20,8 +20,8 @@ class DataSourceAuth:
             auth_function_name = datasource.auth_function
             auth_args = datasource.auth_args
 
-            module = importlib.import_module(module_name)
-
+            module = __import__(module_name, auth_function_name)
+            
             # Get the authentication function
             auth_function = getattr(module, auth_function_name, None)
             if auth_function is None:
