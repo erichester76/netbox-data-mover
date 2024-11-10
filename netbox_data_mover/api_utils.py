@@ -6,7 +6,6 @@ import datetime
 import inspect
 import types
 
-
 class APIDataSource(DataMoverDataSource):
     def __init__(self, name):
         self.name = name
@@ -14,14 +13,12 @@ class APIDataSource(DataMoverDataSource):
         self.clients = []
         self.session_expiry = {}
         
-
     def is_session_valid(self, base_url):
         if base_url in self.session_expiry:
             return datetime.datetime.now() < self.session_expiry[base_url]
         return False
     
-    
-    def prepare_auth_args(self, base_url):
+    def prepare_auth_args(self):
         """Prepare auth args, converting lists to dicts as needed and setting SSL context."""
         auth_args = self.auth_args
 

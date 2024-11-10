@@ -47,7 +47,8 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
             instance = self.get_queryset().get(id=datasource_id)
             try:
                 # Authenticate and get the client
-                client = APIDataSource.authenticate(instance)
+                client = APIDataSource(instance)
+                client.authenticate()
 
                 if not client:
                     return Response({"detail": "Failed to authenticate with the data source."}, status=status.HTTP_400_BAD_REQUEST)
