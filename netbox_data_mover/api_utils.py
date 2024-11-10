@@ -15,7 +15,7 @@ class APIDataSource:
         self.session_expiry = {}
         
         # Extract fields from datasource_instance and assign them
-        self.base_urls = datasource_instance.base_urls.split(",") if datasource_instance.base_urls else []
+        self.base_urls = datasource_instance.base_urls if datasource_instance.base_urls else []
         self.auth_method = datasource_instance.auth_method
         self.auth_function = datasource_instance.auth_function
         self.module = datasource_instance.module
