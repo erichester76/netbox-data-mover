@@ -2,7 +2,6 @@ import ssl
 import importlib
 from .models import DataMoverDataSource
 import requests
-from bravado.client import SwaggerClient
 from bravado.requests_client import RequestsClient
 import datetime
 import inspect
@@ -33,7 +32,8 @@ class APIDataSource(DataMoverDataSource):
 
     def _authenticate_swagger(self, base_url):
         """Authenticate using Bravado (Swagger) with various auth methods."""
-        http_client = RequestsClient()
+        #http_client = RequestsClient()
+        http_client = requests.Session
         auth_method = self.config['auth_method']
         auth_args = self.config['auth_args']  # Assume auth_args is a dictionary
         
