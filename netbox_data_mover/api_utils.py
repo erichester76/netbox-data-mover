@@ -8,12 +8,12 @@ import types
 
 
 class APIDataSource(DataMoverDataSource):
-    def __init__(self, name, config):
-        super().__init__(config)
+    def __init__(self, name):
         self.name = name
         self.api = None
         self.clients = []
         self.session_expiry = {}
+        
 
     def is_session_valid(self, base_url):
         if base_url in self.session_expiry:
@@ -22,8 +22,8 @@ class APIDataSource(DataMoverDataSource):
 
     def authenticate(self):
         """Handle authentication, supporting both Swagger and non-Swagger clients."""
-        api_type = self.config['type']
-        for base_url in self.config['base_urls']:
+        api_type = self.type
+        for base_url in self.base_urls:
             if api_type == 'api-swagger':
                 self._authenticate_swagger(base_url)
             else:
@@ -33,8 +33,8 @@ class APIDataSource(DataMoverDataSource):
         """Authenticate using Bravado (Swagger) with various auth methods."""
         #http_client = RequestsClient()
         http_client = requests.Session
-        auth_method = self.config['auth_method']
-        auth_args = self.config['auth_args']  # Assume auth_args is a dictionary
+        auth_method = self.auth_method
+        auth_args = self.auth_args  # Assume auth_args is a dictionary
         
         # Apply authentication based on method
         if auth_method == 'apiKey':
@@ -68,9 +68,9 @@ class APIDataSource(DataMoverDataSource):
         print(f"Connected to REST API")
 
     def _authenticate_standard(self, base_url):
-        module = importlib.import_module(self.config['module'])
-        auth_method = self.config['auth_method']
-        auth_func = self._get_auth_function(module, self.config['auth_function'])
+        module = importlib.import_module(self.module)
+        auth_method = self.auth_method
+        auth_func = self._get_auth_function(module, self.auth_function)
         auth_args = self._prepare_auth_args(base_url)
         # Add base_url if required
         if 'base_url' in inspect.signature(auth_func).parameters:
@@ -79,7 +79,7 @@ class APIDataSource(DataMoverDataSource):
         if not (self.api and self.is_session_valid(base_url)):
             # Handle authentication methods
             if auth_method == 'token':
-                self.api = auth_func(base_url, token=self.config['auth_args']['token'])
+                self.api = auth_func(base_url, token=self.auth_args.get('token'))
                 if base_url not in self.session_expiry: 
                     self.clients.append(self.api)
 
@@ -98,7 +98,7 @@ class APIDataSource(DataMoverDataSource):
 
     def _prepare_auth_args(self, base_url):
         """Prepare auth args, converting lists to dicts as needed and setting SSL context."""
-        auth_args = self.config['auth_args']
+        auth_args = self.auth_args
 
         # Convert auth_args list to dictionary if necessary
         if isinstance(auth_args, list):
@@ -122,7 +122,7 @@ class APIDataSource(DataMoverDataSource):
 
     def _handle_custom_login(self, http_client, base_url):
         """Handle custom login for Swagger APIs."""
-        auth_args = self.config['auth_args']
+        auth_args = self.auth_args
         login_url = f"{base_url}{auth_args.get('login_endpoint')}"
         login_data = {'username': auth_args['username'], 'password': auth_args['password']}
         print(f"Logging in to {login_url}")
@@ -142,33 +142,17 @@ class APIDataSource(DataMoverDataSource):
         else:
             raise ConnectionError(f"Login failed with status code {response.status_code}")
 
-    def fetch_data(self, obj_config, api_client):
+    def fetch_data(self, api_client):
         """
         Fetch data from the API using either a direct fetch_data_function or a custom Python code block.
         Dynamically load modules specified in the 'imports' section of the YAML and inject into globals.
         """
 
         # Handle imports specified in YAML
-        imports = obj_config.get('imports', [])
         local_vars = {'api_client': api_client}
 
-        # Dynamically import modules and make them available in local_vars
-        for import_path in imports:
-            try:
-                module_name, attr_name = import_path.rsplit('.', 1)
-                module = __import__(module_name, fromlist=[attr_name])
-                local_vars[attr_name] = getattr(module, attr_name)
-            except ImportError as e:
-                print(f"Error importing {import_path}: {e}")
-                raise
-
-        # Inject all imported local_vars into globals, except for 'api_client'
-        for var_name, var_value in local_vars.items():
-            if var_name != 'api_client':  # Skip api_client to prevent accidental overwrites
-                globals()[var_name] = var_value
-
         # Fetch custom Python code to execute
-        fetch_data_code = obj_config.get('fetch_data_code')
+        fetch_data_code = self.fetch_function
 
         if fetch_data_code:
             print(f"Using custom Python code for data fetch")
