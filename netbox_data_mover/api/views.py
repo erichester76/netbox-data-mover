@@ -5,7 +5,7 @@ from netbox.api.viewsets import NetBoxModelViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status
-from ..api_utils import DataSourceAuth
+from ..api_utils import APIDataSource
 
 
 class DataMoverDataSourceViewSet(NetBoxModelViewSet):
@@ -47,7 +47,7 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
             instance = self.get_queryset().get(id=datasource_id)
             try:
                 # Authenticate and get the client
-                client = DataSourceAuth.authenticate(instance)
+                client = APIDataSource.authenticate(instance)
 
                 if not client:
                     return Response({"detail": "Failed to authenticate with the data source."}, status=status.HTTP_400_BAD_REQUEST)
@@ -64,7 +64,7 @@ class DataMoverDataSourceViewSet(NetBoxModelViewSet):
                         return Response({"detail": "Invalid endpoint ID."}, status=status.HTTP_400_BAD_REQUEST)
 
                     # Use fetch_data to fetch the data from the endpoint
-                    data = DataSourceAuth.fetch_data(instance, client, selected_endpoint)
+                    data = APIDataSource.fetch_data(instance, client, selected_endpoint)
                     
                     # If the response is not in the expected format
                     if not data:
