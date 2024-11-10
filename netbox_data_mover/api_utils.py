@@ -2,7 +2,6 @@ import ssl
 import importlib
 from .models import DataMoverDataSource
 import requests
-from bravado.requests_client import RequestsClient
 import datetime
 import inspect
 import types
