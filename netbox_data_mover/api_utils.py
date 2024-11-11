@@ -27,7 +27,7 @@ class APIDataSource:
             return datetime.datetime.now() < self.session_expiry[base_url]
         return False
 
-    def prepare_auth_args(self):
+    def prepare_auth_args(self, base_url):
         """Prepare auth args, converting lists to dicts as needed and setting SSL context."""
         auth_args = self.auth_args
 
@@ -40,6 +40,11 @@ class APIDataSource:
             auth_args['sslContext'] = ssl._create_unverified_context()
         elif auth_args.get('sslContext') == 'None':
             auth_args['sslContext'] = None
+            
+            
+        if 'host' in auth_args:
+            auth_args['host'] = base_url
+            
         return auth_args
 
     def get_auth_function(self, module, function_path):
@@ -57,7 +62,7 @@ class APIDataSource:
             module = importlib.import_module(self.module)
             auth_method = self.auth_method
             auth_func = self.get_auth_function(module, self.auth_function)
-            auth_args = self.prepare_auth_args()
+            auth_args = self.prepare_auth_args(base_url)
             
             # Add base_url if required
             if 'base_url' in inspect.signature(auth_func).parameters:
